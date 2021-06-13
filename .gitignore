@@ -1,3 +1,4 @@
+### Gradle ###
 HELP.md
 .gradle
 build/
@@ -48,7 +49,7 @@ out/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+### Package Files ###
 *.jar
 *.war
 *.nar
@@ -59,3 +60,10 @@ out/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+### Spring ###
+/src/main/resources/application-local.properties
+
+### Sqlite ###
+/*.db
+/memory:myDb?cache=shared
