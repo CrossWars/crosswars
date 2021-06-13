@@ -13,10 +13,16 @@ class CrosswardController(
     var service: PlayerService
 ) {
 
-    @GetMapping("/players/ids/{player_id}")
+    @PostMapping("/players")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createPlayer(@RequestBody player: Player): Player {
+        return service.createPlayer(player)
+    }
+
+    @GetMapping("/players/emails/{player_email}")
     @ResponseStatus(HttpStatus.OK)
-    fun getPlayerById(@PathVariable("player_id") playerId: Int): ResponseEntity<Player> {
-        val player = service.findPlayerById(playerId)
+    fun getPlayerById(@PathVariable("player_email") playerEmail: String): ResponseEntity<Player> {
+        val player = service.findPlayerByEmail(playerEmail)
         return ResponseEntity.ok(player)
     }
 

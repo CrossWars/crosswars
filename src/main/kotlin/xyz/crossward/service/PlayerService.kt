@@ -29,13 +29,26 @@ class PlayerService(
         return "nothing found"
     }
 
-    fun findPlayerById(id: Int): Player {
-        return playerRepository.findById(id).unwrap() ?: throw NoContentException()
+    fun findPlayerByEmail(email: String): Player {
+        return playerRepository.findById(email.lowercase()).unwrap()
+            ?: throw NoContentException("Could not find player with email $email")
     }
 
     fun findPlayerByName(playerName: String): Player {
-        return playerRepository.findPlayerByName(playerName)
-            .findFirst().unwrap() ?: throw NoContentException()
+        return playerRepository.findPlayerByName(playerName.lowercase()).findFirst().unwrap()
+            ?: throw NoContentException("Could not find player with name $playerName")
+    }
+
+    fun createPlayer(player: Player): Player {
+
+        // lower case the text fields
+        val savedPlayer = Player(
+            email = player.email.lowercase(),
+            name = player.name.lowercase(),
+            telegramId = player.telegramId
+        )
+        playerRepository.save(savedPlayer)
+        return savedPlayer
     }
 }
 

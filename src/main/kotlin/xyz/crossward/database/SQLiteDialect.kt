@@ -4,6 +4,10 @@ import org.hibernate.dialect.Dialect
 import org.hibernate.dialect.identity.IdentityColumnSupport
 import java.sql.Types
 
+/**
+ * Custom SQLite Dialect
+ * This is needed because spring jpa doesn't have support for SQLite
+ */
 class SQLiteDialect : Dialect() {
 
     init {

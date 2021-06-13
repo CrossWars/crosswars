@@ -17,7 +17,7 @@ Create the database at the root of the project:
 ```
 Run the ddl script to create the tables
 ```shell
-> cat resources/ddl.sql | sqlite3 Crossward.db
+> cat src/main/resources/ddl.sql | sqlite3 Crossward.db
 ```
 
 Create an `application-local.properties` file in the resources folder:

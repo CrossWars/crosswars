@@ -7,7 +7,7 @@ import xyz.crossward.entities.Player
 import java.util.stream.Stream
 
 @Repository
-interface PlayerRepository : CrudRepository<Player, Int> {
+interface PlayerRepository : CrudRepository<Player, String> {
 
     @Query("select p from Player p where name = ?1")
     fun findPlayerByName(name: String): Stream<Player>
