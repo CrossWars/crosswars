@@ -16,7 +16,7 @@ class CrosswardController(
     @PostMapping("/users/telegram")
     @ResponseStatus(HttpStatus.CREATED)
     fun createTelegramUser(@RequestBody user: User): User {
-        return service.crateTelegramUser(user)
+        return service.createTelegramUser(user)
     }
 
     @PostMapping("/users/website")

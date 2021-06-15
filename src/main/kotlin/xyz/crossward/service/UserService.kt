@@ -51,7 +51,7 @@ class UserService(
      * @param user user to create
      * @return user saved to the database
      */
-    fun crateTelegramUser(user: User): User {
+    fun createTelegramUser(user: User): User {
         // create a telegram user
         val savedUser = User(
             userId = user.userId,
