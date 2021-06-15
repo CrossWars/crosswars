@@ -2,6 +2,7 @@ package xyz.crossward.service
 
 import org.springframework.stereotype.Service
 import xyz.crossward.entities.User
+import xyz.crossward.exception.BadRequestException
 import xyz.crossward.exception.NoContentException
 import xyz.crossward.repository.UserRepository
 import java.util.*
@@ -44,12 +45,35 @@ class UserService(
             ?: throw NoContentException("Could not find user with name $name")
     }
 
-    fun createUser(user: User): User {
-        // lower case the text fields
+    /**
+     * Creates a telegram user (email is optional)
+     *
+     * @param user user to create
+     * @return user saved to the database
+     */
+    fun crateTelegramUser(user: User): User {
+        // create a telegram user
         val savedUser = User(
-            email = user.email.lowercase(),
-            name = user.name.lowercase(),
             userId = user.userId,
+            name = user.name.lowercase(),
+            email = user.email?.lowercase(),
+            remind = user.remind ?: false
+        )
+        userRepository.save(savedUser)
+        return savedUser
+    }
+
+    /**
+     * Creates a website user (ID is assumed to be the email)
+     *
+     * @param user user to create
+     * @return user saved to the database
+     */
+    fun createWebsiteUser(user: User): User {
+        val savedUser = User(
+            userId = user.userId.lowercase(),
+            name = user.name.lowercase(),
+            email = user.userId.lowercase(),
             remind = user.remind ?: false
         )
         userRepository.save(savedUser)
