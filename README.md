@@ -17,7 +17,7 @@ Create the database at the root of the project:
 ```
 Run the ddl script to create the tables
 ```shell
-> cat resources/ddl.sql | sqlite3 Crossward.db
+> cat src/main/resources/ddl.sql | sqlite3 Crossward.db
 ```
 
 Create an `application-local.properties` file in the resources folder:
@@ -43,8 +43,8 @@ Run using the bootRun task
 ## Example requests
 ```shell
 curl --request GET \
-  --url http://localhost:8080/crossward/api/players/ids/1
+  --url http://localhost:8080/crossward/api/users/ids/1
   
 curl --request GET \
-  --url http://localhost:8080/crossward/api/players/names/Billy
+  --url http://localhost:8080/crossward/api/users/names/Billy
 ```
