@@ -6,7 +6,6 @@ import javax.persistence.*
 @Entity
 @Table(name = "IS_MEMBER")
 class IsMember(
-    @Id @Column(name = "user_id") val userId: Int,
-    @Id @Column(name = "group_id") val groupId: Int
-): Serializable {
-}
+    @Id @Column(name = "user_id") val userId: String,
+    @Id @Column(name = "group_id") val groupId: String
+): Serializable

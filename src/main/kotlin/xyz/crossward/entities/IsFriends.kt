@@ -14,5 +14,4 @@ class IsFriends(
 
     @Id @Column(name = "user_id_2")
     val userId2: String
-): Serializable {
-}
+): Serializable

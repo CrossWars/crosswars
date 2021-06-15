@@ -18,8 +18,7 @@ import javax.persistence.*
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 class Entry(
-    @Id @Column(name = "user_id") val userId: Int,
+    @Id @Column(name = "user_id") val userId: String,
     @Column val date: LocalDate,
     @Column val time: Int,
-) {
-}
+)

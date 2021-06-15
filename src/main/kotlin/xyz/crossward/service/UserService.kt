@@ -50,7 +50,7 @@ class UserService(
             email = user.email.lowercase(),
             name = user.name.lowercase(),
             userId = user.userId,
-            remind = user.remind
+            remind = user.remind ?: false
         )
         userRepository.save(savedUser)
         return savedUser

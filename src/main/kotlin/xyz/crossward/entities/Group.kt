@@ -7,6 +7,5 @@ import javax.persistence.Table
 @Entity
 @Table(name = "GROUP")
 class Group(
-    @Id val id: Int
-) {
-}
+    @Id val id: String
+)
