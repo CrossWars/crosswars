@@ -13,10 +13,16 @@ class CrosswardController(
     var service: UserService
 ) {
 
-    @PostMapping("/users")
+    @PostMapping("/users/telegram")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createTelegramUser(@RequestBody user: User): User {
+        return service.createTelegramUser(user)
+    }
+
+    @PostMapping("/users/website")
     @ResponseStatus(HttpStatus.CREATED)
     fun createUser(@RequestBody user: User): User {
-        return service.createUser(user)
+        return service.createWebsiteUser(user)
     }
 
     @GetMapping("/users/ids/{id}")
