@@ -9,7 +9,7 @@ import java.util.stream.Stream
 @Repository
 interface UserRepository : CrudRepository<User, Int> {
 
-    @Query("select * from USER u where u.name = :name")
+    @Query("select u from User u where u.name = :name")
     fun findUserByName(name: String): Stream<User>
 
     @Query("select u from User u where u.email = :email")

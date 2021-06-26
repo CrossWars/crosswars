@@ -16,7 +16,7 @@ import javax.persistence.*
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(SnakeCaseStrategy::class)
-data class User(
+data class User (
     @Id @Column(name = "user_id") val userId: String, // telegram ID for telegram users, email for website users
     @Column val name: String,
     @Column val remind: Boolean?,
