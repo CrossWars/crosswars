@@ -18,13 +18,13 @@ telegram [leaderboard bot](https://github.com/RobertWetzler/CrosswordLeaderboard
 Create the database at the root of the project:
 
 ```shell
-> sqlite3 Crossward.db
+sqlite3 Crossward.db
 ```
 
 Run the ddl script to create the tables
 
 ```shell
-> cat src/main/resources/ddl.sql | sqlite3 Crossward.db
+cat src/main/resources/crossward.sql | sqlite3 Crossward.db
 ```
 
 Create an `application-local.properties` file in the resources folder:
