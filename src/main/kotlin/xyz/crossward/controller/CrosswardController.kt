@@ -27,7 +27,7 @@ class CrosswardController(
 
     @GetMapping("/users/ids/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getUserById(@PathVariable("id") id: Int): ResponseEntity<User> {
+    fun getUserById(@PathVariable("id") id: String): ResponseEntity<User> {
         return ResponseEntity.ok(service.findUserById(id))
     }
 

@@ -7,7 +7,7 @@ import xyz.crossward.entities.User
 import java.util.stream.Stream
 
 @Repository
-interface UserRepository : CrudRepository<User, Int> {
+interface UserRepository : CrudRepository<User, String> {
 
     @Query("select u from User u where u.name = :name")
     fun findUserByName(name: String): Stream<User>

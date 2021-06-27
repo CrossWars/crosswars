@@ -30,7 +30,7 @@ class UserService(
         return "nothing found"
     }
 
-    fun findUserById(id: Int): User {
+    fun findUserById(id: String): User {
         return userRepository.findById(id).unwrap()
             ?: throw NoContentException("Could not find user with id $id")
     }
@@ -52,6 +52,9 @@ class UserService(
      * @return user saved to the database
      */
     fun createTelegramUser(user: User): User {
+        if (userRepository.existsById(user.userId)) {
+            throw BadRequestException("A user with ID ${user.userId} already exists")
+        }
         // create a telegram user
         val savedUser = User(
             userId = user.userId,
@@ -70,6 +73,9 @@ class UserService(
      * @return user saved to the database
      */
     fun createWebsiteUser(user: User): User {
+        if (userRepository.existsById(user.userId)) {
+            throw BadRequestException("A user with ID ${user.userId} already exists")
+        }
         val savedUser = User(
             userId = user.userId.lowercase(),
             name = user.name.lowercase(),
@@ -78,6 +84,10 @@ class UserService(
         )
         userRepository.save(savedUser)
         return savedUser
+    }
+
+    fun userExists(userId: String): Boolean {
+        return userRepository.existsById(userId)
     }
 }
 

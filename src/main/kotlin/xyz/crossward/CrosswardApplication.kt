@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class CrosswardApplication
 
 fun main(args: Array<String>) {
-	runApplication<CrosswardApplication>(*args)
+    runApplication<CrosswardApplication>(*args)
 }
