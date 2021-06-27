@@ -16,6 +16,7 @@ class SQLiteDialect : Dialect() {
         registerColumnType(Types.SMALLINT, "smallint")
         registerColumnType(Types.INTEGER, "integer")
         registerColumnType(Types.VARCHAR, "char")
+        registerColumnType(Types.DATE, "date")
     }
 
     override fun getIdentityColumnSupport(): IdentityColumnSupport {
