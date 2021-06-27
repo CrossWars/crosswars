@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS ENTRY (
 
 -- Table: GROUP
 CREATE TABLE IF NOT EXISTS [GROUP] (
-    ID TEXT PRIMARY KEY
+    group_id TEXT PRIMARY KEY,
+    name TEXT
 );
 
 -- Table: IS_FRIENDS
@@ -22,8 +23,8 @@ CREATE TABLE [IS_FRIENDS ] (
 
 -- Table: IS_MEMBER
 CREATE TABLE IS_MEMBER (
-    USER_ID  TEXT REFERENCES USER (user_id),
-    GROUP_ID TEXT REFERENCES [GROUP] (ID)
+    user_id  TEXT REFERENCES USER (user_id),
+    group_id TEXT REFERENCES [GROUP] (group_id)
 );
 
 -- Table: USER
@@ -32,4 +33,15 @@ CREATE TABLE USER (
     name    TEXT    NOT NULL,
     remind  BOOLEAN NOT NULL DEFAULT (1),
     email   VARCHAR UNIQUE
+);
+
+-- Table: WINS
+CREATE TABLE WINS (
+    user_id  TEXT    REFERENCES USER (user_id),
+    group_id INTEGER REFERENCES [GROUP] (group_id),
+    wins     INTEGER NOT NULL,
+    PRIMARY KEY (
+        user_id,
+        group_id
+    )
 );

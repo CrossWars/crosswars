@@ -7,8 +7,9 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "IS_MEMBER")
-class IsMember(
-    @Id @Column(name = "user_id") val userId: String,
-    @Id @Column(name = "group_id") val groupId: String
+@Table(name = "WINS")
+class Wins(
+    @Id @Column(name = "user_id") var userId: String,
+    @Id @Column(name = "group_id") var groupId: String,
+    @Column var wins: Int
 ) : Serializable
