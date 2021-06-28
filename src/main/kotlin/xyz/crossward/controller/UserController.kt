@@ -9,7 +9,7 @@ import xyz.crossward.service.UserService
 
 @RestController
 @RequestMapping("/api")
-class CrosswardController(
+class UserController(
     var service: UserService
 ) {
 

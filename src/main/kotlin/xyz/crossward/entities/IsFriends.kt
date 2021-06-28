@@ -11,7 +11,7 @@ import javax.persistence.Table
  */
 @Entity
 @Table(name = "IS_FRIENDS")
-class IsFriends(
+data class IsFriends(
     @Id @Column(name = "user_id_1")
     val userId1: String,
 

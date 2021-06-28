@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "IS_MEMBER")
-class IsMember(
+data class IsMember(
     @Id @Column(name = "user_id") val userId: String,
     @Id @Column(name = "group_id") val groupId: String
 ) : Serializable

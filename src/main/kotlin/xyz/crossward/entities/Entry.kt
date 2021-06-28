@@ -10,8 +10,8 @@ import javax.persistence.*
         UniqueConstraint(columnNames = ["date", "user_id"])
     ]
 )
-class Entry(
+data class Entry(
     @Id @Column(name = "user_id") val userId: String,
-    @Column val date: LocalDate,
+    @Column val date: LocalDate? = null,
     @Column val time: Int,
 )

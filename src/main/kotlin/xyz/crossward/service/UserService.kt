@@ -5,7 +5,7 @@ import xyz.crossward.entities.User
 import xyz.crossward.exception.BadRequestException
 import xyz.crossward.exception.NoContentException
 import xyz.crossward.repository.UserRepository
-import java.util.*
+import xyz.crossward.util.unwrap
 import javax.sql.DataSource
 
 @Service
@@ -90,6 +90,3 @@ class UserService(
         return userRepository.existsById(userId)
     }
 }
-
-// Convert java Optional into kotlin null safety
-fun <T> Optional<T>.unwrap(): T? = orElse(null)
