@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.5.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.spring") version "1.5.10"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.5.10"
+    kotlin("jvm") version "1.5.20"
+    kotlin("plugin.spring") version "1.5.20"
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.5.20"
 }
 
 group = "xyz.crossward"
@@ -13,7 +13,10 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_16
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "16"
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "16"
+    }
 }
 
 repositories {
@@ -42,13 +45,6 @@ dependencies {
     testImplementation("io.kotest:kotest-property-jvm:4.6.0")
     testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "16"
-    }
 }
 
 tasks.withType<Test> {
