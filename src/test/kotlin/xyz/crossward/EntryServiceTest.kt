@@ -27,7 +27,6 @@ class EntryServiceTest {
         entryService.getPuzzleDate(thu5pm) shouldBe thu5pm.toLocalDate()
         entryService.getPuzzleDate(fri5pm) shouldBe fri5pm.toLocalDate()
 
-
         val mon11pm = ZonedDateTime.parse("2021-06-28T23:00:00.000000-04:00[US/Eastern]")
         val tus11pm = ZonedDateTime.parse("2021-06-29T23:00:00.000000-04:00[US/Eastern]")
         val wed11pm = ZonedDateTime.parse("2021-06-30T23:00:00.000000-04:00[US/Eastern]")
