@@ -64,22 +64,22 @@ class EntryService(
      * Saturday: 10PM (Friday) - 6PM
      * Sunday: 6PM (Saturday) - 6PM
      */
-    fun getPuzzleDate(currentDate: ZonedDateTime): LocalDate =
-        when (currentDate.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)) {
+    fun getPuzzleDate(date: ZonedDateTime): LocalDate =
+        when (date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)) {
             in listOf("Mon", "Tue", "Wed", "Thu", "Fri") ->
-                if (currentDate.toLocalTime().isAfter(LocalTime.parse("22:00:00"))) {
-                    currentDate.plusDays(1).toLocalDate()
+                if (date.toLocalTime().isAfter(LocalTime.parse("22:00:00"))) {
+                    date.plusDays(1).toLocalDate()
                 } else {
-                    currentDate.toLocalDate()
+                    date.toLocalDate()
                 }
             in listOf("Sat", "Sun") ->
-                if (currentDate.toLocalTime().isAfter(LocalTime.parse("18:00:00"))) {
-                    currentDate.plusDays(1).toLocalDate()
+                if (date.toLocalTime().isAfter(LocalTime.parse("18:00:00"))) {
+                    date.plusDays(1).toLocalDate()
                 } else {
-                    currentDate.toLocalDate()
+                    date.toLocalDate()
                 }
             else ->
                 // Return the current date if for whatever reason the code gets here
-                currentDate.toLocalDate()
+                date.toLocalDate()
         }
 }
