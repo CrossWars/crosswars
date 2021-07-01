@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service
 import xyz.crossward.entities.Entry
 import xyz.crossward.exception.BadRequestException
 import xyz.crossward.repository.EntryRepository
+import xyz.crossward.util.currentDateInEST
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.util.*
@@ -30,11 +30,11 @@ class EntryService(
             else
                 throw BadRequestException(
                     "Date ${entry.date} is not a valid puzzle date. " +
-                            "Time in New York: ${ZonedDateTime.now(ZoneId.of("US/Eastern"))}"
+                            "Time in New York: ${currentDateInEST()}"
                 )
         } else {
             // use current puzzle date
-            getPuzzleDate(ZonedDateTime.now(ZoneId.of("US/Eastern")))
+            getPuzzleDate(currentDateInEST())
         }
 
         val savedEntry = Entry(
@@ -51,7 +51,7 @@ class EntryService(
      * Valid dates are any date before or on the current puzzle date. Nothing in the future is allowed
      */
     private fun isValidPuzzleDate(date: LocalDate): Boolean {
-        val currentPuzzleDate = getPuzzleDate(ZonedDateTime.now(ZoneId.of("US/Eastern")))
+        val currentPuzzleDate = getPuzzleDate(currentDateInEST())
         return !date.isAfter(currentPuzzleDate)
     }
 
@@ -82,4 +82,5 @@ class EntryService(
                 // Return the current date if for whatever reason the code gets here
                 date.toLocalDate()
         }
+
 }
