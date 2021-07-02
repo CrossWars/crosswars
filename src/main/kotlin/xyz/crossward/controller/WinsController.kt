@@ -31,7 +31,7 @@ class WinsController(
     @GetMapping("/{userId}/{groupId}")
     fun getWins(
         @PathVariable("userId") userId: String,
-        @PathVariable groupId: String
+        @PathVariable("groupId") groupId: String
     ): Wins {
         return winsService.getWins(userId, groupId)
     }
