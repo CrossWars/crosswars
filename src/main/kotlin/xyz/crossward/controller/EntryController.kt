@@ -12,7 +12,6 @@ import xyz.crossward.service.EntryService
 class EntryController(
     private val entryService: EntryService
 ) {
-
     @PostMapping("/entries")
     fun recordEntry(@RequestBody entry: Entry): Entry {
         return entryService.recordEntry(entry)
