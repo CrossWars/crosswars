@@ -25,7 +25,6 @@ class WinsService(
         winsRepository.findById(WinsId(userId, groupId)).unwrap()
             ?: throw NoContentException("No wins could be found for user id $userId in group id $groupId")
 
-    fun updateWinsRecord(wins: Wins): Wins {
-        return winsRepository.save(wins)
-    }
+    fun updateWinsRecord(wins: Wins): Wins =
+        winsRepository.save(wins)
 }
