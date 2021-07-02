@@ -30,20 +30,17 @@ class UserService(
         return "nothing found"
     }
 
-    fun findUserById(id: String): User {
-        return userRepository.findById(id).unwrap()
+    fun findUserById(id: String): User =
+        userRepository.findById(id).unwrap()
             ?: throw NoContentException("Could not find user with id $id")
-    }
 
-    fun findUserByEmail(email: String): User {
-        return userRepository.findUserByEmail(email.lowercase()).findFirst().unwrap()
+    fun findUserByEmail(email: String): User =
+        userRepository.findUserByEmail(email.lowercase()).findFirst().unwrap()
             ?: throw NoContentException("Could not find user with email $email")
-    }
 
-    fun findUserByName(name: String): User {
-        return userRepository.findUserByName(name.lowercase()).findFirst().unwrap()
+    fun findUserByName(name: String): User =
+        userRepository.findUserByName(name.lowercase()).findFirst().unwrap()
             ?: throw NoContentException("Could not find user with name $name")
-    }
 
     /**
      * Creates a telegram user (email is optional)
@@ -86,7 +83,6 @@ class UserService(
         return savedUser
     }
 
-    fun userExists(userId: String): Boolean {
-        return userRepository.existsById(userId)
-    }
+    fun userExists(userId: String): Boolean =
+        userRepository.existsById(userId)
 }

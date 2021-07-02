@@ -1,15 +1,25 @@
 package xyz.crossward.repository
 
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import xyz.crossward.entities.Win
-import xyz.crossward.entities.WinId
+import org.springframework.transaction.annotation.Transactional
+import xyz.crossward.entities.Wins
+import xyz.crossward.entities.WinsId
 import java.util.stream.Stream
 
 @Repository
-interface WinsRepository : CrudRepository<Win, WinId> {
+interface WinsRepository : CrudRepository<Wins, WinsId> {
 
-    @Query("select w from Win w where w.userId = :userId and w.groupId = :groupId")
-    fun findByUserAndGroup(userId: String, groupId: String): Stream<Win>
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        update Wins w 
+        set w.wins = w.wins + 1 
+        where w.userId = :userId and w.groupId = :groupId
+        """
+    )
+    fun addWin(userId: String, groupId: String)
 }

@@ -50,10 +50,8 @@ class EntryService(
     /**
      * Valid dates are any date before or on the current puzzle date. Nothing in the future is allowed
      */
-    private fun isValidPuzzleDate(date: LocalDate): Boolean {
-        val currentPuzzleDate = getPuzzleDate(currentDateInEST())
-        return !date.isAfter(currentPuzzleDate)
-    }
+    private fun isValidPuzzleDate(date: LocalDate): Boolean =
+        !date.isAfter(getPuzzleDate(currentDateInEST()))
 
     /**
      * Get the current NYT puzzle date.
