@@ -35,6 +35,7 @@ driverClassName=org.sqlite.JDBC
 url=jdbc:sqlite:Crossward.db
 username=sa
 password=sa
+google.client-id=<oauth2-client-id>
 ```
 
 ### Build & Run

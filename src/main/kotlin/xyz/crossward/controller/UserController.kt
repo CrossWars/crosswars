@@ -5,11 +5,15 @@ import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import xyz.crossward.entities.User
+import xyz.crossward.service.GoogleAuthService
 import xyz.crossward.service.UserService
+import javax.servlet.http.HttpServletRequest
+
 
 @RestController
 @RequestMapping("/api")
 class UserController(
+    var googleAuthService: GoogleAuthService,
     var service: UserService
 ) {
 
@@ -27,12 +31,15 @@ class UserController(
 
     @GetMapping("/users/ids/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun getUserById(@PathVariable("id") id: String): ResponseEntity<User> {
+    @Transactional(readOnly = true)
+    fun getUserById(@PathVariable("id") id: String, request: HttpServletRequest): ResponseEntity<User> {
+        val user: User = googleAuthService.mapTokenToUser(request.getHeader("Authorization").split(" ")[1])
         return ResponseEntity.ok(service.findUserById(id))
     }
 
     @GetMapping("/users/emails/{email}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(readOnly = true)
     fun getUserByEmail(@PathVariable("email") email: String): ResponseEntity<User> {
         return ResponseEntity.ok(service.findUserByEmail(email))
     }
