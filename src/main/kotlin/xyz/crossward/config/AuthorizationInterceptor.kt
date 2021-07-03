@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse
 
 
 /**
- * Intercept all requests to the app and make sure the
+ * Intercept all requests and check for the Authorized annotation. If it exists, authorize the request coming in with
+ * either auth token or google api token.
  */
 @Component
 class AuthorizationInterceptor(
@@ -19,10 +20,6 @@ class AuthorizationInterceptor(
     private val googleAuthService: GoogleAuthService
 ) : HandlerInterceptor {
 
-    /**
-     * Intercept all requests and check for the Authorized annotation. If it exists, authorize the request coming in with
-     * either auth token or google api token.
-     */
     @Transactional
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         var isAuthorized = false
