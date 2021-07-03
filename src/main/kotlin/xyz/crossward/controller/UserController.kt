@@ -7,14 +7,12 @@ import org.springframework.web.bind.annotation.*
 import xyz.crossward.config.Authorized
 import xyz.crossward.entities.User
 import xyz.crossward.exception.BadRequestException
-import xyz.crossward.service.GoogleAuthService
 import xyz.crossward.service.UserService
 
 
 @RestController
 @RequestMapping("/api")
 class UserController(
-    var googleAuthService: GoogleAuthService,
     var service: UserService
 ) {
 

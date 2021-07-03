@@ -38,10 +38,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-//    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    // Google api
     implementation("com.google.api-client:google-api-client:1.32.1")
 
     // Database
