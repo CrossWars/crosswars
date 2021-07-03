@@ -5,23 +5,30 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import org.springframework.stereotype.Service
-import xyz.crossward.config.GoogleAuthConfig
+import xyz.crossward.config.AuthConfig
 import xyz.crossward.entities.User
 import xyz.crossward.exception.UnauthorizedException
 
 @Service
 class GoogleAuthService(
-    googleAuthConfig: GoogleAuthConfig,
-    private var service: UserService
+    authConfig: AuthConfig,
+    private val service: UserService
 ) {
     private val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory())
-        .setAudience(listOf(googleAuthConfig.clientId))
+        .setAudience(listOf(authConfig.googleClientId))
         .build()
 
     fun isValidated(idToken: String): Boolean =
         verifier.verify(idToken)?.let { true } ?: false
 
+    /**
+     * Uses the email in idToken to find the user in the database
+     *
+     * @param idToken the google oauth idToken
+     * @return a User object
+     */
     fun mapTokenToUser(idToken: String): User =
+        // TODO: see if there's a way to handle token expired exceptions
         verifier.verify(idToken)?.let { googleIdToken ->
             val payload: GoogleIdToken.Payload = googleIdToken.payload
 
@@ -38,5 +45,5 @@ class GoogleAuthService(
             val givenName = payload["given_name"]
 
             service.findUserByEmail(email)
-        } ?: throw UnauthorizedException("User is not authorized")
+        } ?: throw UnauthorizedException("Google id token is invalid")
 }
