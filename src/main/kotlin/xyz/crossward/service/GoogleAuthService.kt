@@ -18,7 +18,7 @@ class GoogleAuthService(
         .setAudience(listOf(authConfig.googleClientId))
         .build()
 
-    fun isValidated(idToken: String): Boolean =
+    fun isValidToken(idToken: String): Boolean =
         verifier.verify(idToken)?.let { true } ?: false
 
     /**
@@ -33,16 +33,16 @@ class GoogleAuthService(
             val payload: GoogleIdToken.Payload = googleIdToken.payload
 
             // Print user identifier
-            val userId: String = payload.subject
+//            val userId: String = payload.subject
 
             // Get profile information from payload
             val email: String = payload.email
-            val emailVerified: Boolean = java.lang.Boolean.valueOf(payload.emailVerified)
-            val name = payload["name"]
-            val pictureUrl = payload["picture"]
-            val locale = payload["locale"]
-            val familyName = payload["family_name"]
-            val givenName = payload["given_name"]
+//            val emailVerified: Boolean = java.lang.Boolean.valueOf(payload.emailVerified)
+//            val name = payload["name"]
+//            val pictureUrl = payload["picture"]
+//            val locale = payload["locale"]
+//            val familyName = payload["family_name"]
+//            val givenName = payload["given_name"]
 
             service.findUserByEmail(email)
         } ?: throw UnauthorizedException("Google id token is invalid")
