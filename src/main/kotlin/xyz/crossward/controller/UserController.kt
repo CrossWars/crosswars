@@ -37,7 +37,7 @@ class UserController(
         return ResponseEntity.ok(service.findUserByEmail(email))
     }
 
-    @GetMapping("users/names/{name}")
+    @GetMapping("/users/names/{name}")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getUserByName(@PathVariable("name") name: String): ResponseEntity<User> {
