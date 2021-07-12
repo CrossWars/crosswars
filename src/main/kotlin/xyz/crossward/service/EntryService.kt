@@ -2,6 +2,8 @@ package xyz.crossward.service
 
 import org.springframework.stereotype.Service
 import xyz.crossward.entities.Entry
+import xyz.crossward.entities.entryDateString
+import xyz.crossward.entities.localDate
 import xyz.crossward.exception.BadRequestException
 import xyz.crossward.repository.EntryRepository
 import xyz.crossward.util.currentDateInEST
@@ -24,15 +26,15 @@ class EntryService(
      * @param entry Entry object to insert into the database
      */
     fun recordEntry(entry: Entry): Entry {
-        val puzzleDate: LocalDate = if (entry.date != null) {
-            if (isValidPuzzleDate(entry.date))
-                entry.date
+        val puzzleDate: LocalDate? = entry.localDate()?.let {
+            if (isValidPuzzleDate(it))
+                it
             else
                 throw BadRequestException(
                     "Date ${entry.date} is not a valid puzzle date. " +
                             "Time in New York: ${currentDateInEST()}"
                 )
-        } else {
+        } ?: run {
             // use current puzzle date
             getPuzzleDate(currentDateInEST())
         }
@@ -40,7 +42,7 @@ class EntryService(
         val savedEntry = Entry(
             userId = entry.userId,
             time = entry.time,
-            date = puzzleDate
+            date = puzzleDate?.entryDateString()
         )
 
         entryRepository.save(savedEntry)
