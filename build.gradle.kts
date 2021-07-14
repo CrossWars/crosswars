@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.5.20"
     kotlin("plugin.spring") version "1.5.20"
     id("org.jetbrains.kotlin.plugin.jpa") version "1.5.20"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.20"
 }
 
 group = "xyz.crossward"
@@ -19,6 +20,15 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+// Allow spring to extend classes with these annotations
+allOpen {
+    annotation("org.springframework.stereotype.Component")
+    annotation("org.springframework.stereotype.Async")
+    annotation("org.springframework.stereotype.Transactional")
+    annotation("org.springframework.stereotype.Cacheable")
+    annotation("org.springframework.stereotype.SpringBootTest")
+}
+
 repositories {
     mavenCentral()
 }
@@ -29,6 +39,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    // Google api
+    implementation("com.google.api-client:google-api-client:1.32.1")
 
     // Database
     implementation("org.xerial:sqlite-jdbc:3.34.0")
