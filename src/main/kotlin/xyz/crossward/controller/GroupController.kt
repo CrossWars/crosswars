@@ -27,7 +27,7 @@ class GroupController(
         return service.createWebsiteGroup(group)
     }
 
-    @PostMapping("/add_user")
+    @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     fun addUserToGroup(@RequestParam("group_id", required = true) groupId: String,
                         @RequestParam("user_id", required = true) userId: String): IsMember{

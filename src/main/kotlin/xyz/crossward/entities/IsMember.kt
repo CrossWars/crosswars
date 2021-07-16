@@ -11,7 +11,7 @@ data class IsMember(
     @Id @Column(name = "group_id") val groupId: String
 ) : Serializable
 
-class IsMemberId(
+data class IsMemberId(
         val userId: String = "",
         val groupId: String = ""
 ) : Serializable

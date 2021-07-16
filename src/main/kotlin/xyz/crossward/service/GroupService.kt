@@ -91,15 +91,16 @@ class GroupService(
      * @return the created IsMember relation
      */
     fun addUserToGroup(groupId: String, userId: String): IsMember {
-        if (isMemberRepository.existsById(IsMemberId(userId, groupId))) {
-            throw BadRequestException("A user with ID ${userId} is already a member of a group with ID ${groupId}")
+        if (!userRepository.existsById(userId)) {
+            throw BadRequestException("A user with ID ${userId} does not exist")
         }
         if (!groupRepository.existsById(groupId)) {
             throw BadRequestException("A group with ID ${groupId} does not exist")
         }
-        if (!userRepository.existsById(userId)) {
-            throw BadRequestException("A user with ID ${userId} does not exist")
+        if (isMemberRepository.existsById(IsMemberId(userId, groupId))) {
+            throw BadRequestException("A user with ID ${userId} is already a member of a group with ID ${groupId}")
         }
+
         val savedIsMember = IsMember(
                 userId = userId,
                 groupId = groupId

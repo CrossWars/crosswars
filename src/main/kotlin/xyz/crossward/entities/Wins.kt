@@ -12,7 +12,7 @@ data class Wins(
     @Column var wins: Int
 ) : Serializable
 
-class WinsId(
+data class WinsId(
     val userId: String = "",
     val groupId: String = ""
 ) : Serializable
