@@ -75,7 +75,7 @@ class UserController(
             return ResponseEntity.ok(user)
         } else {
             name?.let {
-                return ResponseEntity.ok(service.findUserByEmail(name))
+                return ResponseEntity.ok(service.findUserByName(name))
             } ?: throw BadRequestException("user_name query param is required if using auth token")
         }
     }

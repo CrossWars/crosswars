@@ -9,37 +9,37 @@ import xyz.crossward.service.GroupService
 import java.net.URLDecoder
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/groups")
 class GroupController(
         var service: GroupService
 ) {
 
-    @PostMapping("/groups/telegram")
+    @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
     fun createTelegramGroup(@RequestBody group: Group): Group {
         return service.createTelegramGroup(group)
     }
 
-    @PostMapping("/groups/website")
+    @PostMapping("/website")
     @ResponseStatus(HttpStatus.CREATED)
     fun createGroup(@RequestBody group: Group): Group {
         return service.createWebsiteGroup(group)
     }
 
-    @GetMapping("/groups/ids/{id}")
+    @GetMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupById(@PathVariable("id") id: String): ResponseEntity<Group> {
+    fun getGroupById(@RequestParam("group_id", required = true) group_id: String,
+    ): ResponseEntity<Group> {
 
-        return ResponseEntity.ok(service.findGroupById(id))
+        return ResponseEntity.ok(service.findGroupById(group_id))
     }
 
 
-    @GetMapping("/groups/names/{name}")
+    @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupByName(@PathVariable("name") name: String): ResponseEntity<Group
-            > {
+    fun getGroupByName(@RequestParam("group_name", required = true) name: String): ResponseEntity<Group> {
         //var decoded = URLDecoder.decode(name, "UTF-8");
         return ResponseEntity.ok(service.findGroupByName(name))
     }
