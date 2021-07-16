@@ -31,9 +31,17 @@ class GroupService(
                 ?: throw NoContentException("Could not find group with name $name")
     }
 
-    fun findUsersByGroupId(group_id: String): List<User> {
-        return groupRepository.findUsersByGroupId(group_id).toList()
-                ?: throw NoContentException("Could not find group with ID $group_id or group had no users")
+    /**
+     * Finds all users in a given group
+     *
+     * @param groupId the id of the group to get members from
+     * @return A list of the users that are members of the given group
+     */
+    fun findUsersByGroupId(groupId: String): List<User> {
+        if (!groupRepository.existsById(groupId)) {
+            throw BadRequestException("A group with ID ${groupId} does not exist")
+        }
+        return groupRepository.findUsersByGroupId(groupId).toList()
     }
 
     /**
@@ -80,6 +88,7 @@ class GroupService(
      *
      * @param groupId The groupId of the group to add the user to
      * @param userID The userId of the user to add
+     * @return the created IsMember relation
      */
     fun addUserToGroup(groupId: String, userId: String): IsMember {
         if (isMemberRepository.existsById(IsMemberId(userId, groupId))) {

@@ -8,7 +8,6 @@ import xyz.crossward.entities.Group
 import xyz.crossward.entities.User
 import xyz.crossward.entities.IsMember
 import xyz.crossward.service.GroupService
-import java.net.URLDecoder
 
 @RestController
 @RequestMapping("/api/groups")
@@ -30,15 +29,15 @@ class GroupController(
 
     @PostMapping("/add_user")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addUserToGroup(@RequestParam("groupId", required = true) groupId: String,
-                        @RequestParam("userId", required = true) userId: String): IsMember{
+    fun addUserToGroup(@RequestParam("group_id", required = true) groupId: String,
+                        @RequestParam("user_id", required = true) userId: String): IsMember{
         return service.addUserToGroup(groupId, userId)
     }
 
     @GetMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupById(@RequestParam("groupId", required = true) groupId: String,
+    fun getGroupById(@RequestParam("group_id", required = true) groupId: String,
     ): ResponseEntity<Group> {
         return ResponseEntity.ok(service.findGroupById(groupId))
     }
@@ -47,14 +46,14 @@ class GroupController(
     @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupByName(@RequestParam("groupName", required = true) groupName: String): ResponseEntity<Group> { return ResponseEntity.ok(service.findGroupByName(groupName))
+    fun getGroupByName(@RequestParam("group_name", required = true) groupName: String): ResponseEntity<Group> { return ResponseEntity.ok(service.findGroupByName(groupName))
     }
 
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getUsersByGroupId(@RequestParam("groupId", required = true) groupId: String): ResponseEntity<List<User>> {
+    fun getUsersByGroupId(@RequestParam("group_id", required = true) groupId: String): ResponseEntity<List<User>> {
         return ResponseEntity.ok(service.findUsersByGroupId(groupId))
     }
 
