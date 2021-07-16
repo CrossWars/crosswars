@@ -32,7 +32,6 @@ class GroupController(
     @Transactional(readOnly = true)
     fun getGroupById(@RequestParam("group_id", required = true) group_id: String,
     ): ResponseEntity<Group> {
-
         return ResponseEntity.ok(service.findGroupById(group_id))
     }
 
@@ -40,9 +39,7 @@ class GroupController(
     @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupByName(@RequestParam("group_name", required = true) name: String): ResponseEntity<Group> {
-        //var decoded = URLDecoder.decode(name, "UTF-8");
-        return ResponseEntity.ok(service.findGroupByName(name))
+    fun getGroupByName(@RequestParam("group_name", required = true) name: String): ResponseEntity<Group> { return ResponseEntity.ok(service.findGroupByName(name))
     }
 
 
@@ -50,7 +47,6 @@ class GroupController(
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getUsersByGroupId(@RequestParam("group_id", required = true) group_id: String): ResponseEntity<List<User>> {
-        //var decoded = URLDecoder.decode(name, "UTF-8");
         return ResponseEntity.ok(service.findUsersByGroupId(group_id))
     }
 
