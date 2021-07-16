@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import xyz.crossward.entities.Group
+import xyz.crossward.entities.User
 import xyz.crossward.service.GroupService
 import java.net.URLDecoder
 
@@ -45,6 +46,13 @@ class GroupController(
     }
 
 
+    @GetMapping("/users")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional(readOnly = true)
+    fun getUsersByGroupId(@RequestParam("group_id", required = true) group_id: String): ResponseEntity<List<User>> {
+        //var decoded = URLDecoder.decode(name, "UTF-8");
+        return ResponseEntity.ok(service.findUsersByGroupId(group_id))
+    }
 
 
 }

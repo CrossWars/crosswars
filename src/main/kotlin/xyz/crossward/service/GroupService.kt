@@ -2,6 +2,7 @@ package xyz.crossward.service
 
 import org.springframework.stereotype.Service
 import xyz.crossward.entities.Group
+import xyz.crossward.entities.User
 import xyz.crossward.exception.BadRequestException
 import xyz.crossward.exception.NoContentException
 import xyz.crossward.repository.GroupRepository
@@ -13,14 +14,19 @@ class GroupService(
 ) {
 
 
-    fun findGroupById(id: String): Group {
-        return groupRepository.findById(id).unwrap()
-                ?: throw NoContentException("Could not find group with id $id")
+    fun findGroupById(group_id: String): Group {
+        return groupRepository.findById(group_id).unwrap()
+                ?: throw NoContentException("Could not find group with id $group_id")
     }
 
     fun findGroupByName(name: String): Group {
         return groupRepository.findGroupByName(name.lowercase()).findFirst().unwrap()
                 ?: throw NoContentException("Could not find group with name $name")
+    }
+
+    fun findUsersByGroupId(group_id: String): List<User> {
+        return groupRepository.findUsersByGroupId(group_id).toList()
+                ?: throw NoContentException("Could not find group with ID $group_id or group had no users")
     }
 
     /**
