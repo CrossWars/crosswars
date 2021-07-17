@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS ENTRY (
     )
 );
 
--- Table: GROUP
-CREATE TABLE IF NOT EXISTS [GROUP] (
+-- Table: CROSSGROUP
+CREATE TABLE IF NOT EXISTS CROSSGROUP (
     group_id TEXT PRIMARY KEY,
     name TEXT
 );
@@ -24,7 +24,7 @@ CREATE TABLE [IS_FRIENDS ] (
 -- Table: IS_MEMBER
 CREATE TABLE IS_MEMBER (
     user_id  TEXT REFERENCES USER (user_id),
-    group_id TEXT REFERENCES [GROUP] (group_id)
+    group_id TEXT REFERENCES CROSSGROUP (group_id)
 );
 
 -- Table: USER
@@ -38,7 +38,7 @@ CREATE TABLE USER (
 -- Table: WINS
 CREATE TABLE WINS (
     user_id  TEXT    REFERENCES USER (user_id),
-    group_id INTEGER REFERENCES [GROUP] (group_id),
+    group_id INTEGER REFERENCES CROSSGROUP (group_id),
     wins     INTEGER NOT NULL,
     PRIMARY KEY (
         user_id,

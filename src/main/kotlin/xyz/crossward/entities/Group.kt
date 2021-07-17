@@ -6,7 +6,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "GROUP")
+@Table(name = "CROSSGROUP")
 data class Group(
     @Id val id: String,
     @Column val name: String
