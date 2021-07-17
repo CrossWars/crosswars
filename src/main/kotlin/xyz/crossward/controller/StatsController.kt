@@ -11,14 +11,14 @@ import xyz.crossward.service.StatsService
 class StatsController(
     var service: StatsService
 ) {
-    @GetMapping("/average")
+    @GetMapping("/averages")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getAverageTimeByUserId(
-        @RequestParam("user", required = false) user: String?
+        @RequestParam("user_id", required = false) userId: String?
     ): ResponseEntity<Double> {
         return ResponseEntity.ok(
-            user?.let {
+            userId?.let {
                 service.getAverageTimeByUserId(it)
             }
         )
@@ -28,10 +28,10 @@ class StatsController(
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getBestTimeByUserId(
-        @RequestParam("user", required = false) user: String?
+        @RequestParam("user_id", required = false) userId: String?
     ): ResponseEntity<Int> {
         return ResponseEntity.ok(
-            user?.let {
+            userId?.let {
                 service.getBestTimeByUserId(it)
             }
         )

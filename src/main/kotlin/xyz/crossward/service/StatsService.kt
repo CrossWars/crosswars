@@ -1,35 +1,33 @@
 package xyz.crossward.service
 
 import org.springframework.stereotype.Service
+import xyz.crossward.exception.BadRequestException
 import xyz.crossward.repository.EntryRepository
+import xyz.crossward.repository.UserRepository
+
 
 @Service
 class StatsService(
-    private val entryRepository: EntryRepository
+    private val entryRepository: EntryRepository,
+    private val userRepository: UserRepository
 ) {
     fun getAverageTimeByUserId(userId: String): Double {
-        val times = entryRepository.findTimesByUserId(userId)
-        var count = 0
-        var sum = 0.0
-        times.forEach {
-            it?.let {
-                count += 1
-                sum += it
-            }
+        if (!userRepository.existsById(userId)) {
+            throw BadRequestException("A user with ID ${userId} does not exist")
         }
-        return sum / count
+        val average = entryRepository.findTimesByUserId(userId).toList().average()
+        if (average.isNaN())
+        {
+            throw BadRequestException("No entries found for user with ID ${userId}")
+        }
+        return average
     }
 
     fun getBestTimeByUserId(userId: String): Int {
-        val times = entryRepository.findTimesByUserId(userId)
-        var best = Int.MAX_VALUE
-        times.forEach {
-            it?.let {
-                if (it < best) {
-                    best = it
-                }
-            }
+        if (!userRepository.existsById(userId)) {
+            throw BadRequestException("A user with ID ${userId} does not exist")
         }
-        return best
+        val times = entryRepository.findTimesByUserId(userId)
+        return times.min(Integer::compare).orElseThrow { throw BadRequestException("No entries found for user with ID ${userId}")}
     }
 }
