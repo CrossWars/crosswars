@@ -28,6 +28,6 @@ class StatsService(
             throw BadRequestException("A user with ID ${userId} does not exist")
         }
         val times = entryRepository.findTimesByUserId(userId)
-        return times.min(Integer::compare).orElseThrow { throw BadRequestException("No entries found for user with ID ${userId}")}
+        return times.toList()?.minOrNull() ?: throw BadRequestException("No entries found for user with ID: ${userId}")
     }
 }

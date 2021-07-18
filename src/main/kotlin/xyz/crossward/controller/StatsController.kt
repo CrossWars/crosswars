@@ -24,7 +24,7 @@ class StatsController(
         )
     }
 
-    @GetMapping("/best")
+    @GetMapping("/best_times")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getBestTimeByUserId(
