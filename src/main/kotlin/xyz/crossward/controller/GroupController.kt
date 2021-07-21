@@ -5,16 +5,15 @@ import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import xyz.crossward.entities.Group
-import xyz.crossward.entities.User
 import xyz.crossward.entities.IsMember
+import xyz.crossward.entities.User
 import xyz.crossward.service.GroupService
 
 @RestController
 @RequestMapping("/api/groups")
 class GroupController(
-        var service: GroupService
+    var service: GroupService
 ) {
-
     @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
     fun createTelegramGroup(@RequestBody group: Group): Group {
@@ -29,15 +28,18 @@ class GroupController(
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addUserToGroup(@RequestParam("group_id", required = true) groupId: String,
-                        @RequestParam("user_id", required = true) userId: String): IsMember{
+    fun addUserToGroup(
+        @RequestParam("group_id", required = true) groupId: String,
+        @RequestParam("user_id", required = true) userId: String
+    ): IsMember {
         return service.addUserToGroup(groupId, userId)
     }
 
     @GetMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupById(@RequestParam("group_id", required = true) groupId: String,
+    fun getGroupById(
+        @RequestParam("group_id", required = true) groupId: String,
     ): ResponseEntity<Group> {
         return ResponseEntity.ok(service.findGroupById(groupId))
     }
@@ -46,7 +48,8 @@ class GroupController(
     @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupByName(@RequestParam("group_name", required = true) groupName: String): ResponseEntity<Group> { return ResponseEntity.ok(service.findGroupByName(groupName))
+    fun getGroupByName(@RequestParam("group_name", required = true) groupName: String): ResponseEntity<Group> {
+        return ResponseEntity.ok(service.findGroupByName(groupName))
     }
 
 
@@ -56,8 +59,4 @@ class GroupController(
     fun getUsersByGroupId(@RequestParam("group_id", required = true) groupId: String): ResponseEntity<List<User>> {
         return ResponseEntity.ok(service.findUsersByGroupId(groupId))
     }
-
-
-
-
 }

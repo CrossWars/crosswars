@@ -17,7 +17,6 @@ import java.util.*
 class EntryService(
     private val entryRepository: EntryRepository
 ) {
-
     /**
      * Record a new entry into the database.
      *
@@ -26,7 +25,7 @@ class EntryService(
      * @param entry Entry object to insert into the database
      */
     fun recordEntry(entry: Entry): Entry {
-        val puzzleDate: LocalDate? = entry.localDate()?.let {
+        val puzzleDate: LocalDate = entry.localDate()?.let {
             if (isValidPuzzleDate(it))
                 it
             else
@@ -42,7 +41,7 @@ class EntryService(
         val savedEntry = Entry(
             userId = entry.userId,
             time = entry.time,
-            date = puzzleDate?.entryDateString()
+            date = puzzleDate.entryDateString()
         )
 
         entryRepository.save(savedEntry)
@@ -83,4 +82,19 @@ class EntryService(
                 date.toLocalDate()
         }
 
+    fun getEntries(userId: String, fromDate: String?, toDate: String?): List<Entry> =
+        // only fromDate is specified
+        if (fromDate != null && toDate == null) {
+            entryRepository.getEntriesByDateRange(
+                userId,
+                fromDate,
+                LocalDate.now().entryDateString()
+            ).toList()
+        }
+        // both fromDate and toDate are specified
+        else if (fromDate != null && toDate != null) {
+            entryRepository.getEntriesByDateRange(userId, fromDate, toDate).toList()
+        } else {
+            entryRepository.getAllEntries(userId).toList()
+        }
 }
