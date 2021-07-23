@@ -11,26 +11,26 @@ import xyz.crossward.service.UserService
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 class UserController(
     var service: UserService
 ) {
 
-    @PostMapping("/users/telegram")
+    @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
     @Authorized(googleIdToken = false)
     fun createTelegramUser(@RequestBody user: User): User {
         return service.createTelegramUser(user)
     }
 
-    @PostMapping("/users/website")
+    @PostMapping("/website")
     @ResponseStatus(HttpStatus.CREATED)
     @Authorized
     fun createUser(@RequestBody user: User): User {
         return service.createWebsiteUser(user)
     }
 
-    @GetMapping("/users/ids")
+    @GetMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     @Authorized
@@ -47,7 +47,7 @@ class UserController(
         }
     }
 
-    @GetMapping("/users/emails")
+    @GetMapping("/emails")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     @Authorized
@@ -64,7 +64,7 @@ class UserController(
         }
     }
 
-    @GetMapping("users/names")
+    @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getUserByName(

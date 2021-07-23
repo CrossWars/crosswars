@@ -12,6 +12,6 @@ data class IsMember(
 ) : Serializable
 
 data class IsMemberId(
-        val userId: String = "",
-        val groupId: String = ""
+    val userId: String = "",
+    val groupId: String = ""
 ) : Serializable

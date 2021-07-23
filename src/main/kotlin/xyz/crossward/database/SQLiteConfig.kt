@@ -10,7 +10,6 @@ import javax.sql.DataSource
 class SQLiteConfig(
     var env: Environment,
 ) {
-
     @Bean
     fun dataSource(): DataSource? {
         val dataSource = DriverManagerDataSource()

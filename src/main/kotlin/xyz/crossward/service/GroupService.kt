@@ -2,33 +2,31 @@ package xyz.crossward.service
 
 import org.springframework.stereotype.Service
 import xyz.crossward.entities.Group
-import xyz.crossward.entities.User
 import xyz.crossward.entities.IsMember
 import xyz.crossward.entities.IsMemberId
+import xyz.crossward.entities.User
 import xyz.crossward.exception.BadRequestException
 import xyz.crossward.exception.NoContentException
 import xyz.crossward.repository.GroupRepository
-import xyz.crossward.repository.UserRepository
 import xyz.crossward.repository.IsMemberRepository
+import xyz.crossward.repository.UserRepository
 import xyz.crossward.util.unwrap
 import java.util.*
 
 @Service
 class GroupService(
-        val groupRepository: GroupRepository,
-        val userRepository: UserRepository,
-        val isMemberRepository: IsMemberRepository
+    val groupRepository: GroupRepository,
+    val userRepository: UserRepository,
+    val isMemberRepository: IsMemberRepository
 ) {
-
-
     fun findGroupById(group_id: String): Group {
         return groupRepository.findById(group_id).unwrap()
-                ?: throw NoContentException("Could not find group with id $group_id")
+            ?: throw NoContentException("Could not find group with id $group_id")
     }
 
     fun findGroupByName(name: String): Group {
         return groupRepository.findGroupByName(name.lowercase()).findFirst().unwrap()
-                ?: throw NoContentException("Could not find group with name $name")
+            ?: throw NoContentException("Could not find group with name $name")
     }
 
     /**
@@ -56,13 +54,12 @@ class GroupService(
         }
         // create a telegram group
         val savedGroup = Group(
-                id = group.id,
-                name = group.name.lowercase()
+            id = group.id,
+            name = group.name.lowercase()
         )
         groupRepository.save(savedGroup)
         return savedGroup
     }
-
 
     /**
      * Creates a Website group, using name as ID
@@ -76,8 +73,8 @@ class GroupService(
         }
         // create a website group
         val savedGroup = Group(
-                id = group.name.lowercase(),
-                name = group.name.lowercase()
+            id = group.name.lowercase(),
+            name = group.name.lowercase()
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -102,13 +99,10 @@ class GroupService(
         }
 
         val savedIsMember = IsMember(
-                userId = userId,
-                groupId = groupId
+            userId = userId,
+            groupId = groupId
         )
         isMemberRepository.save(savedIsMember)
         return savedIsMember
     }
 }
-
-// Convert java Optional into kotlin null safety
-fun <T> Optional<T>.unwrap(): T? = orElse(null)
