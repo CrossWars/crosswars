@@ -21,10 +21,11 @@ interface EntryRepository : CrudRepository<Entry, EntryId> {
         """
         select e from Entry e
         where e.date between :fromDate and :toDate and e.userId = :userId
+        order by e.date
     """
     )
     fun getEntriesByDateRange(userId: String, fromDate: String, toDate: String): Stream<Entry>
 
-    @Query("select e from Entry e where e.userId = :userId")
+    @Query("select e from Entry e where e.userId = :userId order by e.date")
     fun getAllEntries(userId: String): Stream<Entry>
 }
