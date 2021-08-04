@@ -70,3 +70,13 @@ curl --request POST \
 	"time": 60
 }'
 ```
+
+## Generating the Swagger docs
+
+Run the app locally and hit this endpoint to generate the swagger docs in json format.
+
+```
+GET http://localhost:8080/crossward/v2/api-docs
+```
+
+You can get a pretty layout and UI by pasting the json [here](https://editor.swagger.io).
