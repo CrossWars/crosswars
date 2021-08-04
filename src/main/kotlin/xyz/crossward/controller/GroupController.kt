@@ -1,5 +1,6 @@
 package xyz.crossward.controller
 
+import io.swagger.annotations.Api
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
@@ -9,6 +10,7 @@ import xyz.crossward.entities.IsMember
 import xyz.crossward.entities.User
 import xyz.crossward.service.GroupService
 
+@Api(tags = ["Groups"])
 @RestController
 @RequestMapping("/api/groups")
 class GroupController(

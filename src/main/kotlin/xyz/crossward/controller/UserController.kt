@@ -1,5 +1,6 @@
 package xyz.crossward.controller
 
+import io.swagger.annotations.Api
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
@@ -9,9 +10,9 @@ import xyz.crossward.entities.User
 import xyz.crossward.exception.BadRequestException
 import xyz.crossward.service.UserService
 
-
 @RestController
 @RequestMapping("/api/users")
+@Api(tags = ["Users"])
 class UserController(
     var service: UserService
 ) {

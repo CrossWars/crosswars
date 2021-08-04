@@ -1,0 +1,893 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Backend crossword REST API to Store and maintain crossword data.",
+    "version": "1.0",
+    "title": "Crossward API",
+    "contact": {
+      "name": "Crosswars Help",
+      "url": "crosswars.xyz/help",
+      "email": "crosswars.help@gmail.com"
+    },
+    "license": {}
+  },
+  "host": "localhost:8080",
+  "tags": [
+    {
+      "name": "Entries",
+      "description": "Create and update entries"
+    },
+    {
+      "name": "Groups",
+      "description": "Create and update groups"
+    },
+    {
+      "name": "Stats",
+      "description": "Get various statistical information"
+    },
+    {
+      "name": "Users",
+      "description": "Create and update user information"
+    },
+    {
+      "name": "Wins",
+      "description": "Create and update wins"
+    }
+  ],
+  "paths": {
+    "/crossward/api/entries": {
+      "get": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "getEntries",
+        "operationId": "getEntriesUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "from_date",
+            "in": "query",
+            "description": "from_date",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "description": "to_date",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EntryRes"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "recordEntry",
+        "operationId": "recordEntryUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "entry",
+            "description": "entry",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EntryReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EntryRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/groups/ids": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "getGroupById",
+        "operationId": "getGroupByIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "query",
+            "description": "group_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GroupRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/groups/names": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "getGroupByName",
+        "operationId": "getGroupByNameUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "group_name",
+            "in": "query",
+            "description": "group_name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GroupRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/groups/telegram": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "createTelegramGroup",
+        "operationId": "createTelegramGroupUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "group",
+            "description": "group",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GroupReq"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/GroupRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/groups/users": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "getUsersByGroupId",
+        "operationId": "getUsersByGroupIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "query",
+            "description": "group_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "addUserToGroup",
+        "operationId": "addUserToGroupUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "query",
+            "description": "group_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/IsMember"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/groups/website": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "createGroup",
+        "operationId": "createGroupUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "group",
+            "description": "group",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GroupReq"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/GroupRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/stats/averages": {
+      "get": {
+        "tags": [
+          "Stats"
+        ],
+        "summary": "getAverageTimeByUserId",
+        "operationId": "getAverageTimeByUserIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "user_id",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/stats/best_times": {
+      "get": {
+        "tags": [
+          "Stats"
+        ],
+        "summary": "getBestTimeByUserId",
+        "operationId": "getBestTimeByUserIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "user_id",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/users/emails": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "getUserByEmail",
+        "operationId": "getUserByEmailUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "remind",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "user_email",
+            "in": "query",
+            "description": "user_email",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/users/ids": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "getUserById",
+        "operationId": "getUserByIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "remind",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "user_id",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/users/names": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "getUserByName",
+        "operationId": "getUserByNameUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "remind",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "user_name",
+            "in": "query",
+            "description": "user_name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/users/telegram": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "createTelegramUser",
+        "operationId": "createTelegramUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserReq"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/UserRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/users/website": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "createUser",
+        "operationId": "createUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserReq"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/UserRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/wins": {
+      "post": {
+        "tags": [
+          "Wins"
+        ],
+        "summary": "recordWin",
+        "operationId": "recordWinUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "wins",
+            "description": "wins",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WinsReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/WinsRes"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Wins"
+        ],
+        "summary": "updateWinsRecord",
+        "operationId": "updateWinsRecordUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "wins",
+            "description": "wins",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WinsReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/WinsRes"
+            }
+          }
+        }
+      }
+    },
+    "/crossward/api/wins/{userId}/{groupId}": {
+      "get": {
+        "tags": [
+          "Wins"
+        ],
+        "summary": "getWins",
+        "operationId": "getWinsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "groupId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/WinsRes"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EntryReq": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "EntryReq"
+    },
+    "EntryRes": {
+      "type": "object",
+      "required": [
+        "time"
+      ],
+      "properties": {
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "EntryRes"
+    },
+    "GroupReq": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "GroupReq"
+    },
+    "GroupRes": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "GroupRes"
+    },
+    "IsMember": {
+      "type": "object",
+      "required": [
+        "group_id",
+        "user_id"
+      ],
+      "properties": {
+        "group_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "IsMember"
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "name",
+        "user_id"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remind": {
+          "type": "boolean"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "User"
+    },
+    "UserReq": {
+      "type": "object",
+      "required": [
+        "name",
+        "user_id"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remind": {
+          "type": "boolean"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "UserReq"
+    },
+    "UserRes": {
+      "type": "object",
+      "required": [
+        "name",
+        "user_id"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remind": {
+          "type": "boolean"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "UserRes"
+    },
+    "WinsReq": {
+      "type": "object",
+      "required": [
+        "group_id",
+        "user_id"
+      ],
+      "properties": {
+        "group_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "wins": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "WinsReq"
+    },
+    "WinsRes": {
+      "type": "object",
+      "required": [
+        "group_id",
+        "user_id",
+        "wins"
+      ],
+      "properties": {
+        "group_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "wins": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "WinsRes"
+    }
+  }
+}

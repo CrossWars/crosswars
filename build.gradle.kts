@@ -38,14 +38,17 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    // Springfox
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
 
     // Google api
     implementation("com.google.api-client:google-api-client:1.32.1")
 
     // Database
-    implementation("org.xerial:sqlite-jdbc:3.34.0")
+    implementation("org.xerial:sqlite-jdbc:3.36.0.1")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -54,10 +57,10 @@ dependencies {
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:4.6.0")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:4.6.0")
-    testImplementation("io.kotest:kotest-property-jvm:4.6.0")
-    testImplementation("io.mockk:mockk:1.11.0")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:4.6.1")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:4.6.1")
+    testImplementation("io.kotest:kotest-property-jvm:4.6.1")
+    testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
 }
 

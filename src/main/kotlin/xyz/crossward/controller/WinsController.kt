@@ -1,9 +1,11 @@
 package xyz.crossward.controller
 
+import io.swagger.annotations.Api
 import org.springframework.web.bind.annotation.*
 import xyz.crossward.entities.Wins
 import xyz.crossward.service.WinsService
 
+@Api(tags = ["Wins"])
 @RestController
 @RequestMapping("/api/wins")
 class WinsController(
