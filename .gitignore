@@ -67,3 +67,6 @@ hs_err_pid*
 ### Sqlite ###
 /*.db
 /memory:myDb?cache=shared
+
+### Mac OS ###
+*.DS_Store

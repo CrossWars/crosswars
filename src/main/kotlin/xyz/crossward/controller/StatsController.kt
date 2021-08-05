@@ -1,11 +1,13 @@
 package xyz.crossward.controller
 
+import io.swagger.annotations.Api
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import xyz.crossward.service.StatsService
 
+@Api(tags = ["Stats"])
 @RestController
 @RequestMapping("/api/stats")
 class StatsController(
