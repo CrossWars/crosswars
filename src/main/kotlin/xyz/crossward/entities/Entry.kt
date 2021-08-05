@@ -26,12 +26,9 @@ data class EntryId(
 
 private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-fun Entry.localDate(): LocalDate? {
-    if (this.date != null) {
-        return LocalDate.parse(this.date, formatter)
-    }
-    return null;
-}
+fun Entry.localDate(): LocalDate?  =
+        this.date?.let { LocalDate.parse(this.date, formatter) }
+
 
 fun LocalDate.entryDateString(): String {
     return this.format(formatter)
