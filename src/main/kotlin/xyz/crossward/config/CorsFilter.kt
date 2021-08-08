@@ -32,7 +32,7 @@ class SimpleCORSFilter : Filter {
             throw UnauthorizedException("Unauthorized")
         }
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+        response.setHeader("Access-Control-Allow-Origin", allowedOrigins.joinToString(", "))
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         response.setHeader("Access-Control-Max-Age", "3600")
         response.setHeader(
