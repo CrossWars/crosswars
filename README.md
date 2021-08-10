@@ -1,4 +1,4 @@
-# crossward
+# crosswars-backend
 
 Backend crossword REST API to Store and maintain crossword data. See the related
 telegram [leaderboard bot](https://github.com/RobertWetzler/CrosswordLeaderboardBot).
@@ -7,7 +7,7 @@ telegram [leaderboard bot](https://github.com/RobertWetzler/CrosswordLeaderboard
 
 | Dependency | Version |
 | ---------- | ------- |
-| Kotlin     | 1.5.10  |
+| Kotlin     | 1.5.20  |
 | Java       | 16      |
 | Springboot | 2.5.1   |
 
@@ -18,13 +18,13 @@ telegram [leaderboard bot](https://github.com/RobertWetzler/CrosswordLeaderboard
 Create the database at the root of the project:
 
 ```shell
-sqlite3 Crossward.db
+sqlite3 Crosswars.db
 ```
 
 Run the ddl script to create the tables
 
 ```shell
-cat src/main/resources/crossward.sql | sqlite3 Crossward.db
+cat src/main/resources/crosswars.sql | sqlite3 CrosswordDB.db
 ```
 
 Create an `application-local.properties` file in the resources folder:
@@ -32,7 +32,7 @@ Create an `application-local.properties` file in the resources folder:
 ```properties
 # Database
 driverClassName=org.sqlite.JDBC
-url=jdbc:sqlite:Crossward.db
+url=jdbc:sqlite:CrosswordDB.db
 username=sa
 password=sa
 google.client-id=<oauth2-client-id>
@@ -57,13 +57,13 @@ Run using the bootRun task
 
 ```shell
 curl --request GET \
-  --url http://localhost:8080/crossward/api/users/ids/1
+  --url http://localhost:8080/crossword/api/users/ids/1
   
 curl --request GET \
-  --url http://localhost:8080/crossward/api/users/names/Billy
+  --url http://localhost:8080/crossword/api/users/names/Billy
   
 curl --request POST \
-  --url http://localhost:8080/crossward/api/entries \
+  --url http://localhost:8080/crossword/api/entries \
   --header 'Content-Type: application/json' \
   --data '{
 	"user_id": "userId",
@@ -76,7 +76,7 @@ curl --request POST \
 Run the app locally and hit this endpoint to generate the swagger docs in json format.
 
 ```
-GET http://localhost:8080/crossward/v2/api-docs
+GET http://localhost:8080/crosswars/v2/api-docs
 ```
 
 You can get a pretty layout and UI by pasting the json [here](https://editor.swagger.io).

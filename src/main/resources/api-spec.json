@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Backend crossword REST API to Store and maintain crossword data.",
+    "description": "Backend crossword REST API to store and maintain crossword data.",
     "version": "1.0",
-    "title": "Crossward API",
+    "title": "Crosswars API",
     "contact": {
       "name": "Crosswars Help",
       "url": "crosswars.xyz/help",
@@ -35,7 +35,7 @@
     }
   ],
   "paths": {
-    "/crossward/api/entries": {
+    "/crosswars/api/entries": {
       "get": {
         "tags": [
           "Entries"
@@ -113,7 +113,7 @@
         }
       }
     },
-    "/crossward/api/groups/ids": {
+    "/crosswars/api/groups/ids": {
       "get": {
         "tags": [
           "Groups"
@@ -142,7 +142,7 @@
         }
       }
     },
-    "/crossward/api/groups/names": {
+    "/crosswars/api/groups/names": {
       "get": {
         "tags": [
           "Groups"
@@ -171,7 +171,7 @@
         }
       }
     },
-    "/crossward/api/groups/telegram": {
+    "/crosswars/api/groups/telegram": {
       "post": {
         "tags": [
           "Groups"
@@ -205,7 +205,7 @@
         }
       }
     },
-    "/crossward/api/groups/users": {
+    "/crosswars/api/groups/users": {
       "get": {
         "tags": [
           "Groups"
@@ -274,7 +274,7 @@
         }
       }
     },
-    "/crossward/api/groups/website": {
+    "/crosswars/api/groups/website": {
       "post": {
         "tags": [
           "Groups"
@@ -308,7 +308,7 @@
         }
       }
     },
-    "/crossward/api/stats/averages": {
+    "/crosswars/api/stats/averages": {
       "get": {
         "tags": [
           "Stats"
@@ -338,7 +338,7 @@
         }
       }
     },
-    "/crossward/api/stats/best_times": {
+    "/crosswars/api/stats/best_times": {
       "get": {
         "tags": [
           "Stats"
@@ -368,7 +368,7 @@
         }
       }
     },
-    "/crossward/api/users/emails": {
+    "/crosswars/api/users/emails": {
       "get": {
         "tags": [
           "Users"
@@ -421,7 +421,7 @@
         }
       }
     },
-    "/crossward/api/users/ids": {
+    "/crosswars/api/users/ids": {
       "get": {
         "tags": [
           "Users"
@@ -474,7 +474,7 @@
         }
       }
     },
-    "/crossward/api/users/names": {
+    "/crosswars/api/users/names": {
       "get": {
         "tags": [
           "Users"
@@ -527,7 +527,7 @@
         }
       }
     },
-    "/crossward/api/users/telegram": {
+    "/crosswars/api/users/telegram": {
       "post": {
         "tags": [
           "Users"
@@ -561,7 +561,7 @@
         }
       }
     },
-    "/crossward/api/users/website": {
+    "/crosswars/api/users/website": {
       "post": {
         "tags": [
           "Users"
@@ -595,7 +595,7 @@
         }
       }
     },
-    "/crossward/api/wins": {
+    "/crosswars/api/wins": {
       "post": {
         "tags": [
           "Wins"
@@ -661,7 +661,7 @@
         }
       }
     },
-    "/crossward/api/wins/{userId}/{groupId}": {
+    "/crosswars/api/wins/{userId}/{groupId}": {
       "get": {
         "tags": [
           "Wins"

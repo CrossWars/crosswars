@@ -9,7 +9,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.allopen") version "1.5.20"
 }
 
-group = "xyz.crossward"
+group = "xyz.crosswars"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_16
 
