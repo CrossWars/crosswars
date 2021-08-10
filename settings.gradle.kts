@@ -1,1 +1,1 @@
-rootProject.name = "crossward"
+rootProject.name = "crosswars-backend"
