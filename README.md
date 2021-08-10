@@ -57,13 +57,13 @@ Run using the bootRun task
 
 ```shell
 curl --request GET \
-  --url http://localhost:8080/crossword/api/users/ids/1
+  --url http://localhost:8080/crosswars/api/users/ids/1
   
 curl --request GET \
-  --url http://localhost:8080/crossword/api/users/names/Billy
+  --url http://localhost:8080/crosswars/api/users/names/Billy
   
 curl --request POST \
-  --url http://localhost:8080/crossword/api/entries \
+  --url http://localhost:8080/crosswars/api/entries \
   --header 'Content-Type: application/json' \
   --data '{
 	"user_id": "userId",
