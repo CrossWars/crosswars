@@ -18,7 +18,7 @@ telegram [leaderboard bot](https://github.com/RobertWetzler/CrosswordLeaderboard
 Create the database at the root of the project:
 
 ```shell
-sqlite3 Crosswars.db
+sqlite3 CrosswordDB.db
 ```
 
 Run the ddl script to create the tables
