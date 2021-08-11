@@ -16,6 +16,7 @@ data class Entry(
     val userId: String,
 
     @Column(unique = true) val date: String? = null,
+
     @Column val time: Int,
 ) : Serializable
 

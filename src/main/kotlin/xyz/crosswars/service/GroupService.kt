@@ -29,6 +29,10 @@ class GroupService(
             ?: throw NoContentException("Could not find group with name $name")
     }
 
+    fun findGroupsByUser(userId: String): List<Group> {
+        return groupRepository.findGroupsByUser(userId).toList()
+    }
+
     /**
      * Finds all users in a given group
      *

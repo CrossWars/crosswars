@@ -88,13 +88,33 @@ class EntryService(
             entryRepository.getEntriesByDateRange(
                 userId,
                 fromDate,
-                LocalDate.now().entryDateString()
+                getPuzzleDate(currentDateInEST()).entryDateString()
             ).toList()
         }
         // both fromDate and toDate are specified
         else if (fromDate != null && toDate != null) {
             entryRepository.getEntriesByDateRange(userId, fromDate, toDate).toList()
         } else {
+            // No date is specified
             entryRepository.getAllEntries(userId).toList()
+        }
+
+    fun getAllEntriesByGroupAndDate(groupId: String, fromDate: String?, toDate: String?): List<Entry> =
+        // only fromDate is specified
+        if (fromDate != null && toDate == null) {
+            val currentPuzzleDate = getPuzzleDate(currentDateInEST()).entryDateString()
+            entryRepository.getEntriesByGroupAndDate(
+                groupId,
+                fromDate,
+                currentPuzzleDate
+            ).toList()
+        }
+        // both fromDate and toDate are specified
+        else if (fromDate != null && toDate != null) {
+            entryRepository.getEntriesByGroupAndDate(groupId, fromDate, toDate).toList()
+        } else {
+            // No date is specified
+            val currentPuzzleDate = getPuzzleDate(currentDateInEST()).entryDateString()
+            entryRepository.getEntriesByGroupAndDate(groupId, currentPuzzleDate, currentPuzzleDate).toList()
         }
 }
