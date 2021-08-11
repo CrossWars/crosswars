@@ -99,7 +99,7 @@ class EntryService(
             entryRepository.getAllEntries(userId).toList()
         }
 
-    fun getAllEntriesByGroupAndDate(groupId: String, fromDate: String?, toDate: String?): List<Entry> =
+    fun getEntriesByGroupAndDate(groupId: String, fromDate: String?, toDate: String?): List<Entry> =
         // only fromDate is specified
         if (fromDate != null && toDate == null) {
             val currentPuzzleDate = getPuzzleDate(currentDateInEST()).entryDateString()

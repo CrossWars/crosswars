@@ -46,6 +46,6 @@ class EntryController(
         @RequestParam("from_date", required = false) fromDate: String?,
         @RequestParam("to_date", required = false) toDate: String?
     ): ResponseEntity<List<Entry>> {
-        return ResponseEntity.ok(entryService.getAllEntriesByGroupAndDate(groupId, fromDate, toDate))
+        return ResponseEntity.ok(entryService.getEntriesByGroupAndDate(groupId, fromDate, toDate))
     }
 }
