@@ -46,7 +46,6 @@ class GroupController(
         return ResponseEntity.ok(service.findGroupById(groupId))
     }
 
-
     @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
@@ -54,6 +53,18 @@ class GroupController(
         return ResponseEntity.ok(service.findGroupByName(groupName))
     }
 
+    /**
+     * Get a list of all the groups a user is a member of
+     *
+     * @param userId
+     * @return a list of groups
+     */
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional(readOnly = true)
+    fun getGroupsByUser(@RequestParam("user_id", required = true) userId: String): ResponseEntity<List<Group>> {
+        return ResponseEntity.ok(service.findGroupsByUser(userId))
+    }
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)

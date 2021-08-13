@@ -28,4 +28,14 @@ interface EntryRepository : CrudRepository<Entry, EntryId> {
 
     @Query("select e from Entry e where e.userId = :userId order by e.date")
     fun getAllEntries(userId: String): Stream<Entry>
+
+    @Query(
+        """
+        select e from Entry e, IsMember im
+        where e.userId = im.userId and im.groupId = :groupId
+            and e.date between :fromDate and :toDate
+        order by e.date, e.userId
+        """
+    )
+    fun getEntriesByGroupAndDate(groupId: String, fromDate: String, toDate: String): Stream<Entry>
 }

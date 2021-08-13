@@ -29,13 +29,23 @@ class EntryController(
      * @param toDate get entries up to and including the specified date (optional)
      * @return a list of entries
      */
-    @GetMapping
+    @GetMapping("/users")
     @Transactional(readOnly = true)
-    fun getEntries(
+    fun getEntriesByUser(
         @RequestParam("user_id") userId: String,
         @RequestParam("from_date", required = false) fromDate: String?,
         @RequestParam("to_date", required = false) toDate: String?
     ): ResponseEntity<List<Entry>> {
         return ResponseEntity.ok(entryService.getEntries(userId, fromDate, toDate))
+    }
+
+    @GetMapping("/groups")
+    @Transactional(readOnly = true)
+    fun getEntriesByGroup(
+        @RequestParam("group_id") groupId: String,
+        @RequestParam("from_date", required = false) fromDate: String?,
+        @RequestParam("to_date", required = false) toDate: String?
+    ): ResponseEntity<List<Entry>> {
+        return ResponseEntity.ok(entryService.getEntriesByGroupAndDate(groupId, fromDate, toDate))
     }
 }
