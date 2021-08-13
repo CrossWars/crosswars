@@ -66,7 +66,7 @@ class GroupController(
         return ResponseEntity.ok(service.findGroupsByUser(userId))
     }
 
-    @GetMapping("/groups")
+    @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getUsersByGroupId(@RequestParam("group_id", required = true) groupId: String): ResponseEntity<List<User>> {
