@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.5.20"
     id("org.jetbrains.kotlin.plugin.jpa") version "1.5.20"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.5.20"
+    id("jacoco")
 }
 
 group = "xyz.crosswars"
@@ -67,3 +68,66 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.isEnabled = false
+        csv.isEnabled = false
+        html.isEnabled = true
+        html.destination = file("${buildDir}/jacoco/")
+    }
+    doLast {
+        println("file://${buildDir}/jacoco/index.html")
+    }
+    classDirectories.setFrom(classDirectories.files.map {
+        fileTree(it).matching {
+            exclude(
+                "com/tgt/profile/config/**",
+                "com/tgt/profile/constants/**",
+                "com/tgt/profile/exception/**",
+                "com/tgt/profile/model/**",
+                "com/tgt/profile/util/**",
+                "com/tgt/profile/tokenmanager/**",
+                "com/tgt/profile/ProfileAggregatorMain**"
+            )
+        }
+    })
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = "CLASS"
+            limit {
+                minimum = BigDecimal(1.0)
+            }
+            // Exclude classes from coverage
+            excludes = listOf(
+                "com.tgt.profile.config.*",
+                "com.tgt.profile.constants.*",
+                "com.tgt.profile.exception.*",
+                "com.tgt.profile.model.*",
+                "com.tgt.profile.util.*",
+                "com.tgt.profile.tokenmanager.*",
+                "com.tgt.profile.webclient.IdentityWebClient.getByGuestId.lambda**",
+                "com.tgt.profile.ProfileAggregatorMain**"
+            )
+        }
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+    testLogging.setEvents(listOf("skipped", "failed"))
+    testLogging.showExceptions = true
+    testLogging.setExceptionFormat("full")
+    testLogging.showCauses = true
+    testLogging.showStackTraces = true
+    testLogging.showStandardStreams = false
+}
+
+//tasks.check {
+//    dependsOn(tasks.jacocoTestCoverageVerification)
+//}
