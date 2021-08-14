@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import xyz.crosswars.entities.Group
 import xyz.crosswars.entities.User
+import xyz.crosswars.exception.BadRequestException
 import java.util.stream.Stream
 
 @Repository
@@ -18,4 +19,10 @@ interface GroupRepository : CrudRepository<Group, String> {
 
     @Query("select g from Group g, IsMember im where im.userId = :userId and g.id = im.groupId")
     fun findGroupsByUser(userId: String): Stream<Group>
+}
+
+fun GroupRepository.checkIfGroupExists(groupId: String) {
+    if (!this.existsById(groupId)) {
+        throw BadRequestException("the group $groupId does not exist")
+    }
 }
