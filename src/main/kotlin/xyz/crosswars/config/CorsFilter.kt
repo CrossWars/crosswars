@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class SimpleCORSFilter : Filter {
 
-    private val allowedOrigins = listOf("http://localhost:3000", "https://crosswars.xyz")
+    private val allowedOrigins = listOf("http://localhost:3000", "https://crosswars.xyz", "http://localhost:8080")
 
     @Throws(ServletException::class)
     override fun init(fc: FilterConfig?) {
@@ -34,7 +34,7 @@ class SimpleCORSFilter : Filter {
             }
         }
 
-        response.setHeader("Access-Control-Allow-Origin", allowedOrigins.joinToString(", "))
+        response.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin")) // Return the request's origin
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         response.setHeader("Access-Control-Max-Age", "3600")
         response.setHeader(
