@@ -22,7 +22,7 @@ export default {
           console.log(res)
           Cookies.set('id_token', res)
           console.log(Cookies.has('id_token'))
-          this.$router.push('Login')
+          this.$router.push('Home')
         })
 
     }

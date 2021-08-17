@@ -7,7 +7,9 @@ import axios from 'axios'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'https://api.example.com' })
+//TODO: Find a way to automatically switch these URLS (could use docker env variable eventually)
+//const api = axios.create({ baseURL: 'http://localhost:8080/crosswars/api' })
+const api = axios.create({ baseURL: 'http://crosswars.xyz/crosswars/api' })
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
