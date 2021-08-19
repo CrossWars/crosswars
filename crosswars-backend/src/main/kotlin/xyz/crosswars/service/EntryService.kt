@@ -7,11 +7,10 @@ import xyz.crosswars.entities.localDate
 import xyz.crosswars.exception.BadRequestException
 import xyz.crosswars.repository.EntryRepository
 import xyz.crosswars.util.currentDateInEST
+import xyz.crosswars.util.getPuzzleDate
+import xyz.crosswars.util.getPuzzleDateInEST
+import xyz.crosswars.util.isValidPuzzleDate
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZonedDateTime
-import java.time.format.TextStyle
-import java.util.*
 
 @Service
 class EntryService(
@@ -48,47 +47,13 @@ class EntryService(
         return savedEntry
     }
 
-    /**
-     * Valid dates are any date before or on the current puzzle date. Nothing in the future is allowed
-     */
-    private fun isValidPuzzleDate(date: LocalDate): Boolean =
-        !date.isAfter(getPuzzleDate(currentDateInEST()))
-
-    /**
-     * Get the current NYT puzzle date.
-     *
-     * Crosswords are available at the following times (in EST):
-     * Monday: 6PM (Sunday) - 10PM (Monday)
-     * Tuesday - Friday: 10PM (previous day) - 10PM
-     * Saturday: 10PM (Friday) - 6PM
-     * Sunday: 6PM (Saturday) - 6PM
-     */
-    fun getPuzzleDate(date: ZonedDateTime): LocalDate =
-        when (date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)) {
-            in listOf("Mon", "Tue", "Wed", "Thu", "Fri") ->
-                if (date.toLocalTime().isAfter(LocalTime.parse("22:00:00"))) {
-                    date.plusDays(1).toLocalDate()
-                } else {
-                    date.toLocalDate()
-                }
-            in listOf("Sat", "Sun") ->
-                if (date.toLocalTime().isAfter(LocalTime.parse("18:00:00"))) {
-                    date.plusDays(1).toLocalDate()
-                } else {
-                    date.toLocalDate()
-                }
-            else ->
-                // Return the current date if for whatever reason the code gets here
-                date.toLocalDate()
-        }
-
     fun getEntries(userId: String, fromDate: String?, toDate: String?): List<Entry> =
         // only fromDate is specified
         if (fromDate != null && toDate == null) {
             entryRepository.getEntriesByDateRange(
                 userId,
                 fromDate,
-                getPuzzleDate(currentDateInEST()).entryDateString()
+                getPuzzleDateInEST()
             ).toList()
         }
         // both fromDate and toDate are specified
@@ -102,11 +67,10 @@ class EntryService(
     fun getEntriesByGroupAndDate(groupId: String, fromDate: String?, toDate: String?): List<Entry> =
         // only fromDate is specified
         if (fromDate != null && toDate == null) {
-            val currentPuzzleDate = getPuzzleDate(currentDateInEST()).entryDateString()
             entryRepository.getEntriesByGroupAndDate(
                 groupId,
                 fromDate,
-                currentPuzzleDate
+                getPuzzleDateInEST()
             ).toList()
         }
         // both fromDate and toDate are specified
@@ -114,7 +78,7 @@ class EntryService(
             entryRepository.getEntriesByGroupAndDate(groupId, fromDate, toDate).toList()
         } else {
             // No date is specified
-            val currentPuzzleDate = getPuzzleDate(currentDateInEST()).entryDateString()
+            val currentPuzzleDate = getPuzzleDateInEST()
             entryRepository.getEntriesByGroupAndDate(groupId, currentPuzzleDate, currentPuzzleDate).toList()
         }
 }
