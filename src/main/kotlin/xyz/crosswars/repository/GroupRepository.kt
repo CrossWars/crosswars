@@ -23,6 +23,6 @@ interface GroupRepository : CrudRepository<Group, String> {
 
 fun GroupRepository.checkIfGroupExists(groupId: String) {
     if (!this.existsById(groupId)) {
-        throw BadRequestException("the group $groupId does not exist")
+        throw BadRequestException("group_id $groupId does not exist")
     }
 }

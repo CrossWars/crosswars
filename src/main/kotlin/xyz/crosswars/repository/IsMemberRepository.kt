@@ -11,6 +11,6 @@ interface IsMemberRepository : CrudRepository<IsMember, IsMemberId>
 
 fun IsMemberRepository.checkIfMemberOf(memberId: IsMemberId) {
     if (!this.existsById(memberId)) {
-        throw BadRequestException("the user ${memberId.userId} is not a member of group ${memberId.groupId}")
+        throw BadRequestException("user_id ${memberId.userId} is not a member of group_id ${memberId.groupId}")
     }
 }

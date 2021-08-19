@@ -27,4 +27,15 @@ data class WinCount(
     val wins: Int,
     val fromDate: String?,
     val toDate: String?
+) {
+    constructor(userId: String, groupId: String, wins: Long) : this(userId, groupId, wins.toInt(), null, null)
+}
+
+/**
+ * Represents a single winner of a group and date
+ */
+data class Winner(
+    val userId: String
 )
+
+fun Win.toWinner(): Winner = Winner(this.userId)

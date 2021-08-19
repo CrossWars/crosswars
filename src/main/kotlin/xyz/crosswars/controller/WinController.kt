@@ -4,8 +4,9 @@ import io.swagger.annotations.Api
 import org.springframework.web.bind.annotation.*
 import xyz.crosswars.entities.Win
 import xyz.crosswars.entities.WinCount
+import xyz.crosswars.entities.Winner
 import xyz.crosswars.service.WinService
-import xyz.crosswars.util.getPuzzleDateInEST
+import javax.transaction.Transactional
 
 @Api(tags = ["Wins"])
 @RestController
@@ -19,33 +20,36 @@ class WinController(
      * Creates a new record if the user has never won before.
      * Increases the number of wins if the user has an entry.
      *
-     * @param wins request object containing the win data
+     * @param win request object containing the win data
      */
     @PostMapping
-    fun recordWin(@RequestBody wins: Win): Win {
-        return winService.recordWin(wins)
+    fun recordWin(@RequestBody win: Win): Win {
+        return winService.recordWin(win)
     }
 
     /**
-     * Get wins for a user in a specific group
+     * Get the winner in a group for the given date
      *
-     * @param userId the user id
      * @param groupId the group id the user is a member of
+     * @param date date of the win
      */
-    @GetMapping
+    @GetMapping("/winners")
     fun getWin(
-        @RequestParam("user_id") userId: String,
         @RequestParam("group_id") groupId: String,
         @RequestParam("date", required = false) date: String?
-    ): Win {
-        val win = Win(
-            userId,
-            groupId,
-            date = date ?: getPuzzleDateInEST()
-        )
-        return winService.getWins(win)
+    ): Winner {
+        return winService.getWinner(groupId, date)
     }
 
+    /**
+     * Get the win count for a single user in a given group
+     *
+     * @param userId user id
+     * @param groupId group id
+     * @param fromDate the date to start counting wins from (inclusive)
+     * @param toDate the date to start counting wins to (inclusive)
+     * @return a WinCount object
+     */
     @GetMapping("/counts")
     fun getWinCount(
         @RequestParam("user_id") userId: String,
@@ -54,6 +58,14 @@ class WinController(
         @RequestParam("to_date", required = false) toDate: String?,
     ): WinCount {
         return winService.getWinCount(userId, groupId, fromDate, toDate)
+    }
+
+    @GetMapping("/counts/groups")
+    @Transactional
+    fun getWinCountForAllUsersInGroup(
+        @RequestParam("group_id") groupId: String
+    ): List<WinCount> {
+        return winService.getWinCountsForAllUsersInGroup(groupId)
     }
 
     /**

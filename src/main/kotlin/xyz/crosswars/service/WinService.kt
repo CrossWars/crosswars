@@ -1,14 +1,10 @@
 package xyz.crosswars.service
 
 import org.springframework.stereotype.Service
-import xyz.crosswars.entities.IsMemberId
-import xyz.crosswars.entities.Win
-import xyz.crosswars.entities.WinCount
-import xyz.crosswars.entities.WinId
+import xyz.crosswars.entities.*
 import xyz.crosswars.exception.NoContentException
 import xyz.crosswars.repository.*
 import xyz.crosswars.util.getPuzzleDateInEST
-import xyz.crosswars.util.unwrap
 
 @Service
 class WinService(
@@ -26,9 +22,10 @@ class WinService(
         return winRepository.save(win)
     }
 
-    fun getWins(win: Win): Win =
-        winRepository.findById(WinId(win.userId, win.groupId, win.date)).unwrap()
-            ?: throw NoContentException("No wins could be found for user id ${win.userId} in group id ${win.groupId} and date ${win.date}")
+    fun getWinner(groupId: String, date: String?): Winner {
+        return winRepository.getWinByGroupId(groupId, date ?: getPuzzleDateInEST())?.toWinner()
+            ?: throw NoContentException("No winner in group id $groupId and date $date could be found")
+    }
 
     fun updateWinsRecord(win: Win): Win {
         validateWin(win)
@@ -72,4 +69,7 @@ class WinService(
             )
         }
     }
+
+    fun getWinCountsForAllUsersInGroup(groupId: String): List<WinCount> =
+        winRepository.getWinCountsForAllUsersInGroup(groupId).toList()
 }
