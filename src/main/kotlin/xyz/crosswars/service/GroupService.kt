@@ -41,7 +41,7 @@ class GroupService(
      */
     fun findUsersByGroupId(groupId: String): List<User> {
         if (!groupRepository.existsById(groupId)) {
-            throw BadRequestException("A group with ID ${groupId} does not exist")
+            throw BadRequestException("A group with ID $groupId does not exist")
         }
         return groupRepository.findUsersByGroupId(groupId).toList()
     }

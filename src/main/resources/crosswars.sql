@@ -44,10 +44,11 @@ CREATE TABLE USER
 CREATE TABLE WINS
 (
     user_id  TEXT REFERENCES USER (user_id),
-    group_id INTEGER REFERENCES CROSSGROUP (group_id),
-    wins     INTEGER NOT NULL,
+    group_id TEXT REFERENCES CROSSGROUP (group_id),
+    date     DATE NOT NULL,
     PRIMARY KEY (
                  user_id,
-                 group_id
+                 group_id,
+                 date
         )
 );
