@@ -12,7 +12,7 @@ import javax.persistence.*
 data class Entry(
     @Id
     @Column(name = "user_id", unique = true)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     val userId: String,
 
     @Column(unique = true) val date: String? = null,
