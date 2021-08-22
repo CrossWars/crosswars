@@ -9,7 +9,7 @@ import xyz.crosswars.service.StatsService
 
 @Api(tags = ["Stats"])
 @RestController
-@RequestMapping("/api/stats")
+@RequestMapping("/stats")
 class StatsController(
     var service: StatsService
 ) {

@@ -10,7 +10,7 @@ import javax.transaction.Transactional
 
 @Api(tags = ["Wins"])
 @RestController
-@RequestMapping("/api/wins")
+@RequestMapping("/wins")
 class WinController(
     private val winService: WinService
 ) {

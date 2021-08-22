@@ -12,7 +12,7 @@ import xyz.crosswars.service.GroupService
 
 @Api(tags = ["Groups"])
 @RestController
-@RequestMapping("/api/groups")
+@RequestMapping("/groups")
 class GroupController(
     var service: GroupService
 ) {
