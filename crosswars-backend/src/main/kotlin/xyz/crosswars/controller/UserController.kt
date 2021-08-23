@@ -11,7 +11,7 @@ import xyz.crosswars.exception.BadRequestException
 import xyz.crosswars.service.UserService
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @Api(tags = ["Users"])
 class UserController(
     var service: UserService
