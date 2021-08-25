@@ -11,7 +11,7 @@
 HELP.md
 .gradle
 build/
-!gradle/wrapper/gradle-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -32,16 +32,16 @@ bin/
 *.iws
 *.iml
 *.ipr
-out/
+**/out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
 ### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/.nb-gradle/
 
 ### VS Code ###
 .vscode/
@@ -62,11 +62,11 @@ out/
 hs_err_pid*
 
 ### Spring ###
-/src/main/resources/application-local.properties
+**/src/main/resources/application-local.properties
 
 ### Sqlite ###
-/*.db
-/memory:myDb?cache=shared
+**/*.db
+**/memory:myDb?cache=shared
 
 ### Mac OS ###
 *.DS_Store

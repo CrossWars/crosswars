@@ -68,7 +68,6 @@ export default defineComponent({
       const secs = timeInSeconds % 60;
       return mins + ":" + (secs < 10 ? "0" : "") + secs;
     },
-  },
-  computed: {},
+  }
 });
 </script>

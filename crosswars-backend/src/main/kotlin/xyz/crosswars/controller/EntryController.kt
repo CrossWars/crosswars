@@ -9,7 +9,7 @@ import xyz.crosswars.service.EntryService
 
 @Api(tags = ["Entries"])
 @RestController
-@RequestMapping("/api/entries")
+@RequestMapping("/entries")
 class EntryController(
     private val entryService: EntryService
 ) {

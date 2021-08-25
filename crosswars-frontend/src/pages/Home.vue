@@ -8,7 +8,7 @@ import EntryTable from "components/EntryTable.vue";
 import EntryForm from "components/EntryForm.vue";
 
 export default {
-  name: "Home2",
+  name: "Home",
   components: {
     EntryTable,
     EntryForm,
@@ -148,5 +148,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>
