@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          CrossWars
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
@@ -38,7 +38,6 @@
           :key="link.title"
           v-bind="link"
         />
-        <EntryTable/>
       </q-list>
     </q-drawer>
 
@@ -50,7 +49,6 @@
 
 <script>
 import EssentialLink from 'components/EssentialLink.vue'
-import EntryTable from 'components/EntryTable.vue'
 
 const linksList = [
   {
@@ -104,7 +102,6 @@ export default defineComponent({
 
   components: {
     EssentialLink,
-    EntryTable
   },
 
   setup () {
