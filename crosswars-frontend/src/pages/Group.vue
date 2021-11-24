@@ -2,7 +2,6 @@
 <q-inner-loading
     :showing="showLoading"
     color: primary/>
-<EntryList :entries="leaderboardEntries"/>
 <div class="q-ma-lg"
     v-show="showGroupPage">
     <h3 class=text-capitalize>
@@ -17,7 +16,6 @@ import EntryList from "components/EntryList.vue";
 export default {
   name: "Group",
   components: {
-    EntryList,
   },
   data() {
     return {
@@ -33,9 +31,6 @@ export default {
     };
   },
   computed: {
-    leaderboardEntries: function() {
-      return Array.from(this.userIdToLeaderboardEntry.values())
-    }
   },
   mounted() {
     this.getGroupInfo();
