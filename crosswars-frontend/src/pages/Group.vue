@@ -1,47 +1,35 @@
 <template lang="">
-  <div class="q-pa-sm">
-    <EntryForm @add:entry="addEntry" :loading="submitLoading"/>
-  </div>
-  <div class="q-px-md">
-    <q-card>
-    <q-expansion-item
-    default-opened
-    icon="leaderboard"
-    label="Today's leaderboard">
-      <EntryList :entries="leaderboardEntries"/>
-    </q-expansion-item>
-    </q-card >
-    <div class="q-pt-md">
-    <q-card>
-    <q-expansion-item
-    default-opened
-    icon="groups"
-    label="Your Groups">
-    </q-expansion-item>
-    </q-card>
-    </div>
-  </div>
+<q-inner-loading
+    :showing="showLoading"
+    color: primary/>
+<EntryList :entries="leaderboardEntries"/>
+<div class="q-ma-lg"
+    v-show="showGroupPage">
+    <h3 class=text-capitalize>
+        {{groupName}}
+    </h3>
+</div>
 
 </template>
 <script>
 import EntryList from "components/EntryList.vue";
-import EntryForm from "components/EntryForm.vue";
 
 export default {
-  name: "Home",
+  name: "Group",
   components: {
     EntryList,
-    EntryForm,
   },
   data() {
     return {
-      user_id: "123456789",
+      groupName: new String,
       user_name: "testdude",
       groupIdToGroup: new Map(),
       userIdToUser: new Map(),
       groupToEntries: new Map(),
       userIdToLeaderboardEntry: new Map(),
       submitLoading: false,
+      showLoading: true,
+      showGroupPage: false,
     };
   },
   computed: {
@@ -50,22 +38,22 @@ export default {
     }
   },
   mounted() {
-    this.getDataForLeaderboardEntries();
+    this.getGroupInfo();
   },
   methods: {
-    async addEntry(entry) {
-      this.submitLoading = true;
-      entry.user_id = this.user_id;
-      this.$api.post(`/entries`, entry).then(() => {
-        this.submitLoading = false;
-        var leaderboardEntry = {
-          user: { user_id: this.user_id, name: this.user_name },
-          groups: Array.from(this.groupIdToGroup.values()),
-          time: entry.time,
-        };
-        this.userIdToLeaderboardEntry.set(this.user_id, leaderboardEntry)
-        this.setPositions();
-      });
+    async getGroupInfo()
+    {
+        this.$api.get(`/groups/ids?group_id=${this.$route.params.groupID}`).then((result) => {
+            setTimeout(() => {
+            this.groupName = result.data.name;
+            this.showGroupPage = true;
+            this.showLoading = false;
+            this.getGroupEntries();}, 1000);
+        });
+    },
+    async getGroupEntries()
+    {
+//pass
     },
     async getDataForLeaderboardEntries() {
       this.$api.get(`/groups?user_id=${this.user_id}`).then((result) => {
@@ -168,4 +156,8 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+    .capitalize {
+        text-transform: capitalize;
+    }
+</style>

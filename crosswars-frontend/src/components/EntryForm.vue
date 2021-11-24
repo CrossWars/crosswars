@@ -2,6 +2,8 @@
 <div id="entry-form">
     <form @submit.prevent="handleSubmit">
        <q-input 
+       ref="EntryInput"
+       inputmode="numeric"
        outlined 
        v-model="timeString" 
        label="Enter Your Time" 
@@ -58,10 +60,21 @@ export default {
       this.submitting = false;
     },
     onFocus() {
-      //should move selection caret to end, but not 100% sure if it works
-      const val = this.timeString;
-      this.timeString = null;
-      this.timeString = val;
+      let e = this.$refs.EntryInput.getNativeElement();
+      setTimeout(()=> {
+        e.setSelectionRange(e.value.length, e.value.length)
+      }, 1)  
+      console.log(e);
+      //sets caret to end, but doesn't work in Safari :(
+      /**var el = this.$refs.EntryInput.getNativeElement()
+      if (typeof el.selectionStart == "number") {
+          el.selectionStart = el.selectionEnd = el.value.length;
+      } else if (typeof el.createTextRange != "undefined") {
+          el.focus();
+          var range = el.createTextRange();
+          range.collapse(false);
+          range.select();
+      }*/
     },
     parseTime(time) {
       const mins_secs = time.split(":");
