@@ -13,7 +13,7 @@
           {{ entry.user.name.charAt(0)}}
         
         </q-avatar>
-                <q-item-label font=text-weight-bold class="q-py-s">{{ entry.user.name }}</q-item-label>
+         <q-item-label font=text-weight-bold class="q-py-s">{{ entry.user.name }}</q-item-label>
 
       </q-item-section>
       
@@ -34,7 +34,6 @@
 
 <script>
 import { defineComponent } from "vue";
-//check out https://codepen.io/smolinari/pen/WNQjVBN?editors=1010 for adding group chips
 
 export default defineComponent({
   name: "EntryTable",

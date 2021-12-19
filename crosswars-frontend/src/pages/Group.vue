@@ -11,7 +11,6 @@
 
 </template>
 <script>
-import EntryList from "components/EntryList.vue";
 
 export default {
   name: "Group",
