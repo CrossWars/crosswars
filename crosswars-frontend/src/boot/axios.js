@@ -9,14 +9,19 @@ import axios from 'axios'
 // for each client)
 
 //TODO: Find a way to automatically switch these URLS (could use docker env variable eventually)
-//const api = axios.create({ baseURL: 'http://localhost:8080/crosswars/api' })
+//For production:
 const api = axios.create({ baseURL: 'http://crosswars.xyz/crosswars/api' })
+//For testing in browser:
+//const api = axios.create({ baseURL: 'http://localhost:8080/crosswars/api' })
+//For testing on phone over Wifi:
+//const api = axios.create({ baseURL: 'http://192.168.1.79:8080/crosswars/api' })
+//const api = axios.create({ baseURL: 'http://192.168.86.51:8080/crosswars/api' })
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios
-  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
+  // ^ ^ ^ this will allow you to                       use this.$axios (for Vue Options API form)
   //       so you won't necessarily have to import axios in each vue file
 
   app.config.globalProperties.$api = api

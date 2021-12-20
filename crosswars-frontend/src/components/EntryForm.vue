@@ -2,6 +2,8 @@
 <div id="entry-form">
     <form @submit.prevent="handleSubmit">
        <q-input 
+       ref="EntryInput"
+       inputmode="numeric"
        outlined 
        v-model="timeString" 
        label="Enter Your Time" 
@@ -58,10 +60,12 @@ export default {
       this.submitting = false;
     },
     onFocus() {
-      //should move selection caret to end, but not 100% sure if it works
-      const val = this.timeString;
-      this.timeString = null;
-      this.timeString = val;
+      //sets caret to end of input field
+      let e = this.$refs.EntryInput.getNativeElement();
+      setTimeout(()=> {
+        e.setSelectionRange(e.value.length, e.value.length)
+      }, 1)  
+      console.log(e);
     },
     parseTime(time) {
       const mins_secs = time.split(":");

@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class SimpleCORSFilter : Filter {
 
-    private val allowedOrigins = listOf("http://localhost:3000", "https://crosswars.xyz", "http://localhost:8080")
+    private val allowedOrigins = listOf("https://localhost:3000", "https://crosswars.xyz", "http://localhost:3000",
+                                        "http://192.168.1.79:3000", "http://192.168.86.51:3000")
 
     @Throws(ServletException::class)
     override fun init(fc: FilterConfig?) {

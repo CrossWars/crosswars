@@ -9,11 +9,10 @@
   </q-page>
 </template>
 
-
 <script>
 import { Cookies } from 'quasar'
 export default {
-  name: 'PageIndex',
+  name: 'LoginButton',
   methods: {
     auth (network) {
       

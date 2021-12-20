@@ -42,7 +42,7 @@ export default {
 .googleBtn {
   display: inline-block;
       background: white;
-      color: #444;
+      color: rgb(36, 46, 102);
       width: 190px;
       border-radius: 5px;
       border: thin solid #888;

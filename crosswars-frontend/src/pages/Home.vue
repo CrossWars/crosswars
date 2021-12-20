@@ -1,16 +1,36 @@
 <template lang="">
-  <EntryForm @add:entry="addEntry" :loading="submitLoading"/>
-  <EntryTable :entries="leaderboardEntries"/>
+  <div class="q-pa-sm">
+    <EntryForm @add:entry="addEntry" :loading="submitLoading"/>
+  </div>
+  <div class="q-px-md">
+    <q-card>
+    <q-expansion-item
+    default-opened
+    icon="leaderboard"
+    label="Today's leaderboard">
+      <EntryList :entries="leaderboardEntries"/>
+    </q-expansion-item>
+    </q-card >
+    <div class="q-pt-md">
+    <q-card>
+    <q-expansion-item
+    default-opened
+    icon="groups"
+    label="Your Groups">
+    </q-expansion-item>
+    </q-card>
+    </div>
+  </div>
 
 </template>
 <script>
-import EntryTable from "components/EntryTable.vue";
+import EntryList from "components/EntryList.vue";
 import EntryForm from "components/EntryForm.vue";
 
 export default {
   name: "Home",
   components: {
-    EntryTable,
+    EntryList,
     EntryForm,
   },
   data() {

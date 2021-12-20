@@ -21,6 +21,14 @@ const routes = [
       { path: '', component: () => import('pages/Home.vue') }
     ]
   },
+  {
+    path: '/group/:groupID',
+    name: 'group',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Group.vue') }
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
