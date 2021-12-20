@@ -9,24 +9,28 @@
   </q-page>
 </template>
 
-<script>
+<script lang="ts">
 import { Cookies } from 'quasar'
-export default {
+import { defineComponent } from 'vue'
+import { HelloJSLoginOptions } from 'hellojs';
+export default defineComponent({
   name: 'LoginButton',
   methods: {
-    auth (network) {
-      
-      this.$hello(network).login({scope: "profile openid email", response_type: "token id_token"})
+    auth (network: string) {
+      const loginOptions: HelloJSLoginOptions = {
+        scope: 'profile openid email',
+        response_type: 'id_token token'
+      }
+      void this.$hello(network).login(loginOptions)
         .then((res) => {
-          console.log(res)
-          Cookies.set('id_token', res)
-          console.log(Cookies.has('id_token'))
-          this.$router.push('Home')
-        })
-
+          if(res.authResponse?.id_token != null) {
+           Cookies.set('id_token', res.authResponse?.id_token);
+          }
+          void this.$router.push('Home')
+        });
     }
   }
-}
+})
 </script>
 <style scoped>
 .googleBtn {

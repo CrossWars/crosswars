@@ -1,42 +1,43 @@
 <template lang="">
-  <div class="q-pa-sm">
-    <EntryForm @add:entry="addEntry" :loading="submitLoading"/>
-  </div>
-  <div class="q-px-md">
-    <q-card>
-    <q-expansion-item
-    default-opened
-    icon="leaderboard"
-    label="Today's leaderboard">
-      <EntryList :entries="leaderboardEntries"/>
-    </q-expansion-item>
-    </q-card >
-    <div class="q-pt-md">
-    <q-card>
-    <q-expansion-item
-    default-opened
-    icon="groups"
-    label="Your Groups">
-    </q-expansion-item>
-    </q-card>
+  <div>
+    <div class="q-pa-sm">
+      <EntryForm @add:entry="addEntry" :loading="submitLoading"/>
+    </div>
+    <div class="q-px-md">
+      <q-card>
+      <q-expansion-item
+      default-opened
+      icon="leaderboard"
+      label="Today's leaderboard">
+        <EntryList :entries="leaderboardEntries"/>
+      </q-expansion-item>
+      </q-card >
+      <div class="q-pt-md">
+      <q-card>
+      <q-expansion-item
+      default-opened
+      icon="groups"
+      label="Your Groups">
+      </q-expansion-item>
+      </q-card>
+      </div>
     </div>
   </div>
-
 </template>
-<script>
-import EntryList from "components/EntryList.vue";
-import EntryForm from "components/EntryForm.vue";
-
-export default {
-  name: "Home",
+<script lang="ts">
+import EntryList from 'components/EntryList.vue';
+import EntryForm from 'components/EntryForm.vue';
+import {defineComponent} from 'vue'
+export default defineComponent({
+  name: 'HomePage',
   components: {
     EntryList,
     EntryForm,
   },
   data() {
     return {
-      user_id: "123456789",
-      user_name: "testdude",
+      user_id: '123456789',
+      user_name: 'testdude',
       groupIdToGroup: new Map(),
       userIdToUser: new Map(),
       groupToEntries: new Map(),
@@ -56,7 +57,7 @@ export default {
     async addEntry(entry) {
       this.submitLoading = true;
       entry.user_id = this.user_id;
-      this.$api.post(`/entries`, entry).then(() => {
+      this.$api.post('/entries', entry).then(() => {
         this.submitLoading = false;
         var leaderboardEntry = {
           user: { user_id: this.user_id, name: this.user_name },
@@ -69,7 +70,7 @@ export default {
     },
     async getDataForLeaderboardEntries() {
       this.$api.get(`/groups?user_id=${this.user_id}`).then((result) => {
-        this.groupIdToGroup = this.arrayToMap(result.data, "id");
+        this.groupIdToGroup = this.arrayToMap(result.data, 'id');
         let promises = [];
         for (let group of result.data) {
           //get uses of group, put in groupToUsers map
@@ -149,13 +150,13 @@ export default {
         }
       }
       //set position of each entry object
-      for (var i = 0; i < positions.length; i++) {
-        for (let entry of positions[i]) {
-          entry.position = i + 1;
+      for (var j = 0; j < positions.length; j++) {
+        for (let entry of positions[j]) {
+          entry.position = j + 1;
         }
       }
     },
-    arrayToMap(arr, keyField) {
+    arrayToMap(arr: [any], keyField: string) {
       /* takes an array of objects and makes it into a map based on a key
       [{id: 1, name: Rob}] -> {1: {id: 1, name: rob}}
       */
@@ -166,6 +167,6 @@ export default {
       return map;
     },
   },
-};
+});
 </script>
 <style scoped></style>

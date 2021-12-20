@@ -4,21 +4,21 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: '', component: () => import('src/pages/IndexPage.vue') }
     ]
   },
   {
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Login.vue') }
+      { path: '', component: () => import('src/pages/LoginPage.vue') }
     ]
   },
   {
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Home.vue') }
+      { path: '', component: () => import('src/pages/HomePage.vue') }
     ]
   },
   {
@@ -26,7 +26,7 @@ const routes = [
     name: 'group',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Group.vue') }
+      { path: '', component: () => import('src/pages/GroupPage.vue') }
     ]
   },
 
@@ -34,7 +34,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404.vue')
+    component: () => import('src/pages/Error404Page.vue')
   }
 ]
 

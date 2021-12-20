@@ -32,31 +32,22 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script lang="ts">
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "EntryTable",
+  name: 'EntryTable',
   props: {
-    entries: Array,
-    validator: (prop) => prop.every(e => typeof e === 'Object')
-  },
-  setup() {
-    return {
-      groupRedirect(groupId) {
-        this.$router.push({path: `/group/${groupId}`})
-      }
-    }
-  },
-  data() {
-    return {
-    };
+    entries: Array
   },
   methods: {
-    formatTime(timeInSeconds) {
+    formatTime(timeInSeconds: number) : string{
       const mins = Math.floor(timeInSeconds / 60);
       const secs = timeInSeconds % 60;
-      return mins + ":" + (secs < 10 ? "0" : "") + secs;
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`
+    },
+    groupRedirect(groupId: string) {
+      void this.$router.push({path: `/group/${groupId}`})
     },
   },
   computed: {

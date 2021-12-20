@@ -1,25 +1,29 @@
 <template lang="">
-<q-inner-loading
-    :showing="showLoading"
-    color: primary/>
-<div class="q-ma-lg"
-    v-show="showGroupPage">
-    <h3 class=text-capitalize>
-        {{groupName}}
-    </h3>
+<div>
+  <q-inner-loading
+      :showing="showLoading"
+      color: primary/>
+  <div class="q-ma-lg"
+      v-show="showGroupPage">
+      <h3 class=text-capitalize>
+          {{groupName}}
+      </h3>
+  </div>
 </div>
-
 </template>
-<script>
+<script lang="ts">
+import {defineComponent} from 'vue'
 
-export default {
-  name: "Group",
+import {Group} from '../models/Groups/groups'
+
+export default defineComponent({
+  name: 'GroupPage',
   components: {
   },
   data() {
     return {
       groupName: new String,
-      user_name: "testdude",
+      user_name: 'testdude',
       groupIdToGroup: new Map(),
       userIdToUser: new Map(),
       groupToEntries: new Map(),
@@ -32,16 +36,16 @@ export default {
   computed: {
   },
   mounted() {
-    this.getGroupInfo();
+    void this.getGroupInfo();
   },
   methods: {
     async getGroupInfo()
     {
-        this.$api.get(`/groups/ids?group_id=${this.$route.params.groupID}`).then((result) => {
-            this.groupName = result.data.name;
+        await this.$api.get(`/groups/ids?group_id=${this.$route.params.groupID as string}`).then((result) => {
+            this.groupName = (result.data as Group).name
             this.showGroupPage = true;
             this.showLoading = false;
-            this.getGroupEntries();
+            void this.getGroupEntries();
         });
     },
     async getGroupEntries()
@@ -49,7 +53,7 @@ export default {
         //pass
     }
   },
-};
+});
 </script>
 <style scoped>
     .capitalize {
