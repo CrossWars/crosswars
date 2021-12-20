@@ -10,7 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-j
+
         <q-toolbar-title>
           CrossWars
         </q-toolbar-title>
