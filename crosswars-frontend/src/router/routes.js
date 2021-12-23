@@ -34,7 +34,7 @@ const routes = [
     name: 'group',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Group.vue') }
+      { path: '', component: () => import('pages/GroupPage.vue') }
     ]
   },
 
