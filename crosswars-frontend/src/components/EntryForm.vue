@@ -2,7 +2,7 @@
 <div id="entry-form">
     <form @submit.prevent="handleSubmit">
        <q-input 
-       ref="EntryInput"
+       ref="inputRef"
        inputmode="numeric"
        outlined 
        v-model="timeString" 
@@ -31,14 +31,10 @@
     </form>
   </div>
 </template>
-<script>
-import { ref } from "vue";
-
-export default {
-  name: "EntryForm",
-  setup() {
-    const submitting = ref(false);
-  },
+<script lang='ts'>
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name: 'EntryForm',
   props: {
     loading: Boolean,
   },
@@ -53,22 +49,24 @@ export default {
         this.submitting = false;
         return;
       }
-      this.$emit("add:entry", { time: time });
-      this.timeString = "0:00";
+      this.$emit('add:entry', { time: time });
+      this.timeString = '0:00'
       this.error = false;
       this.success = true;
       this.submitting = false;
     },
     onFocus() {
-      //sets caret to end of input field
-      let e = this.$refs.EntryInput.getNativeElement();
+      //sets caret to end of input field. I can't get ESLint to like this code, so for now the errors are just disabled
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
+      let e = (this.$refs['inputRef'] as any).getNativeElement();
       setTimeout(()=> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         e.setSelectionRange(e.value.length, e.value.length)
       }, 1)  
       console.log(e);
     },
-    parseTime(time) {
-      const mins_secs = time.split(":");
+    parseTime(time: string) {
+      const mins_secs = time.split(':');
       console.log(mins_secs);
       const mins = parseInt(mins_secs[0]);
       const secs = parseInt(mins_secs[1]);
@@ -80,11 +78,10 @@ export default {
       error: false,
       success: false,
       submitting: false,
-      timeString: "0:00",
+      timeString: '0:00',
     };
   },
-  computed: {},
-};
+});
 </script>
 <style scoped>
 .inputField {

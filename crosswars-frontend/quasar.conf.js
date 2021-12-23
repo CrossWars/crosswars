@@ -13,7 +13,7 @@ const { configure } = require('quasar/wrappers');
 module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli/supporting-ts
-    supportTS: false,
+    supportTS: true,
 
     // https://v2.quasar.dev/quasar-cli/prefetch-feature
     // preFetch: true,
@@ -141,9 +141,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `CrossWars`,
-        short_name: `CrossWars`,
-        description: `A Crossword Platform`,
+        name: 'CrossWars',
+        short_name: 'CrossWars',
+        description: 'A Crossword Platform',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

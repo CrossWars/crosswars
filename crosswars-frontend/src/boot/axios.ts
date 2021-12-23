@@ -1,5 +1,5 @@
 import { boot } from 'quasar/wrappers'
-import axios from 'axios'
+import axios, { AxiosInstance, AxiosStatic } from 'axios'
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -17,6 +17,13 @@ const api = axios.create({ baseURL: 'http://crosswars.xyz/crosswars/api' })
 //const api = axios.create({ baseURL: 'http://192.168.1.79:8080/crosswars/api' })
 //const api = axios.create({ baseURL: 'http://192.168.86.51:8080/crosswars/api' })
 
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $axios: AxiosStatic;
+    $api: AxiosInstance;
+  }
+}
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
