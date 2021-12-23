@@ -43,13 +43,12 @@ export default defineComponent({
       this.submitting = true;
       this.success = false;
       let time = this.parseTime(this.timeString);
-      if (time <= 0) {
-        console.log(time);
+      if (time <= 0 || time >= 24*60*60) {
         this.error = true;
         this.submitting = false;
         return;
       }
-      this.$emit('add:entry', { time: time });
+      this.$emit('add:entry', time);
       this.timeString = '0:00'
       this.error = false;
       this.success = true;
@@ -65,7 +64,7 @@ export default defineComponent({
       }, 1)  
       console.log(e);
     },
-    parseTime(time: string) {
+    parseTime(time: string): number {
       const mins_secs = time.split(':');
       console.log(mins_secs);
       const mins = parseInt(mins_secs[0]);

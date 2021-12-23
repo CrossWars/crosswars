@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-list separator>
-      <q-item v-for="entry in sortedEntries" :key="entry.user_name" class="q-my-sm" clickable v-ripple>
+      <q-item v-for="entry in sortedEntries" :key="entry.user.id" class="q-my-sm" clickable v-ripple>
       <q-item-section side>
         <div>
         <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>
@@ -33,12 +33,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { CombinedLeaderboardEntry } from 'src/models/Entries/entries';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  name: 'EntryTable',
+  name: 'CombinedEntryList',
   props: {
-    entries: Array
+    entries: 
+    {
+      type: Array as PropType<CombinedLeaderboardEntry[]>,
+      default: () => []
+    }
   },
   methods: {
     formatTime(timeInSeconds: number) : string{
@@ -51,8 +56,12 @@ export default defineComponent({
     },
   },
   computed: {
-    sortedEntries: function() {
-        return [...this.entries].sort((a, b) => a.position - b.position);
+    sortedEntries: function() : CombinedLeaderboardEntry[] {
+        //this sorting function comes from .position possibly being undefined
+        return [...this.entries].sort((a, b) => 
+          (a.position || b.position) ? 
+            (!a.position ? -1 : !b.position ? 1 : a.position -b.position) : 0
+        );
       }
     }
 });
