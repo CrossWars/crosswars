@@ -10,7 +10,7 @@ export async function getGroupByGroupId(group_id: string): Promise<Group>
 {
     return api.get(`/groups/ids?group_id=${group_id}`)
     .then((groupResponse) => {
-        return createGroupFromData(groupResponse);
+        return createGroupFromData(groupResponse.data);
     })
 }
 export async function getGroupsByUserId(user_id: string): Promise<Group[]>

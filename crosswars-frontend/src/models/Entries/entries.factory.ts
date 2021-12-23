@@ -32,8 +32,6 @@ export async function createDailyCombinedLeaderboardEntries(user_id: string): Pr
         promises.push(promise2)
     }
     await Promise.all(promises)
-    console.log('Entries from groups:')
-    console.log(groupToEntries)
     //create leaderboard entries
     const userIdToCombinedLeaderboardEntry = new Map<string, CombinedLeaderboardEntry>()
     for(const [group, entries] of groupToEntries)
@@ -59,6 +57,29 @@ export async function createDailyCombinedLeaderboardEntries(user_id: string): Pr
     const entries =  Array.from(userIdToCombinedLeaderboardEntry.values())
     setLeaderboardEntryPositions(entries)
     return entries
+}
+export async function createDailyLeaderboardEntries(group_id: string): Promise<LeaderboardEntry[]>
+{
+    const entries = await getEntriesByGroupId(group_id)
+    const userIdToUsers = await getUsersByGroupId(group_id).then(
+        (users) => {
+            const userIdToUsers = new Map<string, User>();
+            for (const user of users)
+            {
+                userIdToUsers.set(user.id, user)
+            }
+            return userIdToUsers;
+        }
+    )
+    const leaderboardEntries: LeaderboardEntry[] = []
+    for (const entry of entries)
+    {
+        const user = userIdToUsers.get(entry.user_id)
+        if(!user) continue
+        leaderboardEntries.push({...entry, position: 0, user: user})
+    }
+    setLeaderboardEntryPositions(leaderboardEntries)
+    return leaderboardEntries
 }
 
 export function setLeaderboardEntryPositions(entries: LeaderboardEntry[])

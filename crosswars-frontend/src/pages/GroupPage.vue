@@ -3,54 +3,68 @@
   <q-inner-loading
       :showing="showLoading"
       color: primary/>
-  <div class="q-ma-lg"
+  <div class="q-ma-sm"
       v-show="showGroupPage">
-      <h3 class=text-capitalize>
-          {{groupName}}
-      </h3>
+      <h4 class=text-capitalize>
+          {{group.name}}
+      </h4>
+  </div>
+    <GroupDailyBarChart :entries="dailyLeaderboardEntries"/>
+  
+  <div class="q-pa-md">
+      <q-card>
+        <q-expansion-item
+        default-opened
+        icon="leaderboard"
+        label="Today's leaderboard">
+          <EntryList :entries="dailyLeaderboardEntries"/>
+        </q-expansion-item>
+      </q-card >
   </div>
 </div>
 </template>
 <script lang="ts">
+
+import { LeaderboardEntry } from 'src/models/Entries/entries';
+import { Group } from 'src/models/Groups/groups';
 import {defineComponent} from 'vue'
 
-import {Group} from '../models/Groups/groups'
+import {createDailyLeaderboardEntries} from 'src/models/Entries/entries.factory'
+import {getGroupByGroupId} from 'src/models/Groups/groups.api'
+
+import GroupDailyBarChart from 'components/charts/GroupDailyBarChart.vue'
+import EntryList from 'components/EntryList.vue'
 
 export default defineComponent({
   name: 'GroupPage',
   components: {
+    EntryList,
+    GroupDailyBarChart
   },
   data() {
     return {
-      groupName: new String,
-      user_name: 'testdude',
-      groupIdToGroup: new Map(),
-      userIdToUser: new Map(),
-      groupToEntries: new Map(),
-      userIdToLeaderboardEntry: new Map(),
-      submitLoading: false,
-      showLoading: true,
+      group: {name: 'poop', id: ''} as Group,
       showGroupPage: false,
+      showLoading: true,
+      dailyLeaderboardEntries: [] as LeaderboardEntry[]
     };
   },
   computed: {
   },
   mounted() {
-    void this.getGroupInfo();
+    this.getGroupInfo();
+    this.getDailyLeaderboardEntries();
   },
   methods: {
     async getGroupInfo()
     {
-        await this.$api.get(`/groups/ids?group_id=${this.$route.params.groupID as string}`).then((result) => {
-            this.groupName = (result.data as Group).name
-            this.showGroupPage = true;
-            this.showLoading = false;
-            void this.getGroupEntries();
-        });
+        this.group = await getGroupByGroupId(this.$route.params.groupID as string)
+        this.showGroupPage = true;
+        this.showLoading = false;
     },
-    async getGroupEntries()
+    async getDailyLeaderboardEntries()
     {
-        //pass
+      this.dailyLeaderboardEntries = await createDailyLeaderboardEntries(this.$route.params.groupID as string)
     }
   },
 });
