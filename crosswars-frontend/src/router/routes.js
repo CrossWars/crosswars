@@ -29,14 +29,6 @@ const routes = [
       { path: '', component: () => import('src/pages/GroupPage.vue') }
     ]
   },
-  {
-    path: '/group/:groupID',
-    name: 'group',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/GroupPage.vue') }
-    ]
-  },
 
   // Always leave this as last one,
   // but you can also remove it
