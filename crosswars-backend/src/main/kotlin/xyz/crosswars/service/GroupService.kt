@@ -33,6 +33,9 @@ class GroupService(
         return groupRepository.findGroupsByUser(userId).toList()
     }
 
+    fun findAllGroups(): List<Group> {
+        return groupRepository.findAllGroups().toList()
+    }
     /**
      * Finds all users in a given group
      *
@@ -109,4 +112,5 @@ class GroupService(
         isMemberRepository.save(savedIsMember)
         return savedIsMember
     }
+
 }
