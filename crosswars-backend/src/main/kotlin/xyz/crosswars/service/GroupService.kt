@@ -112,5 +112,4 @@ class GroupService(
         isMemberRepository.save(savedIsMember)
         return savedIsMember
     }
-
 }
