@@ -22,6 +22,14 @@ const routes = [
     ]
   },
   {
+    path: '/createGroup',
+    name: 'createGroup',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/CreateGroupPage.vue') }
+    ]
+  },
+  {
     path: '/group/:groupID',
     name: 'group',
     component: () => import('layouts/MainLayout.vue'),

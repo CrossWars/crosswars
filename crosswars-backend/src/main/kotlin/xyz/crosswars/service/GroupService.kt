@@ -72,13 +72,17 @@ class GroupService(
      * @return group saved to the database
      */
     fun createWebsiteGroup(group: Group): Group {
-        if (groupRepository.existsById(group.name.lowercase())) {
-            throw BadRequestException("A group with ID ${group.name.lowercase()} already exists")
+        if (!isGroupNameValid(group.name)) {
+            throw BadRequestException("The name \"${group.name}\" is invalid.")
+        }
+        val groupId = group.name.replace(' ', '_').lowercase()
+        if (groupRepository.existsById(groupId)) {
+            throw BadRequestException("A group with name ${group.name} already exists.")
         }
         // create a website group
         val savedGroup = Group(
-            id = group.name.lowercase(),
-            name = group.name.lowercase()
+            id = groupId,
+            name = group.name
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -108,5 +112,12 @@ class GroupService(
         )
         isMemberRepository.save(savedIsMember)
         return savedIsMember
+    }
+
+    private fun isGroupNameValid(group_name: String): Boolean {
+        if(group_name.length < 3 || group_name.length > 25) return false
+        //match with alphanumeric, separated by space between words
+        val pattern = "^[a-zA-Z1-9]+( ?[a-zA-Z-1-9])*$".toRegex()
+        return pattern.matches(group_name)
     }
 }

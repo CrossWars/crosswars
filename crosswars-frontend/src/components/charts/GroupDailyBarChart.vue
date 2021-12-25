@@ -1,5 +1,5 @@
 <template>
-    <apexchart v-if="entries.length > 0" type="bar" height="200" :options="chartOptions" :series="series"></apexchart>
+    <apexchart v-if="entries.length > 1" type="bar" height="200" :options="chartOptions" :series="series"></apexchart>
 </template>;
 
 <script lang="ts">

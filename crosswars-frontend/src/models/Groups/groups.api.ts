@@ -29,7 +29,24 @@ export async function getGroupByName(group_name: string): Promise<Group>
 {
     return api.get(`/groups/names?group_name=${group_name}`)
     .then((groupResponse) => {
-        return createGroupFromData(groupResponse);
+        return createGroupFromData(groupResponse.data);
+    })
+}
+
+export async function postNewGroup(group: Group): Promise<Group>
+{
+    return api.post('/groups/website', group).then((groupResponse) => {
+        return createGroupFromData(groupResponse.data)
+    })
+}
+
+export async function addUserToGroup(group_id: string, user_id: string)
+{
+    return api.post('/groups/users', null, {
+        params: {
+            group_id: group_id,
+            user_id: user_id
+        }
     })
 }
 
