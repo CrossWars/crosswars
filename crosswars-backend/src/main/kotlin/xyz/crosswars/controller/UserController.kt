@@ -31,20 +31,20 @@ class UserController(
         return service.createWebsiteUser(user)
     }
 
+    //If ID is null, return auth user
     @GetMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     @Authorized
     fun getUserById(
         @RequestParam("user_id", required = false) id: String?,
-        @RequestAttribute("auth_user") user: User?
+        @RequestAttribute("auth_user") user: User
     ): ResponseEntity<User> {
-        if (user != null) {
-            return ResponseEntity.ok(user)
+        return if (id == null || user.userId == id) {
+            ResponseEntity.ok(user)
         } else {
-            id?.let {
-                return ResponseEntity.ok(service.findUserById(id))
-            } ?: throw BadRequestException("User id query param is required if using auth token")
+            // exclude emails of other users
+            ResponseEntity.ok(service.findUserById(id).apply { this.email = null })
         }
     }
 
@@ -53,15 +53,11 @@ class UserController(
     @Transactional(readOnly = true)
     @Authorized
     fun getUserByEmail(
-        @RequestParam("user_email", required = false) email: String?,
+        @RequestParam("user_email") email: String,
         @RequestAttribute("auth_user") user: User?
     ): ResponseEntity<User> {
-        if (user != null) {
-            return ResponseEntity.ok(user)
-        } else {
-            email?.let {
-                return ResponseEntity.ok(service.findUserByEmail(email))
-            } ?: throw BadRequestException("user_email query param is required if using auth token")
+        email.let {
+            return ResponseEntity.ok(service.findUserByEmail(email))
         }
     }
 
@@ -69,15 +65,11 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
     fun getUserByName(
-        @RequestParam("user_name", required = false) name: String?,
+        @RequestParam("user_name") name: String,
         @RequestAttribute("auth_user") user: User?
     ): ResponseEntity<User> {
-        if (user != null) {
-            return ResponseEntity.ok(user)
-        } else {
-            name?.let {
-                return ResponseEntity.ok(service.findUserByName(name))
-            } ?: throw BadRequestException("user_name query param is required if using auth token")
+        name.let {
+            return ResponseEntity.ok(service.findUserByName(name))
         }
     }
 }
