@@ -190,6 +190,7 @@ export default defineComponent({
     color: rgb(88, 88, 88);
     top: 35%;
     left: 2%;
+    width: 400%;
   }
   .unselectable {
       -webkit-touch-callout: none;
