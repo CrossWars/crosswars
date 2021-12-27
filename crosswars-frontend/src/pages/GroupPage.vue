@@ -157,7 +157,7 @@ export default defineComponent({
     vertical-align: middle;  /* needed for Safari */
   }
   .input-group-icon{
-    background:#eee;
+    background:rgb(234, 234, 234);
     color: #777;
     border-radius: 0px 5px 5px 0px;
     display: inline-block;
