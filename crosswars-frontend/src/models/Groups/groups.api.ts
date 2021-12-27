@@ -50,3 +50,12 @@ export async function addUserToGroup(group_id: string, user_id: string)
     })
 }
 
+export async function getIsMember(group_id: string, user_id: string): Promise<boolean>
+{
+    return api.get('/groups/is_members', {
+        params: {
+            group_id: group_id,
+            user_id: user_id
+        }
+    }).then((isMemberResponse) => isMemberResponse.data)
+}

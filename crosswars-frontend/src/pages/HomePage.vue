@@ -7,10 +7,11 @@
       <q-card flat bordered class="my-card bg-grey-1">
         <q-card-section>
           <div class="row items-center no-wrap">
-            <div class="col">
-              <div class="text-h6">Looks like you're not in any groups</div>
-              <div class="text-subtitle3">Create a group to compete with others. Or, get an invite link from a friend</div>
+            <div class="col display: block;">
+              <div class="text-h6">It looks like you're not in any groups</div>
+              <div class="text-subtitle3">Create a group to compete with others or get an invite link from a friend. Then have lots of fun doing the crossword every day with your friends!</div>
             </div>
+            
           </div>
         </q-card-section>
         <q-separator />
@@ -50,7 +51,7 @@ export default defineComponent({
   },
   data() {
     return {
-      user: {id: '123456789', name: 'testdude'} as User,
+      user: {id: '000', name: 'testdude'} as User,
       entries: [] as CombinedLeaderboardEntry[],
       groups: [] as Group[],
       submitLoading: false,

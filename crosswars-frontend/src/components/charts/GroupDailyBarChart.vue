@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     entries:  
     {
-      type: [] as PropType<LeaderboardEntry[]>,
+      type: Array as PropType<LeaderboardEntry[]>,
       default: () => []
     },
   },
