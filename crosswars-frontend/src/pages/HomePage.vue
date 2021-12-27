@@ -16,7 +16,7 @@
         </q-card-section>
         <q-separator />
         <q-card-actions>
-          <q-btn to="/createGroup" flat>Create a Group</q-btn>
+          <q-btn to="/create_group" flat>Create a Group</q-btn>
         </q-card-actions>
       </q-card>
     </div>

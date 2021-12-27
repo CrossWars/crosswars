@@ -22,8 +22,8 @@ const routes = [
     ]
   },
   {
-    path: '/createGroup',
-    name: 'createGroup',
+    path: '/create_group',
+    name: 'create_group',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/CreateGroupPage.vue') }
@@ -38,8 +38,8 @@ const routes = [
     ]
   },
   {
-    path: '/groupInvite/:groupID',
-    name: 'groupInvite',
+    path: '/group_invite/:groupID',
+    name: 'group_invite',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/GroupInvitePage.vue') }

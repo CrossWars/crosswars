@@ -13,15 +13,20 @@ import xyz.crosswars.repository.UserRepository
 import xyz.crosswars.util.unwrap
 import java.util.*
 
+//match with alphanumeric, separated by space between words
+private const val VALID_GROUP_NAME_PATTERN = "^[a-zA-Z1-9]+( ?[a-zA-Z1-9])*\$"
+
 @Service
 class GroupService(
     val groupRepository: GroupRepository,
     val userRepository: UserRepository,
     val isMemberRepository: IsMemberRepository
 ) {
-    fun findGroupById(group_id: String): Group {
-        return groupRepository.findById(group_id).unwrap()
-            ?: throw NoContentException("Could not find group with id $group_id")
+
+
+    fun findGroupById(groupId: String): Group {
+        return groupRepository.findById(groupId).unwrap()
+            ?: throw NoContentException("Could not find group with id $groupId")
     }
 
     fun findGroupByName(name: String): Group {
@@ -114,10 +119,8 @@ class GroupService(
         return savedIsMember
     }
 
-    private fun isGroupNameValid(group_name: String): Boolean {
-        if(group_name.length < 3 || group_name.length > 25) return false
-        //match with alphanumeric, separated by space between words
-        val pattern = "^[a-zA-Z1-9]+( ?[a-zA-Z-1-9])*$".toRegex()
-        return pattern.matches(group_name)
+    private fun isGroupNameValid(groupName: String): Boolean {
+        if(groupName.length < 3 || groupName.length > 25) return false
+        return VALID_GROUP_NAME_PATTERN.toRegex().matches(groupName)
     }
 }
