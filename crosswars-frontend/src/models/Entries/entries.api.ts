@@ -9,15 +9,15 @@ export async function getEntriesByUserId(user_id: string, from_date?: string, to
 {
     let from_param = ''
     let to_param = ''
-    if (typeof from_date !== undefined)
+    if (from_date !== undefined)
     {
         from_param = `&from_date=${from_date}`
-        if (typeof to_date !== undefined)
+        if (to_date !== undefined)
         {
             to_param = `&to_date=${to_date}`
         }
     }
-    return api.get(`/entries/entries?user_id=${user_id}${from_param}${to_param}`)
+    return api.get(`/entries/users?user_id=${user_id}${from_param}${to_param}`)
     .then((entriesResponse) => {
         const entries: Entry[] = []
         for (const entryData of entriesResponse.data)

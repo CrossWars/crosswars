@@ -29,6 +29,14 @@ const routes = [
       { path: '', component: () => import('src/pages/GroupPage.vue') }
     ]
   },
+  {
+    path: '/user/:userID',
+    name: 'user',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/UserPage.vue') }
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
