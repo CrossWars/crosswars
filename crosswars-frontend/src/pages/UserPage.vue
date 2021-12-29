@@ -3,8 +3,7 @@
   <q-inner-loading
       :showing="showLoading"
       color: primary/>
-  <div class="q-ma-sm"
-      v-show="showUserPage">
+  <div class="q-ma-sm">
       <h4 class=text-capitalize>
           {{user.name}}
       </h4>
@@ -31,7 +30,7 @@ export default defineComponent({
   },
   data() {
     return {
-      user: {name: 'poop', id: ''} as User,
+      user: {name: 'PlaceholderUser', id: ''} as User,
       showUserPage: false,
       showLoading: true,
       entries: [] as Entry[]

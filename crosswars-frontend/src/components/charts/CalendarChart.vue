@@ -1,19 +1,41 @@
 <template lang="">
-    <div>
-        <VueECharts :options="heatmap" autoresize/>
-    </div>
+    <div v-if="entries.length > 0">
+        <q-card class="q-pa-md">
+            <q-expansion-item icon="calendar_today" :label="label">
+                    <v-chart :option="heatmap" class="chart" autoresize/>
+            </q-expansion-item>
+        </q-card>
+  </div>
 </template>
-<script lang="ts">
+<script lang='ts'>
 import { Entry } from 'src/models/Entries/entries';
 import { defineComponent, PropType } from 'vue';
+import { formatTime} from 'src/utilities/time'
 
-
-import VueECharts from 'vue-echarts';
-import "echarts/lib/chart/heatmap";
-import "echarts/lib/component/tooltip";
-import "echarts/lib/component/grid";
-import "echarts/lib/component/visualMap";
+import { use, time} from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import { HeatmapChart } from 'echarts/charts';
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  VisualMapComponent,
+  GridComponent,
+  CalendarComponent,
+} from 'echarts/components';
+import VChart, { THEME_KEY } from 'vue-echarts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
+
+use([
+  CanvasRenderer,
+  HeatmapChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  VisualMapComponent,
+  GridComponent,
+  CalendarComponent
+]);
 
 export default defineComponent({
     name: 'CalendarChart',
@@ -25,7 +47,15 @@ export default defineComponent({
         },
   },
   components: {
-    VueECharts
+    VChart
+  },
+  provide: {
+      [THEME_KEY]: 'light'
+  },
+  data() {
+    return {
+      label: `${(new Date()).getFullYear()} Heatmap`
+    };
   },
   methods: {
       getData(entries: Entry[]) {
@@ -36,15 +66,44 @@ export default defineComponent({
       }
   },
   computed: {
-    heatmap: function(): ECBasicOption {
+    other: function() {
+        return 0
+    },
+    heatmap: function() {
         let options: ECBasicOption = {
             tooltip: {
                 position: 'top',
+                formatter: function (p: any) {
+                    const fDate = time.format('yyyy/MM/dd', p.data[0], false)
+                    const fTime = formatTime(p.data[1])
+                    return '(' + fDate + ') ' + fTime
+                }
             },
+            visualMap: {
+                maxOpen: true,
+                calculable: true,
+                min: 5,
+                orient: 'horizontal',
+                align: 'auto',
+                left: 'center',
+                top: 0,
+                itemHeight: 250,
+                formatter: function (v: any) {
+                    return formatTime(Math.floor(v))
+                }
+            },
+            calendar: [{
+                top: 100,
+                left: 'center',
+                range: (new Date()).getFullYear(),
+                borderWidth: 0.5,
+                orient: 'vertical'
+                }
+            ],
             series: [{
                 type: 'heatmap',
                 coordinateSystem: 'calendar',
-                data: [['2020-01-01', 20]],
+                data: this.entries.map((e) => [e.date, e.time]),
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -58,6 +117,8 @@ export default defineComponent({
   }
 })
 </script>
-<style lang="">
-    
+<style scoped>
+    .chart {
+        height: 1200px;
+    }
 </style>
