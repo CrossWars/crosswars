@@ -1,10 +1,8 @@
 <template lang="">
-    <div v-if="entries.length > 0">
-        <q-card class="q-pa-md">
-            <q-expansion-item icon="calendar_today" :label="label">
-                    <v-chart :option="heatmap" class="chart" autoresize/>
-            </q-expansion-item>
-        </q-card>
+    <div>
+        <q-expansion-item icon="calendar_today" :label="label">
+            <v-chart :option="heatmap" class="chart" autoresize/>
+        </q-expansion-item>
   </div>
 </template>
 <script lang='ts'>

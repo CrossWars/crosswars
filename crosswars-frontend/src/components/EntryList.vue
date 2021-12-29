@@ -8,15 +8,17 @@
         </div>
       </q-item-section>
       <q-item-section avatar>
-        <q-avatar color="primary" text-color="white">
-          {{ entry.user.name.charAt(0)}}
-        </q-avatar>
+        <q-btn :to="getUserLink(entry.user_id)" round>
+          <q-avatar color="primary" text-color="white">
+            {{ entry.user.name.charAt(0).toUpperCase()}}
+          </q-avatar>
+        </q-btn>
       </q-item-section>
       <q-item-section>
-        <q-item-label font=text-weight-bold class="q-py-s">{{ entry.user.name }}</q-item-label>
+        <q-item-label><p font=text-weight-bold class="q-pt-xs" style="text-transform: capitalize; text-align: left;">{{ entry.user.name }}</p></q-item-label>
       </q-item-section>
       <q-item-section side>
-        <q-item-label>{{ formatTime(entry.time) }}</q-item-label>
+        <q-item-label style="color: black; font-size: 15px;">{{ formatTime(entry.time) }}</q-item-label>
       </q-item-section>
       </q-item>
     </q-list>
@@ -45,6 +47,10 @@ export default defineComponent({
     groupRedirect(groupId: string) {
       void this.$router.push({path: `/group/${groupId}`})
     },
+    getUserLink(userId: string): string
+    {
+      return `/user/${userId}`
+    }
   },
   computed: {
     sortedEntries: function() : LeaderboardEntry[] {

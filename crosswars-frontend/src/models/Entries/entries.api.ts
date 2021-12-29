@@ -51,7 +51,10 @@ export async function getEntriesByGroupId(group_id: string, from_date?: string, 
     })
 }
 export async function postEntry(entry: PostEntry){
-    console.log('Entry:')
-    console.log(entry)
     return api.post('/entries', entry)
+}
+
+export async function getBestEntryByUserId(user_id: string)
+{
+
 }
