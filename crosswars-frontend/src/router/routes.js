@@ -8,13 +8,6 @@ const routes = [
     ]
   },
   {
-    path: '/login',
-    component: () => import('layouts/LoginLayout.vue'),
-    children: [
-      { path: '', component: () => import('src/pages/LoginPage.vue') }
-    ]
-  },
-  {
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
