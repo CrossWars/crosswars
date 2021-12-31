@@ -5,12 +5,15 @@ import xyz.crosswars.entities.*
 import xyz.crosswars.exception.NoContentException
 import xyz.crosswars.repository.*
 import xyz.crosswars.util.getPuzzleDateInEST
+import xyz.crosswars.util.currentDateInEST
 
 @Service
 class WinService(
     private val winRepository: WinRepository,
     private val isMemberRepository: IsMemberRepository,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val groupService: GroupService,
+    private val entryService: EntryService
 ) {
     fun validateWin(win: Win) {
         groupRepository.checkIfGroupExists(win.groupId)
@@ -72,4 +75,28 @@ class WinService(
 
     fun getWinCountsForAllUsersInGroup(groupId: String): List<WinCount> =
         winRepository.getWinCountsForAllUsersInGroup(groupId).toList()
+
+    fun recordWinsForAllGroups() {
+        val groups = groupService.findAllGroups()
+        groups.forEach { group ->
+            recordWinsForGroup(group)
+        }
+    }
+
+    fun recordWinsForGroup(group: Group) {
+        val date = currentDateInEST().toLocalDate().entryDateString()
+        val entries = entryService.getEntriesByGroupAndDate(group.id, date, date)
+        val winnerIds = getWinnerIdsFromEntries(entries)
+        winnerIds.forEach { winnerId ->
+            val win = Win(winnerId, group.id, date)
+            recordWin(win)
+        }
+    }
+    fun getWinnerIdsFromEntries(entries: List<Entry>): List<String>
+    {
+        //ties can lead to multiple winners
+        if (entries.isEmpty()) return listOf()
+        val min = entries.minOf { it.time }
+        return entries.filter { it.time == min}.map { it.userId}
+    }
 }

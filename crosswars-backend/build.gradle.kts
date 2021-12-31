@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.1"
+    id("org.springframework.boot") version "2.5.8"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.20"
-    kotlin("plugin.spring") version "1.5.20"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.5.20"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.20"
+    kotlin("jvm") version "1.5.32"
+    kotlin("plugin.spring") version "1.5.32"
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.5.32"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.32"
     id("jacoco")
 }
 
@@ -72,10 +72,10 @@ tasks.withType<Test> {
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
-        xml.isEnabled = false
-        csv.isEnabled = false
-        html.isEnabled = true
-        html.destination = file("${buildDir}/jacoco/")
+        xml.required.set(false)
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(file("${buildDir}/jacoco/"))
     }
     doLast {
         println("file://${buildDir}/jacoco/index.html")

@@ -9,12 +9,14 @@ import xyz.crosswars.entities.Group
 import xyz.crosswars.entities.IsMember
 import xyz.crosswars.entities.User
 import xyz.crosswars.service.GroupService
+import xyz.crosswars.service.IsMemberService
 
 @Api(tags = ["Groups"])
 @RestController
 @RequestMapping("/groups")
 class GroupController(
-    var service: GroupService
+    var service: GroupService,
+    val isMemberService: IsMemberService
 ) {
     @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
@@ -71,5 +73,15 @@ class GroupController(
     @Transactional(readOnly = true)
     fun getUsersByGroupId(@RequestParam("group_id", required = true) groupId: String): ResponseEntity<List<User>> {
         return ResponseEntity.ok(service.findUsersByGroupId(groupId))
+    }
+
+    @GetMapping("/is_members")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional(readOnly = true)
+    fun getIsMember(
+        @RequestParam("user_id", required = true) userId: String,
+        @RequestParam("group_id", required = true) groupId: String
+    ): ResponseEntity<Boolean>  {
+        return ResponseEntity.ok(isMemberService.getIsMember(userId, groupId))
     }
 }

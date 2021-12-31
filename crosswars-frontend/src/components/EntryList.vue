@@ -1,24 +1,33 @@
 <template>
   <div>
     <q-list separator>
-      <q-item v-for="entry in sortedEntries" :key="entry.user.id" class="q-my-sm">
-      <q-item-section side>
-        <div>
-        <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>
-        </div>
-      </q-item-section>
-      <q-item-section avatar>
-        <q-avatar color="primary" text-color="white">
-          {{ entry.user.name.charAt(0)}}
-        </q-avatar>
-      </q-item-section>
-      <q-item-section>
-        <q-item-label font=text-weight-bold class="q-py-s">{{ entry.user.name }}</q-item-label>
-      </q-item-section>
-      <q-item-section side>
-        <q-item-label>{{ formatTime(entry.time) }}</q-item-label>
-      </q-item-section>
-      </q-item>
+      <div v-if="sortedEntries.length > 0">
+        <q-item v-for="entry in sortedEntries" :key="entry.user.id" class="q-my-sm">
+          <q-item-section side>
+            <div>
+            <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>
+            </div>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-avatar color="primary" text-color="white">
+              {{ entry.user.name.charAt(0)}}
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label font=text-weight-bold class="q-py-s">{{ entry.user.name }}</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label>{{ formatTime(entry.time) }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </div>
+      <div v-else>
+        <q-item>
+        <q-item-section>
+            <q-item-label font=text-weight-bold>It's pretty empty here</q-item-label>
+          </q-item-section>
+        </q-item>
+      </div>
     </q-list>
   </div>
 </template>
