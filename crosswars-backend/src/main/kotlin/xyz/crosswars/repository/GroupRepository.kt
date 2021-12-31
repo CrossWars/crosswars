@@ -19,6 +19,9 @@ interface GroupRepository : CrudRepository<Group, String> {
 
     @Query("select g from Group g, IsMember im where im.userId = :userId and g.id = im.groupId")
     fun findGroupsByUser(userId: String): Stream<Group>
+
+    @Query("select g from Group g")
+    fun findAllGroups(): Stream<Group>
 }
 
 fun GroupRepository.checkIfGroupExists(groupId: String) {
