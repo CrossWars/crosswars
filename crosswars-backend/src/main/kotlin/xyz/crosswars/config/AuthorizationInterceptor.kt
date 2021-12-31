@@ -27,6 +27,8 @@ class AuthorizationInterceptor(
             val authMethods: Authorized = handler.getMethodAnnotation(Authorized::class.java)
                 ?: return true // Authorized annotation is missing, allow the request to proceed
 
+            if (!authConfig.enabled) return true // Allow all requests if auth is disabled
+
             if (authMethods.googleIdToken) {
                 request.getHeader("Authorization")?.split(" ")?.get(1).let { idToken ->
                     idToken?.let {
