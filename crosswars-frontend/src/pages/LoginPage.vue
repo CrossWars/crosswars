@@ -1,5 +1,7 @@
 <template>
+  <div>
     <login-button />
+  </div>
 </template>
 
 

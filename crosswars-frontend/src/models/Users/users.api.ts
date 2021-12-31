@@ -19,12 +19,25 @@ export async function getUsersByGroupId(group_id: string): Promise<User[]>
     })
 }
 
-//TODO include auth token
 export async function getUserByUserId(user_id: string): Promise<User>
 {
-    const token = Cookies.get('id_token')
-    console.log(`id: ${token}`)
+    const token = localStorage.getItem('jwt')
     return api.get(`/users/ids?user_id=${user_id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+    .then((userResponse) => {
+        return createUserFromData(userResponse.data)
+    })
+}
+
+export async function getUserByJWT(): Promise<User>
+{
+    const token = localStorage.getItem('jwt')
+    return api.get('/users/ids',
         {
             headers: {
                 Authorization: `Bearer ${token}`

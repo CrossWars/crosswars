@@ -8,11 +8,24 @@ const routes = [
     ]
   },
   {
+    path: '/login',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/LoginPage.vue') }
+    ],
+    meta: {
+      guest: true,
+    }
+  },
+  {
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/HomePage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/group/:groupID',
@@ -20,7 +33,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/GroupPage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
 
   // Always leave this as last one,

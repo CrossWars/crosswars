@@ -15,22 +15,34 @@
 import { Cookies } from 'quasar'
 import { defineComponent } from 'vue'
 import { HelloJSLoginOptions } from 'hellojs';
+import { getUserByJWT } from 'src/models/Users/users.api';
 export default defineComponent({
   name: 'LoginButton',
   methods: {
-    auth (network: string) {
+    async auth (network: string) {
       const loginOptions: HelloJSLoginOptions = {
         scope: 'profile openid email',
         response_type: 'id_token token'
       }
-      void this.$hello(network).login(loginOptions)
-        .then((res) => {
-          if(res.authResponse?.id_token != null) {
-           Cookies.set('id_token', res.authResponse?.id_token);
-           console.log(res.authResponse?.id_token);
-          }
-          void this.$router.push('Home')
-        });
+      const res = await this.$hello(network).login(loginOptions)
+      if(res.authResponse?.id_token != null)
+      {
+        console.log(res.authResponse?.id_token)
+        Cookies.set('id_token', res.authResponse?.id_token);
+        localStorage.setItem('jwt', res.authResponse?.id_token)
+        const user = await getUserByJWT();
+        localStorage.setItem('user', JSON.stringify(user))
+        console.log('next url:')
+        console.log(this.$route.params.nextUrl)
+        if (this.$route.query.nextUrl != null)
+        {
+          this.$router.push(this.$route.query.nextUrl as string)
+        }
+        else
+        {
+          this.$router.push('Home')
+        }
+      }
     }
   }
 })

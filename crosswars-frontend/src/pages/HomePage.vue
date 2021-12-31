@@ -30,6 +30,7 @@ import EntryForm from 'components/EntryForm.vue';
 import {defineComponent} from 'vue'
 import { createDailyCombinedLeaderboardEntries,  setLeaderboardEntryPositions } from '../models/Entries/entries.factory'
 import { postEntry } from '../models/Entries/entries.api'
+import { getUserByJWT } from '../models/Users/users.api'
 import { CombinedLeaderboardEntry } from 'src/models/Entries/entries';
 import { User } from 'src/models/Users/users';
 export default defineComponent({
@@ -40,7 +41,7 @@ export default defineComponent({
   },
   data() {
     return {
-      user: {id: '123456789', name: 'testdude'} as User,
+      user: {id: '', name: ''} as User,
       entries: [] as CombinedLeaderboardEntry[],
       submitLoading: false,
     };
@@ -67,6 +68,7 @@ export default defineComponent({
       setLeaderboardEntryPositions(this.entries)
     },
     async createEntries(){
+      this.user = await getUserByJWT();
       this.entries = await createDailyCombinedLeaderboardEntries(this.user.id);
     }
   },
