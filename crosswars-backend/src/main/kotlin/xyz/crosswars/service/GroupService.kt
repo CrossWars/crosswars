@@ -13,15 +13,20 @@ import xyz.crosswars.repository.UserRepository
 import xyz.crosswars.util.unwrap
 import java.util.*
 
+//match with alphanumeric, separated by space between words
+private const val VALID_GROUP_NAME_PATTERN = "^[a-zA-Z1-9]+( ?[a-zA-Z1-9])*\$"
+
 @Service
 class GroupService(
     val groupRepository: GroupRepository,
     val userRepository: UserRepository,
     val isMemberRepository: IsMemberRepository
 ) {
-    fun findGroupById(group_id: String): Group {
-        return groupRepository.findById(group_id).unwrap()
-            ?: throw NoContentException("Could not find group with id $group_id")
+
+
+    fun findGroupById(groupId: String): Group {
+        return groupRepository.findById(groupId).unwrap()
+            ?: throw NoContentException("Could not find group with id $groupId")
     }
 
     fun findGroupByName(name: String): Group {
@@ -72,13 +77,17 @@ class GroupService(
      * @return group saved to the database
      */
     fun createWebsiteGroup(group: Group): Group {
-        if (groupRepository.existsById(group.name.lowercase())) {
-            throw BadRequestException("A group with ID ${group.name.lowercase()} already exists")
+        if (!isGroupNameValid(group.name)) {
+            throw BadRequestException("The name \"${group.name}\" is invalid.")
+        }
+        val groupId = group.name.replace(' ', '_').lowercase()
+        if (groupRepository.existsById(groupId)) {
+            throw BadRequestException("A group with name ${group.name} already exists.")
         }
         // create a website group
         val savedGroup = Group(
-            id = group.name.lowercase(),
-            name = group.name.lowercase()
+            id = groupId,
+            name = group.name
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -108,5 +117,10 @@ class GroupService(
         )
         isMemberRepository.save(savedIsMember)
         return savedIsMember
+    }
+
+    private fun isGroupNameValid(groupName: String): Boolean {
+        if(groupName.length < 3 || groupName.length > 25) return false
+        return VALID_GROUP_NAME_PATTERN.toRegex().matches(groupName)
     }
 }

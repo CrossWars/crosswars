@@ -1,5 +1,5 @@
 <template lang="">
-<div id="entry-form">
+<div class="q-pt-md q-px-md" id="entry-form">
     <form @submit.prevent="handleSubmit">
        <q-input 
        ref="inputRef"
@@ -7,27 +7,25 @@
        outlined 
        v-model="timeString" 
        label="Enter Your Time" 
-       class="inputField"
+       class="q-py-lg"
        mask="#:##"
        fill-mask="0"
        reverse-fill-mask
        @focus="onFocus" />
-
-      <p v-if="error" class="error-message">
-        ❗Please fill out time field
-      </p>
-      <p v-if="success" class="success-message">✅ Time successfully added</p>
+      <div class="q-pt-sm">
       <q-btn 
       color="primary" 
       type="submit"
-      label="Submit" 
-      class="submitButton"
-      
+      label="Submit"
       :loading="loading">
         <template v-slot:loading>
           <q-spinner-dots />
         </template>
     </q-btn>
+    </div>
+    <p v-if="error" class="error-message">
+        Please fill out time field
+      </p>
     </form>
   </div>
 </template>
@@ -83,12 +81,6 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.inputField {
-  margin: 2rem;
-}
-.submitButton {
-  margin-left: 2rem;
-}
 form {
   margin-bottom: 2rem;
   max-width: 300px;
@@ -99,11 +91,9 @@ form {
 
 .error-message {
   color: #d33c40;
-  margin-left: 2rem;
 }
 
 .success-message {
   color: #32a95d;
-  margin-left: 2rem;
 }
 </style>
