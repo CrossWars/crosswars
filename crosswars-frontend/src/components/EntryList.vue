@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-list separator>
+    <div v-if="sortedEntries.length > 0">  
       <q-item v-for="entry in sortedEntries" :key="entry.user.id" class="q-my-sm">
       <q-item-section side>
         <div>
@@ -21,6 +22,14 @@
         <q-item-label style="color: black; font-size: 15px;">{{ formatTime(entry.time) }}</q-item-label>
       </q-item-section>
       </q-item>
+      </div>
+    <div v-else>
+        <q-item>
+        <q-item-section>
+            <q-item-label font=text-weight-bold>It's pretty empty here</q-item-label>
+          </q-item-section>
+        </q-item>
+    </div>
     </q-list>
   </div>
 </template>
