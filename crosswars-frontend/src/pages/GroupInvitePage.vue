@@ -43,6 +43,8 @@
 
 import { Group } from 'src/models/Groups/groups';
 import { getGroupByGroupId, addUserToGroup, getIsMember } from 'src/models/Groups/groups.api';
+import { User } from 'src/models/Users/users';
+import { getUserByJWT } from 'src/models/Users/users.api';
 import {defineComponent} from 'vue'
 
 
@@ -54,7 +56,7 @@ export default defineComponent({
     return {
       isMember: true,
       group: {} as Group,
-      userId: '123456789',
+      user: {} as User,
       error: false,
       errorMessage: '',
       showPage: false,
@@ -69,13 +71,14 @@ export default defineComponent({
   methods: {
     async getGroupInfo()
     {
-        this.isMember = await getIsMember(this.$route.params.groupID as string, this.userId)
+        this.user = await getUserByJWT();
+        this.isMember = await getIsMember(this.$route.params.groupID as string, this.user.id)
         this.group = await getGroupByGroupId(this.$route.params.groupID as string)
         this.showPage = true;
     },
     async joinGroup()
     {
-      addUserToGroup(this.group.id, this.userId).then(
+      addUserToGroup(this.group.id, this.user.id).then(
         () => this.groupRedirect(this.group.id))
     },
     goHome() {

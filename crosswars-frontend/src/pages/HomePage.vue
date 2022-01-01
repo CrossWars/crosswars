@@ -3,7 +3,7 @@
     <div>
       <EntryForm @add:entry="addEntry" :loading="submitLoading"/>
     </div>
-    <div v-if="groups.length==0" class="q-px-md q-pb-md" >
+    <div v-if="groupsRetrieved && groups.length==0" class="q-px-md q-pb-md" >
       <q-card flat bordered class="my-card bg-grey-1">
         <q-card-section>
           <div class="row items-center no-wrap">
@@ -56,11 +56,11 @@ export default defineComponent({
       entries: [] as CombinedLeaderboardEntry[],
       groups: [] as Group[],
       submitLoading: false,
+      groupsRetrieved: false,
     };
   },
   mounted() {
     this.createEntries();
-    this.getGroups();
   },
   methods: {
     async addEntry(time: number) {
@@ -82,11 +82,13 @@ export default defineComponent({
     },
     async createEntries(){
       this.user = await getUserByJWT();
+      this.getGroups();
       this.entries = await createDailyCombinedLeaderboardEntries(this.user.id);
     },
     async getGroups()
     {
       this.groups = await getGroupsByUserId(this.user.id)
+      this.groupsRetrieved = true;
     }
   },
 });

@@ -27,13 +27,10 @@ export default defineComponent({
       const res = await this.$hello(network).login(loginOptions)
       if(res.authResponse?.id_token != null)
       {
-        console.log(res.authResponse?.id_token)
         Cookies.set('id_token', res.authResponse?.id_token);
         localStorage.setItem('jwt', res.authResponse?.id_token)
         const user = await getUserByJWT();
         localStorage.setItem('user', JSON.stringify(user))
-        console.log('next url:')
-        console.log(this.$route.params.nextUrl)
         if (this.$route.query.nextUrl != null)
         {
           this.$router.push(this.$route.query.nextUrl as string)
