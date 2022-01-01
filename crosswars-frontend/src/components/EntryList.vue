@@ -1,33 +1,35 @@
 <template>
   <div>
     <q-list separator>
-      <div v-if="sortedEntries.length > 0">
-        <q-item v-for="entry in sortedEntries" :key="entry.user.id" class="q-my-sm">
-          <q-item-section side>
-            <div>
-            <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>
-            </div>
-          </q-item-section>
-          <q-item-section avatar>
-            <q-avatar color="primary" text-color="white">
-              {{ entry.user.name.charAt(0)}}
-            </q-avatar>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label font=text-weight-bold class="q-py-s">{{ entry.user.name }}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-item-label>{{ formatTime(entry.time) }}</q-item-label>
-          </q-item-section>
-        </q-item>
+    <div v-if="sortedEntries.length > 0">  
+      <q-item v-for="entry in sortedEntries" :key="entry.user.id" class="q-my-sm">
+      <q-item-section side>
+        <div>
+        <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>
+        </div>
+      </q-item-section>
+      <q-item-section avatar>
+        <q-btn :to="getUserLink(entry.user_id)" round>
+          <q-avatar color="primary" text-color="white">
+            {{ entry.user.name.charAt(0).toUpperCase()}}
+          </q-avatar>
+        </q-btn>
+      </q-item-section>
+      <q-item-section>
+        <q-item-label><p font=text-weight-bold class="q-pt-xs" style="text-transform: capitalize; text-align: left;">{{ entry.user.name }}</p></q-item-label>
+      </q-item-section>
+      <q-item-section side>
+        <q-item-label style="color: black; font-size: 15px;">{{ formatTime(entry.time) }}</q-item-label>
+      </q-item-section>
+      </q-item>
       </div>
-      <div v-else>
+    <div v-else>
         <q-item>
         <q-item-section>
             <q-item-label font=text-weight-bold>It's pretty empty here</q-item-label>
           </q-item-section>
         </q-item>
-      </div>
+    </div>
     </q-list>
   </div>
 </template>
@@ -54,6 +56,10 @@ export default defineComponent({
     groupRedirect(groupId: string) {
       void this.$router.push({path: `/group/${groupId}`})
     },
+    getUserLink(userId: string): string
+    {
+      return `/user/${userId}`
+    }
   },
   computed: {
     sortedEntries: function() : LeaderboardEntry[] {
