@@ -89,7 +89,6 @@ export default defineComponent({
     async getGroups()
     {
       this.groups = await getGroupsByUserId(this.user.id);
-      console.log(this.groups)
       this.groupsRetrieved = true;
     }
   },

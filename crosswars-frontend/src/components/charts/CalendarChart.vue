@@ -57,7 +57,6 @@ export default defineComponent({
   },
   methods: {
       getData(entries: Entry[]) {
-          console.log('entries:')
           let data = entries.map((e) => [e.date, e.time])
           console.log(data);
           return data;

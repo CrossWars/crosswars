@@ -45,8 +45,6 @@ export default defineComponent({
       try {
         user = await getUserByJWT();
         localStorage.setItem('user', JSON.stringify(user));
-        console.log('Here');
-        console.log(user);
         this.goToNextPage();
       } catch (e) {
         // create user on backend if not found
