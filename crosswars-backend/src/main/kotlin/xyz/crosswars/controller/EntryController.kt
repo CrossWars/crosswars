@@ -1,11 +1,16 @@
 package xyz.crosswars.controller
 
 import io.swagger.annotations.Api
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
+import xyz.crosswars.config.Authorized
 import xyz.crosswars.entities.Entry
+import xyz.crosswars.entities.User
 import xyz.crosswars.service.EntryService
+
 
 @Api(tags = ["Entries"])
 @RestController
@@ -14,7 +19,12 @@ class EntryController(
     private val entryService: EntryService
 ) {
     @PostMapping
-    fun recordEntry(@RequestBody entry: Entry): Entry {
+    @Authorized
+    fun recordEntry(@RequestBody entry: Entry, @RequestAttribute("auth_user") user: User): Entry {
+        if (user.userId != entry.userId) {
+            throw ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Auth user does not match entry user")
+        }
         return entryService.recordEntry(entry)
     }
 

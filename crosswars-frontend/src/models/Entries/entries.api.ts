@@ -51,10 +51,12 @@ export async function getEntriesByGroupId(group_id: string, from_date?: string, 
     })
 }
 export async function postEntry(entry: PostEntry){
-    return api.post('/entries', entry)
-}
-
-export async function getBestEntryByUserId(user_id: string)
-{
-
+    const token = localStorage.getItem('jwt')
+    return api.post('/entries', entry,
+    {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    )
 }

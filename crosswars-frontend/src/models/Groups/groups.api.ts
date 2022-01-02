@@ -35,17 +35,28 @@ export async function getGroupByName(group_name: string): Promise<Group>
 
 export async function postNewGroup(group: Group): Promise<Group>
 {
-    return api.post('/groups/website', group).then((groupResponse) => {
+    const token = localStorage.getItem('jwt')
+    return api.post('/groups/website', group,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    ).then((groupResponse) => {
         return createGroupFromData(groupResponse.data)
     })
 }
 
 export async function addUserToGroup(group_id: string, user_id: string)
 {
+    const token = localStorage.getItem('jwt')
     return api.post('/groups/users', null, {
         params: {
             group_id: group_id,
             user_id: user_id
+        },
+        headers: {
+            Authorization: `Bearer ${token}`
         }
     })
 }

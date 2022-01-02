@@ -9,7 +9,7 @@
           <div class="row items-center no-wrap">
             <div class="col display: block;">
               <div class="text-h6">It looks like you're not in any groups</div>
-              <div class="text-subtitle3">Create a group to compete with others or get an invite link from a friend. Then have lots of fun doing the crossword every day with your friends!</div>
+              <div class="text-subtitle3">Create a group or get an invite link from a friend to compete with others.</div>
             </div>
             
           </div>
@@ -17,10 +17,11 @@
         <q-separator />
         <q-card-actions>
           <q-btn to="/create_group" flat>Create a Group</q-btn>
+          <q-btn :to="`/user/${user.id}`" flat>See Your Stats</q-btn>
         </q-card-actions>
       </q-card>
     </div>
-    <div v-if="entries.length > 0" class="q-px-md">
+    <div v-if="entries.length > 0 && groups.length > 0" class="q-px-md">
       <q-card>
       <q-expansion-item
       default-opened
@@ -57,7 +58,7 @@ export default defineComponent({
       groups: [] as Group[],
       submitLoading: false,
       groupsRetrieved: false,
-    };
+    }
   },
   mounted() {
     this.createEntries();
@@ -87,7 +88,8 @@ export default defineComponent({
     },
     async getGroups()
     {
-      this.groups = await getGroupsByUserId(this.user.id)
+      this.groups = await getGroupsByUserId(this.user.id);
+      console.log(this.groups)
       this.groupsRetrieved = true;
     }
   },

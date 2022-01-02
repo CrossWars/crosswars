@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import xyz.crosswars.config.Authorized
+import xyz.crosswars.config.AuthorizedNewUser
 import xyz.crosswars.entities.User
 import xyz.crosswars.exception.BadRequestException
 import xyz.crosswars.service.UserService
@@ -26,8 +27,8 @@ class UserController(
 
     @PostMapping("/website")
     @ResponseStatus(HttpStatus.CREATED)
-    @Authorized
-    fun createUser(@RequestBody user: User): User {
+    @AuthorizedNewUser
+    fun createUser(@RequestAttribute("auth_user") user: User): User {
         return service.createWebsiteUser(user)
     }
 

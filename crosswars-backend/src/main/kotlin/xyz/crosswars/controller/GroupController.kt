@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import xyz.crosswars.config.Authorized
 import xyz.crosswars.entities.Group
 import xyz.crosswars.entities.IsMember
 import xyz.crosswars.entities.User
@@ -20,18 +21,21 @@ class GroupController(
 ) {
     @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
+    @Authorized(googleIdToken = false)
     fun createTelegramGroup(@RequestBody group: Group): Group {
         return service.createTelegramGroup(group)
     }
 
     @PostMapping("/website")
     @ResponseStatus(HttpStatus.CREATED)
+    @Authorized
     fun createGroup(@RequestBody group: Group): Group {
         return service.createWebsiteGroup(group)
     }
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
+    @Authorized
     fun addUserToGroup(
         @RequestParam("group_id", required = true) groupId: String,
         @RequestParam("user_id", required = true) userId: String

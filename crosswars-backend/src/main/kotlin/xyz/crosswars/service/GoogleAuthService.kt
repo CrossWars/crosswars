@@ -43,7 +43,16 @@ class GoogleAuthService(
 //            val locale = payload["locale"]
 //            val familyName = payload["family_name"]
 //            val givenName = payload["given_name"]
-
             service.findUserByEmail(email)
         } ?: throw UnauthorizedException("Google id token is invalid")
+
+    fun createUserFromToken(idToken: String): User =
+            // TODO: see if there's a way to handle token expired exceptions
+            verifier.verify(idToken)?.let { googleIdToken ->
+                val payload: GoogleIdToken.Payload = googleIdToken.payload
+                val userId: String = payload.subject
+                val email: String = payload.email
+                val givenName: String = payload["given_name"] as String
+                User(userId = userId, name=givenName, email=email, remind=false)
+            } ?: throw UnauthorizedException("Google id token is invalid")
 }

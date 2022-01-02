@@ -30,6 +30,9 @@ export async function getUserByUserId(user_id: string): Promise<User>
         }
     )
     .then((userResponse) => {
+        if(userResponse.status == 204) {
+            throw new Error('User not found')
+        }
         return createUserFromData(userResponse.data)
     })
 }
@@ -45,7 +48,22 @@ export async function getUserByJWT(): Promise<User>
         }
     )
     .then((userResponse) => {
+        if(userResponse.status == 204) {
+            throw new Error('User not found')
+        }
         return createUserFromData(userResponse.data)
     })
+}
+
+export async function postNewUser(): Promise<User>
+{
+    const token = localStorage.getItem('jwt')
+    return api.post('/users/website', null,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
 }
 
