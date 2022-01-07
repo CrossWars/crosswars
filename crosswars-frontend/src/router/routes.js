@@ -33,7 +33,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/CreateGroupPage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/group/:groupID',
@@ -52,7 +55,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/UserPage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/group_invite/:groupID',
@@ -60,7 +66,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/GroupInvitePage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   // Always leave this as last one,
   // but you can also remove it
