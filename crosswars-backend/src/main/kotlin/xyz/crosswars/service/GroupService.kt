@@ -12,7 +12,6 @@ import xyz.crosswars.repository.IsMemberRepository
 import xyz.crosswars.repository.UserRepository
 import xyz.crosswars.util.unwrap
 import java.util.*
-import kotlin.math.abs
 
 //match with alphanumeric, separated by space between words
 private const val VALID_GROUP_NAME_PATTERN = "^[a-zA-Z1-9]+( ?[a-zA-Z1-9])*\$"
