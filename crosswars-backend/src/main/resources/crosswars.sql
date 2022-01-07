@@ -13,8 +13,9 @@ CREATE TABLE IF NOT EXISTS ENTRY
 -- Table: CROSSGROUP
 CREATE TABLE IF NOT EXISTS CROSSGROUP
 (
-    group_id TEXT PRIMARY KEY,
-    name     TEXT
+    group_id   TEXT PRIMARY KEY,
+    name       TEXT,
+    created_by TEXT REFERENCES USER (user_id)
 );
 
 -- Table: IS_FRIENDS

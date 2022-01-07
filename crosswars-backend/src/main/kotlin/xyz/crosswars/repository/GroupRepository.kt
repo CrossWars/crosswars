@@ -22,6 +22,9 @@ interface GroupRepository : CrudRepository<Group, String> {
 
     @Query("select g from Group g")
     fun findAllGroups(): Stream<Group>
+
+    @Query("select count(g) from Group g where g.createdBy = :userId")
+    fun getCreatedGroupsCountByUserId(userId: String): Int
 }
 
 fun GroupRepository.checkIfGroupExists(groupId: String) {

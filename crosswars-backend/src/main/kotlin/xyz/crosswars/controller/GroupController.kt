@@ -29,8 +29,8 @@ class GroupController(
     @PostMapping("/website")
     @ResponseStatus(HttpStatus.CREATED)
     @Authorized
-    fun createGroup(@RequestBody group: Group): Group {
-        return service.createWebsiteGroup(group)
+    fun createGroup(@RequestBody group: Group, @RequestAttribute("auth_user") user: User): Group {
+        return service.createWebsiteGroup(group, user)
     }
 
     @PostMapping("/users")

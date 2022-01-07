@@ -15,6 +15,7 @@ import java.util.*
 
 //match with alphanumeric, separated by space between words
 private const val VALID_GROUP_NAME_PATTERN = "^[a-zA-Z1-9]+( ?[a-zA-Z1-9])*\$"
+private const val MAX_CREATED_GROUPS_PER_USER = 5
 
 @Service
 class GroupService(
@@ -67,7 +68,8 @@ class GroupService(
         // create a telegram group
         val savedGroup = Group(
             id = group.id,
-            name = group.name.lowercase()
+            name = group.name.lowercase(),
+            createdBy = null
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -79,7 +81,7 @@ class GroupService(
      * @param group group to create
      * @return group saved to the database
      */
-    fun createWebsiteGroup(group: Group): Group {
+    fun createWebsiteGroup(group: Group, createdByUser: User): Group {
         if (!isGroupNameValid(group.name)) {
             throw BadRequestException("The name \"${group.name}\" is invalid.")
         }
@@ -87,10 +89,14 @@ class GroupService(
         if (groupRepository.existsById(groupId)) {
             throw BadRequestException("A group with name ${group.name} already exists.")
         }
+        if (groupRepository.getCreatedGroupsCountByUserId(createdByUser.userId) >= MAX_CREATED_GROUPS_PER_USER) {
+            throw BadRequestException("Max number of created groups reached for user ${createdByUser.name}")
+        }
         // create a website group
         val savedGroup = Group(
             id = groupId,
-            name = group.name
+            name = group.name,
+            createdBy = createdByUser.userId
         )
         groupRepository.save(savedGroup)
         return savedGroup
