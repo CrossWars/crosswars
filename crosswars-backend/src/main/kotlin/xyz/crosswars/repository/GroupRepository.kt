@@ -25,6 +25,9 @@ interface GroupRepository : CrudRepository<Group, String> {
 
     @Query("select count(g) from Group g where g.createdBy = :userId")
     fun getCreatedGroupsCountByUserId(userId: String): Int
+
+    //the following is a derived Spring query
+    fun existsGroupByNameIgnoreCase(name: String): Boolean
 }
 
 fun GroupRepository.checkIfGroupExists(groupId: String) {
