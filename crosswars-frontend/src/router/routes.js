@@ -55,7 +55,7 @@ const routes = [
     ]
   },
   {
-    path: '/groupInvite/:groupID',
+    path: '/group_invite/:groupID',
     name: 'groupInvite',
     component: () => import('layouts/MainLayout.vue'),
     children: [

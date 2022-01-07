@@ -102,7 +102,7 @@ export default defineComponent({
   },
   computed: {
     inviteLink: function(): string {
-        return `${location.host}/#/groupInvite/${this.group.id}`
+        return `${location.host}/#/group_invite/${this.group.id}`
     }
   },
   mounted() {

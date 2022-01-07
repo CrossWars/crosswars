@@ -50,9 +50,10 @@ class GoogleAuthService(
             // TODO: see if there's a way to handle token expired exceptions
             verifier.verify(idToken)?.let { googleIdToken ->
                 val payload: GoogleIdToken.Payload = googleIdToken.payload
-                val userId: String = payload.subject
-                val email: String = payload.email
-                val givenName: String = payload["given_name"] as String
-                User(userId = userId, name=givenName, email=email, remind=false)
-            } ?: throw UnauthorizedException("Google id token is invalid")
+                User(
+                        userId = payload.subject,
+                        name = payload["given_name"] as String,
+                        email = payload.email,
+                        remind = false
+                )} ?: throw UnauthorizedException("Google id token is invalid")
 }
