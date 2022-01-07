@@ -85,11 +85,11 @@ class GroupService(
         if (!isGroupNameValid(group.name)) {
             throw BadRequestException("The name \"${group.name}\" is invalid.")
         }
-        if (groupRepository.existsGroupByNameIgnoreCase(group.name)) {
-            throw BadRequestException("A group with name ${group.name} already exists")
-        }
         if (groupRepository.getCreatedGroupsCountByUserId(createdByUser.userId) >= MAX_CREATED_GROUPS_PER_USER) {
-            throw BadRequestException("Max number of created groups reached for user ${createdByUser.name}")
+            throw BadRequestException("Max number of created groups reached")
+        }
+        if (groupRepository.existsGroupByNameIgnoreCase(group.name)) {
+            throw BadRequestException("A group with name \"${group.name}\" already exists")
         }
         val groupId = createUniqueGroupId()
         // create a website group
