@@ -68,6 +68,13 @@ class WinController(
         return winService.getWinCountsForAllUsersInGroup(groupId)
     }
 
+    @GetMapping("/groups")
+    @Transactional
+    fun getWinsForAllUsersInGroup(
+            @RequestParam("group_id") groupId: String
+    ): List<Win> {
+        return winService.getWinsForAllUsersInGroup(groupId)
+    }
     /**
      * Utility endpoint to manually update a wins record in the database.
      *
@@ -77,7 +84,6 @@ class WinController(
      * @param wins a wins object
      * @return the record saved to the database
      */
-    @PutMapping
     fun updateWinRecord(@RequestBody wins: Win): Win {
         return winService.updateWinsRecord(wins)
     }

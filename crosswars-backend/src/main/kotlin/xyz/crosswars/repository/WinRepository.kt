@@ -43,4 +43,7 @@ interface WinRepository : CrudRepository<Win, WinId> {
         """
     )
     fun getWinCountsForAllUsersInGroup(groupId: String): Stream<WinCount>
+
+    @Query("select w from Win w where w.groupId = :groupId")
+    fun getWinsForAllUsersInGroup(groupId: String): Stream<Win>
 }

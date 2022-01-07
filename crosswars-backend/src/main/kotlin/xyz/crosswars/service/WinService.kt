@@ -76,6 +76,9 @@ class WinService(
     fun getWinCountsForAllUsersInGroup(groupId: String): List<WinCount> =
         winRepository.getWinCountsForAllUsersInGroup(groupId).toList()
 
+    fun getWinsForAllUsersInGroup(groupId: String): List<Win> =
+        winRepository.getWinsForAllUsersInGroup(groupId).toList()
+
     fun recordWinsForAllGroups() {
         val groups = groupService.findAllGroups()
         groups.forEach { group ->

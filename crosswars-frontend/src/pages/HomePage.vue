@@ -22,11 +22,12 @@
       </q-card>
     </div>
     <div v-if="entries.length > 0 && groups.length > 0" class="q-px-md">
-      <q-card>
+      <q-card icon="leaderboard"
+      label="Today's Leaderboard Among All Groups">
       <q-expansion-item
       default-opened
       icon="leaderboard"
-      label="Today's leaderboard">
+      label="Daily Leaderboard Among All Groups">
         <CombinedEntryList :entries="entries"/>
       </q-expansion-item>
       </q-card >
