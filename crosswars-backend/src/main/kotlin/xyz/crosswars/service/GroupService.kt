@@ -15,6 +15,7 @@ import java.util.*
 
 //match with alphanumeric, separated by space between words
 private const val VALID_GROUP_NAME_PATTERN = "^[a-zA-Z1-9]+( ?[a-zA-Z1-9])*\$"
+private const val MAX_CREATED_GROUPS_PER_USER = 5
 
 @Service
 class GroupService(
@@ -67,7 +68,8 @@ class GroupService(
         // create a telegram group
         val savedGroup = Group(
             id = group.id,
-            name = group.name.lowercase()
+            name = group.name.lowercase(),
+            createdBy = null
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -79,18 +81,22 @@ class GroupService(
      * @param group group to create
      * @return group saved to the database
      */
-    fun createWebsiteGroup(group: Group): Group {
+    fun createWebsiteGroup(group: Group, createdByUser: User): Group {
         if (!isGroupNameValid(group.name)) {
             throw BadRequestException("The name \"${group.name}\" is invalid.")
         }
-        val groupId = group.name.replace(' ', '_').lowercase()
-        if (groupRepository.existsById(groupId)) {
-            throw BadRequestException("A group with name ${group.name} already exists.")
+        if (groupRepository.getCreatedGroupsCountByUserId(createdByUser.userId) >= MAX_CREATED_GROUPS_PER_USER) {
+            throw BadRequestException("Max number of created groups reached")
         }
+        if (groupRepository.existsGroupByNameIgnoreCase(group.name)) {
+            throw BadRequestException("A group with name \"${group.name}\" already exists")
+        }
+        val groupId = createUniqueGroupId()
         // create a website group
         val savedGroup = Group(
             id = groupId,
-            name = group.name
+            name = group.name,
+            createdBy = createdByUser.userId
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -100,18 +106,18 @@ class GroupService(
      * Adds a User to a Group, given a GroupId and UserId
      *
      * @param groupId The groupId of the group to add the user to
-     * @param userID The userId of the user to add
+     * @param userId The userId of the user to add
      * @return the created IsMember relation
      */
     fun addUserToGroup(groupId: String, userId: String): IsMember {
         if (!userRepository.existsById(userId)) {
-            throw BadRequestException("A user with ID ${userId} does not exist")
+            throw BadRequestException("A user with ID $userId does not exist")
         }
         if (!groupRepository.existsById(groupId)) {
-            throw BadRequestException("A group with ID ${groupId} does not exist")
+            throw BadRequestException("A group with ID $groupId does not exist")
         }
         if (isMemberRepository.existsById(IsMemberId(userId, groupId))) {
-            throw BadRequestException("A user with ID ${userId} is already a member of a group with ID ${groupId}")
+            throw BadRequestException("A user with ID $userId is already a member of a group with ID $groupId")
         }
 
         val savedIsMember = IsMember(
@@ -125,5 +131,15 @@ class GroupService(
     private fun isGroupNameValid(groupName: String): Boolean {
         if(groupName.length < 3 || groupName.length > 25) return false
         return VALID_GROUP_NAME_PATTERN.toRegex().matches(groupName)
+    }
+
+    private fun createUniqueGroupId(): String {
+        val max = 9999999999999L
+        val min = 1000000000000L
+        var id = (Math.random() * (max - min)).toLong() + min
+        while(groupRepository.existsById(id.toString())) {
+            id = (Math.random() * (max - min)).toLong() + min
+        }
+        return id.toString()
     }
 }

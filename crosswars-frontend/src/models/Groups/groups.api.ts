@@ -13,9 +13,16 @@ export async function getGroupByGroupId(group_id: string): Promise<Group>
         return createGroupFromData(groupResponse.data);
     })
 }
-export async function getGroupsByUserId(user_id: string): Promise<Group[]>
+export async function getGroupsByJWT(): Promise<Group[]>
 {
-    return api.get(`/groups?user_id=${user_id}`)
+    const token = localStorage.getItem('jwt')
+    return api.get('/groups',
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
     .then((groupsResponse) => {
         const groups: Group[] = []
         for (const groupData of groupsResponse.data)

@@ -27,7 +27,7 @@
       <q-expansion-item
       default-opened
       icon="leaderboard"
-      label="Daily Leaderboard Among All Groups">
+      label="Today's Leaderboard Among All Groups">
         <CombinedEntryList :entries="entries"/>
       </q-expansion-item>
       </q-card >
@@ -42,7 +42,7 @@ import {defineComponent} from 'vue'
 import { createDailyCombinedLeaderboardEntries,  setLeaderboardEntryPositions } from '../models/Entries/entries.factory'
 import { postEntry } from '../models/Entries/entries.api'
 import { getUserByJWT } from '../models/Users/users.api'
-import { getGroupsByUserId } from '../models/Groups/groups.api'
+import { getGroupsByJWT } from '../models/Groups/groups.api'
 import { CombinedLeaderboardEntry } from 'src/models/Entries/entries';
 import { User } from 'src/models/Users/users';
 import { Group } from 'src/models/Groups/groups';
@@ -63,6 +63,7 @@ export default defineComponent({
   },
   mounted() {
     this.createEntries();
+    this.getGroups();
   },
   methods: {
     async addEntry(time: number) {
@@ -84,12 +85,11 @@ export default defineComponent({
     },
     async createEntries(){
       this.user = await getUserByJWT();
-      this.getGroups();
-      this.entries = await createDailyCombinedLeaderboardEntries(this.user.id);
+      this.entries = await createDailyCombinedLeaderboardEntries();
     },
     async getGroups()
     {
-      this.groups = await getGroupsByUserId(this.user.id);
+      this.groups = await getGroupsByJWT();
       this.groupsRetrieved = true;
     }
   },
