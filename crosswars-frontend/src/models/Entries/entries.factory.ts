@@ -1,14 +1,14 @@
 import { Group } from '../Groups/groups'
-import { getGroupsByUserId } from '../Groups/groups.api'
+import { getGroupsByJWT } from '../Groups/groups.api'
 import { User } from '../Users/users'
-import { getUserByUserId, getUsersByGroupId } from '../Users/users.api'
+import { getUsersByGroupId } from '../Users/users.api'
 import { CombinedLeaderboardEntry, Entry, LeaderboardEntry } from './entries'
 import { getEntriesByGroupId } from './entries.api'
 
 
-export async function createDailyCombinedLeaderboardEntries(user_id: string): Promise<CombinedLeaderboardEntry[]>
+export async function createDailyCombinedLeaderboardEntries(): Promise<CombinedLeaderboardEntry[]>
 {
-    const groups = await getGroupsByUserId(user_id)
+    const groups = await getGroupsByJWT()
     const promises: Promise<void>[] = []
     const groupToEntries = new Map<Group, Entry[]>();
     const userIdToUsers = new Map<string, User>();
