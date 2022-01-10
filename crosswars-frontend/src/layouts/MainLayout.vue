@@ -32,7 +32,7 @@
 
 <script lang='ts'>
 import { Group } from 'src/models/Groups/groups';
-import { getGroupsByUserId } from 'src/models/Groups/groups.api';
+import { getGroupsByJWT } from 'src/models/Groups/groups.api';
 import { User } from 'src/models/Users/users';
 import { getUserByJWT } from 'src/models/Users/users.api';
 
@@ -56,7 +56,7 @@ export default defineComponent({
     async getUserAndGroups() {
       this.user = await getUserByJWT()
       this.showUser = true
-      this.groups = await getGroupsByUserId(this.user.id)
+      this.groups = await getGroupsByJWT()
     }
   }
 })

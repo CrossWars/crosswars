@@ -57,6 +57,7 @@
         </q-expansion-item>
       </q-card >
     </div>
+    <WinsCalendarChart :wins="wins" :users="users"/>
   </div> 
 </div>
 </template>
@@ -74,6 +75,7 @@ import {getWinsByGroupId} from 'src/models/Wins/wins.api'
 import {createLeaderboardWinCounts} from 'src/models/Wins/wins.factory'
 
 import GroupDailyBarChart from 'components/charts/GroupDailyBarChart.vue'
+import WinsCalendarChart from 'components/charts/WinsCalendarChart.vue'
 import WinsList from 'components/WinsList.vue'
 import EntryList from 'components/EntryList.vue'
 import { ref } from 'vue'
@@ -85,7 +87,8 @@ export default defineComponent({
   components: {
     EntryList,
     WinsList,
-    GroupDailyBarChart
+    GroupDailyBarChart,
+    WinsCalendarChart
   },
   setup() {
     const $q = useQuasar()
