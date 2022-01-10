@@ -19,11 +19,9 @@ export async function getUsersByGroupId(group_id: string): Promise<User[]>
     })
 }
 
-//TODO include auth token
 export async function getUserByUserId(user_id: string): Promise<User>
 {
-    const token = Cookies.get('id_token')
-    console.log(`id: ${token}`)
+    const token = localStorage.getItem('jwt')
     return api.get(`/users/ids?user_id=${user_id}`,
         {
             headers: {
@@ -32,7 +30,40 @@ export async function getUserByUserId(user_id: string): Promise<User>
         }
     )
     .then((userResponse) => {
+        if(userResponse.status == 204) {
+            throw new Error('User not found')
+        }
         return createUserFromData(userResponse.data)
     })
+}
+
+export async function getUserByJWT(): Promise<User>
+{
+    const token = localStorage.getItem('jwt')
+    return api.get('/users/ids',
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+    .then((userResponse) => {
+        if(userResponse.status == 204) {
+            throw new Error('User not found')
+        }
+        return createUserFromData(userResponse.data)
+    })
+}
+
+export async function postNewUser(): Promise<User>
+{
+    const token = localStorage.getItem('jwt')
+    return api.post('/users/website', null,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
 }
 

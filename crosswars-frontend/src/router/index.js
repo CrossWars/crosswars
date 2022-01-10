@@ -1,5 +1,6 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
+import { isJWTExpired } from 'src/utilities/JWTUtilities'
 import routes from './routes'
 
 /*
@@ -24,6 +25,24 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
+  })
+  Router.beforeEach((to, from, next) => {
+    const jwt = localStorage.getItem('jwt')
+    if (to.matched.some(record => record.meta.requiresAuth))
+    {
+      if ((jwt == null || isJWTExpired(jwt)) && to.path !== '/login') {
+        next({
+          path: '/login',
+          query: {nextUrl: to.fullPath}
+        })
+      }
+      else {
+        next()
+      }
+    }
+    else {
+      next()
+    }
   })
 
   return Router

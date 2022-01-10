@@ -9,17 +9,23 @@ const routes = [
   },
   {
     path: '/login',
-    component: () => import('layouts/LoginLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/LoginPage.vue') }
-    ]
+    ],
+    meta: {
+      guest: true,
+    }
   },
   {
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/HomePage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/create_group',
@@ -27,7 +33,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/CreateGroupPage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/group/:groupID',
@@ -35,7 +44,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/GroupPage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/user/:userID',
@@ -43,15 +55,21 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/UserPage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
-    path: '/groupInvite/:groupID',
+    path: '/group_invite/:groupID',
     name: 'groupInvite',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/GroupInvitePage.vue') }
-    ]
+    ],
+    meta: {
+      requiresAuth: true,
+    }
   },
   // Always leave this as last one,
   // but you can also remove it

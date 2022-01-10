@@ -75,8 +75,8 @@ class UserService(
         }
         val savedUser = User(
             userId = user.userId.lowercase(),
-            name = user.name.lowercase(),
-            email = user.userId.lowercase(),
+            name = user.name,
+            email = user.email!!.lowercase(),
             remind = user.remind ?: false
         )
         userRepository.save(savedUser)

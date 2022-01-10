@@ -33,6 +33,8 @@
 
 import { Group } from 'src/models/Groups/groups';
 import { postNewGroup, addUserToGroup } from 'src/models/Groups/groups.api';
+import { User } from 'src/models/Users/users';
+import { getUserByJWT } from 'src/models/Users/users.api';
 import {defineComponent} from 'vue'
 
 
@@ -43,7 +45,7 @@ export default defineComponent({
   data() {
     return {
       name: '',
-      userId: '123456789',
+      user: {} as User,
       error: false,
       errorMessage: '',
       showGroupPage: false,
@@ -53,8 +55,12 @@ export default defineComponent({
   computed: {
   },
   mounted() {
+    this.getUser();
   },
   methods: {
+    async getUser() {
+      this.user = await getUserByJWT();
+    },
     async handleSubmit() {
       this.loading = true;
       if (!this.isGroupNameValid(this.name)) {
@@ -63,10 +69,11 @@ export default defineComponent({
         this.loading =  false
         return
       }
-      const newGroup: Group = {id: '', name: this.name}
-      postNewGroup(newGroup)
+      else if (this.user.id !== undefined) {
+        const newGroup: Group = {id: '', name: this.name}
+        postNewGroup(newGroup)
           .then(group => {
-            addUserToGroup(group.id, this.userId).then(() => this.groupRedirect((group as Group).id))
+            addUserToGroup(group.id, this.user.id).then(() => this.groupRedirect((group as Group).id))
           })
           .catch((error) => {
           this.error=true
@@ -77,13 +84,13 @@ export default defineComponent({
             this.errorMessage = 'An error occured.'
           }
           this.loading=false
-      })
+        })
+      }
     },
     isGroupNameValid(groupName: string): boolean {
       if (groupName.length < 3 || groupName.length > 25) return false
       //match with alphanumeric, separated by space between words
       const match = groupName.match(/^[a-zA-Z1-9]+( ?[a-zA-Z-1-9])*$/)
-      console.log(match)
       return match !== null && match[0] == groupName
     },
     groupRedirect(groupId: string) {

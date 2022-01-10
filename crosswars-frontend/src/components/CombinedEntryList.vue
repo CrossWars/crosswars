@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-list separator>
-      <q-item v-for="entry in sortedEntries" :key="entry.user.id" clickable v-ripple>
+      <q-item v-for="entry in sortedEntries" :key="entry.user.id">
       <q-item-section side>
         <div>
         <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>

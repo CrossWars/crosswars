@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import xyz.crosswars.config.Authorized
 import xyz.crosswars.entities.Group
 import xyz.crosswars.entities.IsMember
 import xyz.crosswars.entities.User
+import xyz.crosswars.exception.UnauthorizedException
 import xyz.crosswars.service.GroupService
 import xyz.crosswars.service.IsMemberService
 
@@ -20,18 +22,21 @@ class GroupController(
 ) {
     @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
+    @Authorized(googleIdToken = false)
     fun createTelegramGroup(@RequestBody group: Group): Group {
         return service.createTelegramGroup(group)
     }
 
     @PostMapping("/website")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createGroup(@RequestBody group: Group): Group {
-        return service.createWebsiteGroup(group)
+    @Authorized
+    fun createGroup(@RequestBody group: Group, @RequestAttribute("auth_user") user: User): Group {
+        return service.createWebsiteGroup(group, user)
     }
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
+    @Authorized
     fun addUserToGroup(
         @RequestParam("group_id", required = true) groupId: String,
         @RequestParam("user_id", required = true) userId: String
@@ -51,6 +56,7 @@ class GroupController(
     @GetMapping("/names")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
+    @Authorized
     fun getGroupByName(@RequestParam("group_name", required = true) groupName: String): ResponseEntity<Group> {
         return ResponseEntity.ok(service.findGroupByName(groupName))
     }
@@ -64,8 +70,9 @@ class GroupController(
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Transactional(readOnly = true)
-    fun getGroupsByUser(@RequestParam("user_id", required = true) userId: String): ResponseEntity<List<Group>> {
-        return ResponseEntity.ok(service.findGroupsByUser(userId))
+    @Authorized
+    fun getGroupsByUser(@RequestAttribute("auth_user") user: User): ResponseEntity<List<Group>> {
+        return ResponseEntity.ok(service.findGroupsByUser(user.userId))
     }
 
     @GetMapping("/users")
