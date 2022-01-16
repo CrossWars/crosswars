@@ -7,16 +7,16 @@
         transition-next="scale"
         swipeable
         animated
-        control-color="white"
+        control-text-color="blue-grey-8"
         navigation
         padding
         arrows
         height="300px"
-        class="bg-secondary text-white shadow-1 rounded-borders"
+        class="bg-secondary text-blue-grey-8 shadow-1 rounded-borders"
       >
-        <q-carousel-slide name="style" class="column no-wrap flex-center">
+        <q-carousel-slide name="style" class="column no-wrap flex-center" >
           <q-icon name="timer" size="56px" />
-          <div class="q-mt-md text-center">
+          <div class="q-mt-md text-center" >
             Submit your mini crossword time each day
           </div>
         </q-carousel-slide>
