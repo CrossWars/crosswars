@@ -12,11 +12,8 @@
               </q-item-section>
             </q-item>
             <q-item clickable :to="`/create_group`">
-              <q-item-section icon>
-                <q-icon name="add_circle" color="secondary" text-color="white"/>
-              </q-item-section>
-              <q-item-section label>
-                <q-item-label>Create a Group</q-item-label>
+              <q-item-section>
+                <q-item-label><q-icon name="group_add" color="primary" text-color="white" size="sm" class="q-pr-sm"/>Create a Group</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
