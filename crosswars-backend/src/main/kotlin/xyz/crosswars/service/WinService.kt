@@ -82,7 +82,11 @@ class WinService(
     fun recordWinsForAllGroups() {
         val groups = groupService.findAllGroups()
         groups.forEach { group ->
-            recordWinsForGroup(group)
+            // Group must have at least two users for wins to be recorded
+            if(groupService.findUsersByGroupId(group.id).size > 1)
+            {
+                recordWinsForGroup(group)
+            }
         }
     }
 
