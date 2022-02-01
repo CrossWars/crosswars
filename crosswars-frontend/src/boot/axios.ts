@@ -15,7 +15,7 @@ const api = axios.create({ baseURL: 'https://crosswars.xyz/crosswars/api' })
 //const api = axios.create({ baseURL: 'http://localhost:8080/crosswars/api' })
 //For testing on phone over Wifi:
 //const api = axios.create({ baseURL: 'http://192.168.1.79:8080/crosswars/api' })
-//const api = axios.create({ baseURL: 'http://192.168.86.51:8080/crosswars/api' })
+//const api = axios.create({ baseURL: 'http://192.168.86.90:8080/crosswars/api' })
 
 
 declare module '@vue/runtime-core' {
