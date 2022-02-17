@@ -8,7 +8,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "CROSSGROUP")
 data class Group(
-        @Id @Column(name = "group_id") val id: String,
+        @Id @Column(name = "group_id") val groupId: String,
         @Column val name: String,
         @Column(name = "created_by") val createdBy: String?
 )

@@ -43,7 +43,7 @@ export async function getGroupByName(group_name: string): Promise<Group>
 export async function postNewGroup(group: Group): Promise<Group>
 {
     const token = localStorage.getItem('jwt')
-    return api.post('/groups/website', group,
+    return api.post('/groups/website', {group_id: group.id, name: group.name},
         {
             headers: {
                 Authorization: `Bearer ${token}`
