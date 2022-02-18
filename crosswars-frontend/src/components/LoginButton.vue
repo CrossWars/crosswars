@@ -1,12 +1,12 @@
 <template>
   <!-- taken from https://codepen.io/stefanjs98/pen/ambVgK -->
-  <q-page class="flex flex-center">
+  <q-page class="q-pa-xl">
     <link
       rel="stylesheet"
       type="text/css"
       href="//fonts.googleapis.com/css?family=Open+Sans"
     />
-    <div class="google-btn" @click="auth('google')">
+    <div style="margin: 0 auto" class="google-btn" @click="auth('google')">
       <div class="google-icon-wrapper">
         <img
           class="google-icon"

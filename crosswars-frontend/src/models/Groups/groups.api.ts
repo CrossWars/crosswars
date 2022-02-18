@@ -4,7 +4,7 @@ import { User } from '../Users/users';
 
 function createGroupFromData(groupData: any, users?: User[]): Group
 {
-    return {id: groupData.id, name: groupData.name, users: users}
+    return {id: groupData.group_id, name: groupData.name, users: users}
 }
 export async function getGroupByGroupId(group_id: string): Promise<Group>
 {
@@ -43,7 +43,7 @@ export async function getGroupByName(group_name: string): Promise<Group>
 export async function postNewGroup(group: Group): Promise<Group>
 {
     const token = localStorage.getItem('jwt')
-    return api.post('/groups/website', group,
+    return api.post('/groups/website', {group_id: group.id, name: group.name},
         {
             headers: {
                 Authorization: `Bearer ${token}`

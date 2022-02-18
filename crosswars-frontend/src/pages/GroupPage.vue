@@ -4,9 +4,9 @@
       :showing="showLoading"
       color: primary/>
   <div v-show="showGroupPage">
-    <div class="q-px-md">
+    <div class="q-pl-md">
       <div>
-        <h4 class="text-capitalize">
+        <h4 class="text-capitalize" style="margin-right: 70px;">
           {{group.name}}
         </h4>
       </div>
@@ -42,8 +42,18 @@
         <q-expansion-item
         default-opened
         icon="leaderboard"
-        label="Today's leaderboard">
+        label="Today's Leaderboard">
           <EntryList :entries="dailyLeaderboardEntries"/>
+        </q-expansion-item>
+      </q-card >
+    </div>
+    <div class="q-pa-md">
+      <q-card>
+        <q-expansion-item
+        default-opened
+        icon="emoji_events"
+        label="Overall Wins">
+          <WinsList :winCounts="winCounts" :users="users"/>
         </q-expansion-item>
       </q-card >
     </div>
@@ -54,20 +64,27 @@
 
 import { LeaderboardEntry } from 'src/models/Entries/entries';
 import { Group } from 'src/models/Groups/groups';
+import { LeaderboardWinCount, Win } from 'src/models/Wins/wins';
 import {defineComponent} from 'vue';
 import {copyToClipboard, useQuasar} from 'quasar';
 
 import {createDailyLeaderboardEntries} from 'src/models/Entries/entries.factory'
 import {getGroupByGroupId} from 'src/models/Groups/groups.api'
+import {getWinsByGroupId} from 'src/models/Wins/wins.api'
+import {createLeaderboardWinCounts} from 'src/models/Wins/wins.factory'
 
 import GroupDailyBarChart from 'components/charts/GroupDailyBarChart.vue'
+import WinsList from 'components/WinsList.vue'
 import EntryList from 'components/EntryList.vue'
 import { ref } from 'vue'
+import { getUsersByGroupId } from 'src/models/Users/users.api';
+import { User } from 'src/models/Users/users';
 
 export default defineComponent({
   name: 'GroupPage',
   components: {
     EntryList,
+    WinsList,
     GroupDailyBarChart
   },
   setup() {
@@ -97,7 +114,10 @@ export default defineComponent({
       showGroupPage: false,
       showLoading: true,
       inviteAlert: ref(false),
-      dailyLeaderboardEntries: [] as LeaderboardEntry[]
+      dailyLeaderboardEntries: [] as LeaderboardEntry[],
+      wins: [] as Win[],
+      winCounts: [] as LeaderboardWinCount[],
+      users: [] as User[],
     };
   },
   computed: {
@@ -108,6 +128,7 @@ export default defineComponent({
   mounted() {
     this.getGroupInfo();
     this.getDailyLeaderboardEntries();
+    this.getWins();
   },
   methods: {
     async getGroupInfo()
@@ -128,6 +149,11 @@ export default defineComponent({
         }).catch(() => {
           this.showCopyErrorNotif()
         })
+    },
+    async getWins(){
+      this.users = await getUsersByGroupId(this.$route.params.groupID as string)
+      this.winCounts = await createLeaderboardWinCounts(this.$route.params.groupID as string)
+      this.wins = await getWinsByGroupId(this.$route.params.groupID as string)
     }
   },
 });

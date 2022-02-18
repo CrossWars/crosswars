@@ -76,19 +76,26 @@ class WinService(
     fun getWinCountsForAllUsersInGroup(groupId: String): List<WinCount> =
         winRepository.getWinCountsForAllUsersInGroup(groupId).toList()
 
+    fun getWinsForAllUsersInGroup(groupId: String): List<Win> =
+        winRepository.getWinsForAllUsersInGroup(groupId).toList()
+
     fun recordWinsForAllGroups() {
         val groups = groupService.findAllGroups()
         groups.forEach { group ->
-            recordWinsForGroup(group)
+            // Group must have at least two users for wins to be recorded
+            if(groupService.findUsersByGroupId(group.groupId).size > 1)
+            {
+                recordWinsForGroup(group)
+            }
         }
     }
 
     fun recordWinsForGroup(group: Group) {
         val date = currentDateInEST().toLocalDate().entryDateString()
-        val entries = entryService.getEntriesByGroupAndDate(group.id, date, date)
+        val entries = entryService.getEntriesByGroupAndDate(group.groupId, date, date)
         val winnerIds = getWinnerIdsFromEntries(entries)
         winnerIds.forEach { winnerId ->
-            val win = Win(winnerId, group.id, date)
+            val win = Win(winnerId, group.groupId, date)
             recordWin(win)
         }
     }

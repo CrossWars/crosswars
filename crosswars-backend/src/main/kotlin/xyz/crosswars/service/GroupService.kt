@@ -62,12 +62,12 @@ class GroupService(
      * @return group saved to the database
      */
     fun createTelegramGroup(group: Group): Group {
-        if (groupRepository.existsById(group.id)) {
-            throw BadRequestException("A group with ID ${group.id} already exists")
+        if (groupRepository.existsById(group.groupId)) {
+            throw BadRequestException("A group with ID ${group.groupId} already exists")
         }
         // create a telegram group
         val savedGroup = Group(
-            id = group.id,
+            groupId = group.groupId,
             name = group.name.lowercase(),
             createdBy = null
         )
@@ -94,7 +94,7 @@ class GroupService(
         val groupId = createUniqueGroupId()
         // create a website group
         val savedGroup = Group(
-            id = groupId,
+            groupId = groupId,
             name = group.name,
             createdBy = createdByUser.userId
         )

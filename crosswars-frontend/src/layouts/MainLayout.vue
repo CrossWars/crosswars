@@ -2,117 +2,58 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          CrossWars
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn flat no-caps size="lg" label="CrossWars" to="/home"/>
+        <q-space/>
+        <q-btn-dropdown stretch flat icon="groups" v-if="groups.length > 0">
+          <q-list>
+            <q-item v-for="group in groups" :key="group.id" clickable :to="`/group/${group.id}`">
+              <q-item-section>
+                <q-item-label>{{group.name}}</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable :to="`/create_group`">
+              <q-item-section>
+                <q-item-label><q-icon name="group_add" color="primary" text-color="white" size="sm" class="q-pr-sm"/>Create a Group</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <q-btn stretch flat icon="person" v-if="showUser" :to="`/user/${user.id}`"/>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="bg-grey-1"
-    >
-      <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
   </q-layout>
 </template>
 
-<script>
-import EssentialLink from 'components/EssentialLink.vue'
+<script lang='ts'>
+import { Group } from 'src/models/Groups/groups';
+import { getGroupsByJWT } from 'src/models/Groups/groups.api';
+import { User } from 'src/models/Users/users';
+import { getUserByJWT } from 'src/models/Users/users.api';
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
 
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    EssentialLink,
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-
+  data() {
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      user: {} as unknown as User,
+      showUser: false,
+      groups: [] as Group[],
+    };
+  },
+  mounted() {
+    this.getUserAndGroups();
+  },
+  methods: {
+    async getUserAndGroups() {
+      this.user = await getUserByJWT()
+      this.showUser = true
+      this.groups = await getGroupsByJWT()
     }
   }
 })
