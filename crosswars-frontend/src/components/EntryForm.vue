@@ -60,11 +60,9 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         e.setSelectionRange(e.value.length, e.value.length)
       }, 1)  
-      console.log(e);
     },
     parseTime(time: string): number {
       const mins_secs = time.split(':');
-      console.log(mins_secs);
       const mins = parseInt(mins_secs[0]);
       const secs = parseInt(mins_secs[1]);
       return mins * 60 + secs;

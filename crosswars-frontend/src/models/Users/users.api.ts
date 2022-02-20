@@ -1,4 +1,3 @@
-import { Cookies } from 'quasar';
 import { api } from 'src/boot/axios';
 import { User } from './users';
 
