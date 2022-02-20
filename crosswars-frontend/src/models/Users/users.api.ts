@@ -67,3 +67,5 @@ export async function postNewUser(): Promise<User>
     )
 }
 
+export async function getGooglePhotoForUser()
+

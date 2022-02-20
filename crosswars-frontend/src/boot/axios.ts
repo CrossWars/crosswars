@@ -10,11 +10,11 @@ import axios, { AxiosInstance, AxiosStatic } from 'axios'
 
 //TODO: Find a way to automatically switch these URLS (could use docker env variable eventually)
 //For production:
-const api = axios.create({ baseURL: 'http://crosswars.xyz/crosswars/api' })
+//const api = axios.create({ baseURL: 'http://crosswars.xyz/crosswars/api' })
 //For testing in browser:
-//const api = axios.create({ baseURL: 'http://localhost:8080/crosswars/api' })
+const api = axios.create({ baseURL: 'http://localhost:8080/crosswars/api' })
 //For testing on phone over Wifi:
-//const api = axios.create({ baseURL: 'http://192.168.1.79:8080/crosswars/api' })
+///const api = axios.create({ baseURL: 'http://192.168.1.79:8080/crosswars/api' })
 //const api = axios.create({ baseURL: 'http://192.168.86.51:8080/crosswars/api' })
 
 
