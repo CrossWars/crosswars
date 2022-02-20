@@ -14,7 +14,7 @@ export interface Entry extends PostEntry {
 //for displaying entries in a leaderboard, showing position and user info
 export interface LeaderboardEntry extends Entry {
     position: number,
-    user: User
+    user: User,
 }
 //for displaying leaderboards among multiple groups, an entry of a given user can belong to multiple groups
 export interface CombinedLeaderboardEntry extends LeaderboardEntry {

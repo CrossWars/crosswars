@@ -10,7 +10,10 @@
       </q-item-section>
       <q-item-section avatar>
         <q-btn :to="getUserLink(winCount.user_id)" round>
-          <q-avatar color="primary" text-color="white">
+          <q-avatar v-if="usersMap.get(winCount.user_id)?.photoUrl !== undefined" color="primary" text-color="white">
+            <img :src="usersMap.get(winCount.user_id)?.photoUrl" />
+          </q-avatar>
+          <q-avatar v-else color="primary" text-color="white">
             {{ usersMap.get(winCount.user_id)?.name.charAt(0).toUpperCase()}}
           </q-avatar>
         </q-btn>
