@@ -125,7 +125,8 @@ export default defineComponent({
         return `${location.host}/#/group_invite/${this.group.id}`
     }
   },
-  mounted() {
+  async mounted() {
+    this.users = await getUsersByGroupId(this.$route.params.groupID as string, true)
     this.getGroupInfo();
     this.getDailyLeaderboardEntries();
     this.getWins();
@@ -139,7 +140,7 @@ export default defineComponent({
     },
     async getDailyLeaderboardEntries()
     {
-      this.dailyLeaderboardEntries = await createDailyLeaderboardEntries(this.$route.params.groupID as string)
+      this.dailyLeaderboardEntries = await createDailyLeaderboardEntries(this.$route.params.groupID as string, this.users)
     },
     copyInviteLink()
     {
@@ -151,7 +152,6 @@ export default defineComponent({
         })
     },
     async getWins(){
-      this.users = await getUsersByGroupId(this.$route.params.groupID as string)
       this.winCounts = await createLeaderboardWinCounts(this.$route.params.groupID as string)
       this.wins = await getWinsByGroupId(this.$route.params.groupID as string)
     }

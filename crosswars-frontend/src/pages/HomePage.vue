@@ -11,7 +11,6 @@
               <div class="text-h6">It looks like you're not in any groups</div>
               <div class="text-subtitle3">Create a group or get an invite link from a friend to compete with others.</div>
             </div>
-            
           </div>
         </q-card-section>
         <q-separator />
@@ -23,16 +22,15 @@
     </div>
     <div v-if="entries.length > 0 && groups.length > 0" class="q-px-md">
       <q-card icon="leaderboard"
-      label="Today's Leaderboard Among All Groups">
+      label="Today's Leaderboard Among All Your Groups">
       <q-expansion-item
       default-opened
       icon="leaderboard"
-      label="Today's Leaderboard Among All Groups">
+      label="Today's Leaderboard Among All Your Groups">
         <CombinedEntryList :entries="entries"/>
       </q-expansion-item>
       </q-card >
     </div>
-    
     </div>
 </template>
 <script lang="ts">

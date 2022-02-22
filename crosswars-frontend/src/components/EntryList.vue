@@ -10,7 +10,10 @@
       </q-item-section>
       <q-item-section avatar>
         <q-btn :to="getUserLink(entry.user_id)" round>
-          <q-avatar color="primary" text-color="white">
+          <q-avatar v-if="entry.user.photoUrl !== undefined" >
+            <img :src="entry.user.photoUrl"/>
+          </q-avatar>
+          <q-avatar v-else color="primary" text-color="white">
             {{ entry.user.name.charAt(0).toUpperCase()}}
           </q-avatar>
         </q-btn>

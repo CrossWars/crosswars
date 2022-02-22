@@ -1,7 +1,7 @@
 import { Group } from '../Groups/groups'
 import { getGroupsByJWT } from '../Groups/groups.api'
 import { User } from '../Users/users'
-import { getUsersByGroupId } from '../Users/users.api'
+import { getUsersByGroupId, getGooglePhotoForUser } from '../Users/users.api'
 import { CombinedLeaderboardEntry, Entry, LeaderboardEntry } from './entries'
 import { getEntriesByGroupId } from './entries.api'
 
@@ -46,7 +46,9 @@ export async function createDailyCombinedLeaderboardEntries(): Promise<CombinedL
                 {
                     continue;
                 }
-                userIdToCombinedLeaderboardEntry.set(entry.user_id, {...entry, position: 0, user: user, groups: [group]})
+                const leaderboardEntry: CombinedLeaderboardEntry = {...entry, position: 0, user: user, groups: [group]}
+                leaderboardEntry.user.photoUrl = await getGooglePhotoForUser(leaderboardEntry.user.id)
+                userIdToCombinedLeaderboardEntry.set(entry.user_id, leaderboardEntry)
             }
             else
             {
@@ -58,24 +60,37 @@ export async function createDailyCombinedLeaderboardEntries(): Promise<CombinedL
     setLeaderboardEntryPositions(entries)
     return entries
 }
-export async function createDailyLeaderboardEntries(group_id: string): Promise<LeaderboardEntry[]>
+export async function createDailyLeaderboardEntries(group_id: string, groupUsers: User[] = []): Promise<LeaderboardEntry[]>
 {
     const entries = await getEntriesByGroupId(group_id)
-    const userIdToUsers = await getUsersByGroupId(group_id).then(
-        (users) => {
-            const userIdToUsers = new Map<string, User>();
-            for (const user of users)
-            {
-                userIdToUsers.set(user.id, user)
+    let userIdToUsers = new Map<string, User>();
+    // avoid extra API call if groupUsers is passed
+    if(groupUsers.length == 0) {
+        userIdToUsers = await getUsersByGroupId(group_id).then(
+            (users) => {
+                const userIdToUsers = new Map<string, User>();
+                for (const user of users)
+                {
+                    userIdToUsers.set(user.id, user)
+                }
+                return userIdToUsers;
             }
-            return userIdToUsers;
+        )
+    }
+    else {
+        for (const user of groupUsers)
+        {
+            userIdToUsers.set(user.id, user);
         }
-    )
+    }
     const leaderboardEntries: LeaderboardEntry[] = []
     for (const entry of entries)
     {
         const user = userIdToUsers.get(entry.user_id)
         if(!user) continue
+        if(user.photoUrl === undefined) {
+            user.photoUrl = await getGooglePhotoForUser(user.id)
+        }
         leaderboardEntries.push({...entry, position: 0, user: user})
     }
     setLeaderboardEntryPositions(leaderboardEntries)
