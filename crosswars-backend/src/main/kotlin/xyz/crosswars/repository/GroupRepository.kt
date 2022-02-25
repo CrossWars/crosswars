@@ -17,7 +17,7 @@ interface GroupRepository : CrudRepository<Group, String> {
     @Query("select u from User u, IsMember im where im.groupId = :groupId and im.userId = u.userId")
     fun findUsersByGroupId(groupId: String): Stream<User>
 
-    @Query("select g from Group g, IsMember im where im.userId = :userId and g.id = im.groupId")
+    @Query("select g from Group g, IsMember im where im.userId = :userId and g.groupId = im.groupId")
     fun findGroupsByUser(userId: String): Stream<Group>
 
     @Query("select g from Group g")

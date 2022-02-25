@@ -4,9 +4,14 @@
       :showing="showLoading"
       color: primary/>
     <div v-if="showUserPage" class="q-ma-sm">
-        <h4 class=text-capitalize>
-            {{user.name}}
-        </h4>
+        <div class="row">
+          <q-avatar v-if="user.photoUrl !== undefined" class="q-px-sm q-pt-lg " size="75px">
+            <img v-if="user.photoUrl !== undefined" :src="user.photoUrl" />
+          </q-avatar>
+          <h4 class="q-pl-lg"  style=" position: relative; top: -2px;">
+              {{user.name}}
+          </h4>
+        </div>
         <div v-if="entries.length > 0">
           <div id="wrapper">
             <div id="bestTime">
@@ -64,7 +69,7 @@ export default defineComponent({
   methods: {
     async getUserInfo()
     {
-        this.user = await getUserByUserId(this.$route.params.userID as string)
+        this.user = await getUserByUserId(this.$route.params.userID as string, true)
         this.showUserPage = true;
         this.showLoading = false;
     },

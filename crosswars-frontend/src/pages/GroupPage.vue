@@ -57,7 +57,6 @@
         </q-expansion-item>
       </q-card >
     </div>
-    <WinsCalendarChart :wins="wins" :users="users"/>
   </div> 
 </div>
 </template>
@@ -75,7 +74,6 @@ import {getWinsByGroupId} from 'src/models/Wins/wins.api'
 import {createLeaderboardWinCounts} from 'src/models/Wins/wins.factory'
 
 import GroupDailyBarChart from 'components/charts/GroupDailyBarChart.vue'
-import WinsCalendarChart from 'components/charts/WinsCalendarChart.vue'
 import WinsList from 'components/WinsList.vue'
 import EntryList from 'components/EntryList.vue'
 import { ref } from 'vue'
@@ -87,8 +85,7 @@ export default defineComponent({
   components: {
     EntryList,
     WinsList,
-    GroupDailyBarChart,
-    WinsCalendarChart
+    GroupDailyBarChart
   },
   setup() {
     const $q = useQuasar()
@@ -128,7 +125,8 @@ export default defineComponent({
         return `${location.host}/#/group_invite/${this.group.id}`
     }
   },
-  mounted() {
+  async mounted() {
+    this.users = await getUsersByGroupId(this.$route.params.groupID as string, true)
     this.getGroupInfo();
     this.getDailyLeaderboardEntries();
     this.getWins();
@@ -142,7 +140,7 @@ export default defineComponent({
     },
     async getDailyLeaderboardEntries()
     {
-      this.dailyLeaderboardEntries = await createDailyLeaderboardEntries(this.$route.params.groupID as string)
+      this.dailyLeaderboardEntries = await createDailyLeaderboardEntries(this.$route.params.groupID as string, this.users)
     },
     copyInviteLink()
     {
@@ -154,7 +152,6 @@ export default defineComponent({
         })
     },
     async getWins(){
-      this.users = await getUsersByGroupId(this.$route.params.groupID as string)
       this.winCounts = await createLeaderboardWinCounts(this.$route.params.groupID as string)
       this.wins = await getWinsByGroupId(this.$route.params.groupID as string)
     }
