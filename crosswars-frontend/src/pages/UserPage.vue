@@ -22,7 +22,7 @@
             </div>
           </div>
         <q-card class="q-pa-sm">
-          <CalendarChart :entries="entries"/>
+          <CalendarChart :entries="entries" :min_time="minTime" :max_time="maxTime"/>
         </q-card>
       </div>
     </div>
@@ -53,6 +53,8 @@ export default defineComponent({
       showUserPage: false,
       showLoading: true,
       entries: [] as Entry[],
+      minTime: 0,
+      maxTime: 0,
       bestTime: '',
       averageTime: '',
     };
@@ -76,11 +78,14 @@ export default defineComponent({
     async getAllEntries()
     {
       this.entries = await getEntriesByUserId(this.$route.params.userID as string)
+      this.minTime = Math.min.apply(Math, this.entries.map(e => e.time))
+      this.maxTime = Math.max.apply(Math, this.entries.map(e => e.time))
       this.getStats();
     },
     async getStats()
     {
-      this.bestTime = formatTime(await getBestTimeByUserId(this.$route.params.userID as string))
+      this.minTime = await getBestTimeByUserId(this.$route.params.userID as string)
+      this.bestTime = formatTime(this.minTime)
       this.averageTime = formatTime(await getAverageTimeByUserId(this.$route.params.userID as string))
     }
   },

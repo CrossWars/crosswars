@@ -3,14 +3,14 @@
     <q-list separator>
       <q-item v-for="entry in sortedEntries" :key="entry.user.id">
       <q-item-section side>
-        <div>
-        <q-item-label style="font-weight: bold">{{ entry.position }}</q-item-label>
+        <div >
+        <q-item-label>{{ entry.position }}</q-item-label>
         </div>
       </q-item-section>
 
       <q-item-section avatar>
-        <q-btn :to="getUserLink(entry.user_id)" round>
-          <q-avatar v-if="entry.user.photoUrl !== undefined" >
+        <q-btn :to="getUserLink(entry.user_id)" round >
+          <q-avatar v-if="entry.user.photoUrl !== undefined">
             <img :src="entry.user.photoUrl"/>
           </q-avatar>
           <q-avatar v-else color="primary" text-color="white">
@@ -20,7 +20,7 @@
          <q-item-label><p font=text-weight-bold class="q-pt-sm" style="text-transform: capitalize; text-align: center;">{{ entry.user.name }}</p></q-item-label>
       </q-item-section>
       <q-item-section name>
-        <div>
+        <div v-if="entry.user_id != user?.id" > 
           <q-chip clickable @click="groupRedirect(group.id)" size="s" v-for="group in entry.groups" :key="group.id">
             {{ group.name}}
           </q-chip>
@@ -36,6 +36,7 @@
 
 <script lang="ts">
 import { CombinedLeaderboardEntry } from 'src/models/Entries/entries';
+import { User } from 'src/models/Users/users';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
@@ -45,7 +46,8 @@ export default defineComponent({
     {
       type: Array as PropType<CombinedLeaderboardEntry[]>,
       default: () => []
-    }
+    },
+    user: Object as PropType<User>,
   },
   methods: {
     formatTime(timeInSeconds: number) : string{

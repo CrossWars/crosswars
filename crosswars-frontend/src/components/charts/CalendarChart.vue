@@ -1,7 +1,7 @@
 <template lang="">
     <div>
-        <q-expansion-item icon="calendar_today" :label="label">
-            <v-chart :option="heatmap" class="chart" autoresize/>
+        <q-expansion-item icon="calendar_today" :label="label" default-opened>
+            <v-chart :option="heatmap" :style="'height: ' + ((new Date().getMonth() + 1)*90 +140) +'px'" autoresize/>
         </q-expansion-item>
   </div>
 </template>
@@ -43,6 +43,8 @@ export default defineComponent({
             type: [] as PropType<Entry[]>,
             default: () => []
         },
+        min_time: Object as PropType<number>,
+        max_time: Object as PropType<number>,
   },
   components: {
     VChart
@@ -52,7 +54,7 @@ export default defineComponent({
   },
   data() {
     return {
-      label: `${(new Date()).getFullYear()} Heatmap`
+      label: `${(new Date()).getFullYear()} Heatmap`,
     };
   },
   methods: {
@@ -78,7 +80,8 @@ export default defineComponent({
             visualMap: {
                 maxOpen: true,
                 calculable: true,
-                min: 5,
+                min: 10,
+                max: 180,
                 orient: 'horizontal',
                 align: 'auto',
                 left: 'center',
@@ -86,12 +89,16 @@ export default defineComponent({
                 itemHeight: 250,
                 formatter: function (v: any) {
                     return formatTime(Math.floor(v))
+                },
+                inRange: {
+                  color: ['#005eff', '#ccdfff']
+                  //color: ['#52fa74', '#fafa52', '#ff8929', '#fa525d']
                 }
             },
             calendar: [{
                 top: 100,
                 left: 'center',
-                range: (new Date()).getFullYear(),
+                range: [new Date(new Date().getFullYear(), 0, 1), new Date()],
                 borderWidth: 0.5,
                 orient: 'vertical'
                 }
@@ -114,7 +121,4 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-    .chart {
-        height: 1200px;
-    }
 </style>

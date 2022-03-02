@@ -1,8 +1,10 @@
 <template lang="">
-  <div :v-if="data.length > 0">
-    <q-expansion-item icon="calendar_today" :label="label">
-      <v-chart :option="heatmap" class="chart" autoresize />
+  <div class="q-pa-md">
+    <q-card>
+    <q-expansion-item icon="calendar_today" label="Wins Calendar" default-opened>
+      <v-chart :option="heatmap" :style="'height: ' + ((month_diff)*90 +150) +'px'" autoresize/>
     </q-expansion-item>
+    </q-card>
   </div>
 </template>
 <script lang="ts">
@@ -23,6 +25,7 @@ import {
 import VChart, { THEME_KEY } from 'vue-echarts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
 import { User } from 'src/models/Users/users';
+import { getNDistinctColors} from 'src/utilities/colors';
 
 use([
   CanvasRenderer,
@@ -48,6 +51,7 @@ export default defineComponent({
         type: Array as PropType<User[]>,
         default: () => []
         },
+        month_diff: {} as PropType<number>,
   },
   components: {
     VChart
@@ -57,7 +61,7 @@ export default defineComponent({
   },
   data() {
     return {
-      label: `${(new Date()).getFullYear()} Heatmap`
+      label: `${(new Date()).getFullYear()} Wins Calendar`
     };
   },
   computed: {
@@ -69,15 +73,15 @@ export default defineComponent({
         return dates[dates.length - 1]
     },
     //returns map of Date -> Array of IDs for days with ties
-    ties: function(): Map<string, string[]> {
-        const ties = new Map<string, string[]>()
+    ties: function(): Map<string, number[]> {
+        const ties = new Map<string, number[]>()
         for(const win of this.wins)
         {
             if(ties.has(win.date)) {
-                ties.get(win.date)!.push(win.user_id)
+                ties.get(win.date)!.push(parseInt(win.user_id))
             }
             else {
-                ties.set(win.date, [win.user_id])
+                ties.set(win.date, [parseInt(win.user_id)])
             }
         }
         const tieEntries = ties.entries();
@@ -89,31 +93,33 @@ export default defineComponent({
         }
         return ties
     },
-    categories: function(): string[] {
-        const categories = [...new Set(this.wins.map((w) => w.user_id))]
+    colors: function(): string[] {
+        const c = getNDistinctColors(this.categories.length, this.ties.size > 0).map(c => c.toLowerCase().replace('0x', '#'));
+        return c;
+    },
+    categories: function(): number[] {
+        const categories = [...new Set(this.wins.map((w) => parseInt(w.user_id)))]
         if(this.ties.size > 0) {
-           categories.push('0')
+           categories.push(0)
         }
         return categories
     },
-    data: function(): string[][] {
+    data: function(): (string | number)[][] {
         var data = this.wins.reduce((result, w) => {
             if(!this.ties.has(w.date)) {
                 result.push([w.date, w.user_id])
+            } else {
+                result.push([w.date, 0])
             }
             return result
-        }, [] as string[][]);
-        for(const date of this.ties.keys())
-        {
-            data.push([date, '0'])
-        }
+        }, [] as (string | number)[][]);
         return data
     },
-    usersMap: function(): Map<string, User> {
+    usersMap: function(): Map<number, User> {
       return this.users.reduce( function(map, user){
-        map.set(user.id, user);
+        map.set(parseInt(user.id), user);
         return map;
-      }, new Map<string, User>());
+      }, new Map<number, User>());
     },
     heatmap: function() {
         let options: ECBasicOption = {
@@ -127,29 +133,29 @@ export default defineComponent({
                         formatString += this.ties.get(date)!.map((id) => this.usersMap.get(id)!.name).join(', ')
                     }
                     else {
-                        formatString += this.usersMap.get(p.data[1])?.name
+                        formatString += this.usersMap.get(parseInt(p.data[1]))?.name
                     }
                     return formatString
                 }
             },
             visualMap: {
-                orient: 'horizontal',
+                orient: 'vertical',
                 type: 'piecewise',
                 categories: this.categories,
                 align: 'auto',
-                left: 'center',
-                top: 0,
+                left: '5%',
+                top: '20px',
                 inRange: {
-                    color: ['red', 'orange', 'green', 'blue', 'purple'],
+                    color: this.colors,
                 },
-                formatter: (id: string) => {
-                    if(id=='0') return 'Tie'
+                formatter: (id: number) => {
+                    if(id==0) return 'Tie'
                     return this.usersMap.get(id)?.name
                 }
             },
             calendar: [{
-                top: 100,
-                left: 'center',
+                top: '80px',
+                left: '40%',
                 range: [this.minDate, this.maxDate],
                 borderWidth: 0.5,
                 orient: 'vertical'
