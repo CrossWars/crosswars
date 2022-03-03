@@ -57,6 +57,9 @@
         </q-expansion-item>
       </q-card >
     </div>
+    <div v-if="showWinCalendar">
+      <WinsCalendarChart :wins="wins" :users="users" :min_date="minWinDate" :max_date="maxWinDate" :month_diff="winMonthDiff"/>
+    </div>
   </div> 
 </div>
 </template>
@@ -74,18 +77,21 @@ import {getWinsByGroupId} from 'src/models/Wins/wins.api'
 import {createLeaderboardWinCounts} from 'src/models/Wins/wins.factory'
 
 import GroupDailyBarChart from 'components/charts/GroupDailyBarChart.vue'
+import WinsCalendarChart from 'components/charts/WinsCalendarChart.vue'
 import WinsList from 'components/WinsList.vue'
 import EntryList from 'components/EntryList.vue'
 import { ref } from 'vue'
 import { getUsersByGroupId } from 'src/models/Users/users.api';
 import { User } from 'src/models/Users/users';
+import {monthDiff} from 'src/utilities/dates';
 
 export default defineComponent({
   name: 'GroupPage',
   components: {
     EntryList,
     WinsList,
-    GroupDailyBarChart
+    GroupDailyBarChart,
+    WinsCalendarChart
   },
   setup() {
     const $q = useQuasar()
@@ -117,6 +123,10 @@ export default defineComponent({
       dailyLeaderboardEntries: [] as LeaderboardEntry[],
       wins: [] as Win[],
       winCounts: [] as LeaderboardWinCount[],
+      minWinDate: {} as Date,
+      maxWinDate: {} as Date,
+      winMonthDiff: {} as number,
+      showWinCalendar: false,
       users: [] as User[],
     };
   },
@@ -154,6 +164,13 @@ export default defineComponent({
     async getWins(){
       this.winCounts = await createLeaderboardWinCounts(this.$route.params.groupID as string)
       this.wins = await getWinsByGroupId(this.$route.params.groupID as string)
+      const winDates = this.wins.map(w => new Date(w.date));
+      this.minWinDate = winDates.reduce(function (a, b) { return a < b ? a : b; });
+      this.maxWinDate = winDates.reduce(function (a, b) { return a > b ? a : b; });
+      this.winMonthDiff = monthDiff(this.minWinDate, this.maxWinDate);
+      if(this.wins.length > 0) {
+        this.showWinCalendar = true;
+      }
     }
   },
 });

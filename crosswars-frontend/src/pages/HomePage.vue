@@ -27,7 +27,7 @@
       default-opened
       icon="leaderboard"
       label="Today's Leaderboard Among All Your Groups">
-        <CombinedEntryList :entries="entries"/>
+        <CombinedEntryList :entries="entries" :user="user"/>
       </q-expansion-item>
       </q-card >
     </div>

@@ -1,7 +1,7 @@
 <template lang="">
     <div>
-        <q-expansion-item icon="calendar_today" :label="label">
-            <v-chart :option="heatmap" class="chart" autoresize/>
+        <q-expansion-item icon="calendar_today" label="Calendar Heatmap" default-opened>
+            <v-chart :option="heatmap" :style="'height: ' + ((month_diff)*90 +140) +'px'" autoresize/>
         </q-expansion-item>
   </div>
 </template>
@@ -43,17 +43,17 @@ export default defineComponent({
             type: [] as PropType<Entry[]>,
             default: () => []
         },
+        min_time: Object as PropType<number>,
+        max_time: Object as PropType<number>,
+        min_date: Object as PropType<Date>,
+        max_date: Object as PropType<Date>,
+        month_diff: Object as PropType<number>
   },
   components: {
     VChart
   },
   provide: {
       [THEME_KEY]: 'light'
-  },
-  data() {
-    return {
-      label: `${(new Date()).getFullYear()} Heatmap`
-    };
   },
   methods: {
       getData(entries: Entry[]) {
@@ -78,7 +78,8 @@ export default defineComponent({
             visualMap: {
                 maxOpen: true,
                 calculable: true,
-                min: 5,
+                min: 10,
+                max: 180,
                 orient: 'horizontal',
                 align: 'auto',
                 left: 'center',
@@ -86,12 +87,16 @@ export default defineComponent({
                 itemHeight: 250,
                 formatter: function (v: any) {
                     return formatTime(Math.floor(v))
+                },
+                inRange: {
+                  color: ['#005eff', '#ccdfff']
+                  //color: ['#52fa74', '#fafa52', '#ff8929', '#fa525d']
                 }
             },
             calendar: [{
                 top: 100,
                 left: 'center',
-                range: (new Date()).getFullYear(),
+                range: [this.min_date, this.max_date],
                 borderWidth: 0.5,
                 orient: 'vertical'
                 }
@@ -114,7 +119,4 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-    .chart {
-        height: 1200px;
-    }
 </style>
