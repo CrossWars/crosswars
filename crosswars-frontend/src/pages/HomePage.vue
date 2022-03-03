@@ -76,13 +76,14 @@ export default defineComponent({
       }
       else 
       {
+
         //don't care about current user's date or groups
         this.entries.push({time: time, user_id: this.user.id, date: '',  groups: [], position: 0, user: this.user})
       }
       setLeaderboardEntryPositions(this.entries)
     },
     async createEntries(){
-      this.user = await getUserByJWT();
+      this.user = await getUserByJWT(true);
       this.entries = await createDailyCombinedLeaderboardEntries();
     },
     async getGroups()

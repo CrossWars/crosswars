@@ -70,3 +70,5 @@ hs_err_pid*
 
 ### Mac OS ###
 *.DS_Store
+crosswars-frontend/src-capacitor/capacitor-flag.d.ts
+crosswars-frontend/src-pwa/pwa-flag.d.ts
