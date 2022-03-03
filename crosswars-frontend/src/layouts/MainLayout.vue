@@ -21,7 +21,7 @@
         <q-btn stretch flat icon="person" v-if="showUser" :to="`/user/${user.id}`"/>
       </q-toolbar>
     </q-header>
-    <q-page-container>
+    <q-page-container style="padding-bottom: 300px;">
       <router-view/>
     </q-page-container>
   </q-layout>

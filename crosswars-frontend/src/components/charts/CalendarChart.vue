@@ -1,7 +1,7 @@
 <template lang="">
     <div>
-        <q-expansion-item icon="calendar_today" :label="label" default-opened>
-            <v-chart :option="heatmap" :style="'height: ' + ((new Date().getMonth() + 1)*90 +140) +'px'" autoresize/>
+        <q-expansion-item icon="calendar_today" label="Calendar Heatmap" default-opened>
+            <v-chart :option="heatmap" :style="'height: ' + ((month_diff)*90 +140) +'px'" autoresize/>
         </q-expansion-item>
   </div>
 </template>
@@ -45,17 +45,15 @@ export default defineComponent({
         },
         min_time: Object as PropType<number>,
         max_time: Object as PropType<number>,
+        min_date: Object as PropType<Date>,
+        max_date: Object as PropType<Date>,
+        month_diff: Object as PropType<number>
   },
   components: {
     VChart
   },
   provide: {
       [THEME_KEY]: 'light'
-  },
-  data() {
-    return {
-      label: `${(new Date()).getFullYear()} Heatmap`,
-    };
   },
   methods: {
       getData(entries: Entry[]) {
@@ -98,7 +96,7 @@ export default defineComponent({
             calendar: [{
                 top: 100,
                 left: 'center',
-                range: [new Date(new Date().getFullYear(), 0, 1), new Date()],
+                range: [this.min_date, this.max_date],
                 borderWidth: 0.5,
                 orient: 'vertical'
                 }

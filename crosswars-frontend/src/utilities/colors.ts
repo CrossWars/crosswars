@@ -2,20 +2,22 @@
 //If case arises where more than 22 distinct colors are needed, look into a programmatic approach
 
 const distinct_colors: string[] = [
-  '0xA6BDD7', //light blue
-  '0xC10020', //vivid red
-  '0x53377A', //strong violet
+  '#3da8ff', //light blue
+  '#eb384d', //vivid red
+  '0xFFB300',
+
   '0x93AA00', //yellowish green
   '0xFF7A5C', //yellowish pink
   '0x817066', //medium grey
   '0xCEA262',
   '0x00538A', //strong blue
-  '0xFFB300',
+
   '0xFF8E00',
   '0xF6768E',
-  
-  '0x803E75',
+  '0x53377A', //strong violet
   '0x007D34',
+  '0x803E75',
+
   '0xFF6800',
   '0xB32851',
   

@@ -22,7 +22,7 @@
             </div>
           </div>
         <q-card class="q-pa-sm">
-          <CalendarChart :entries="entries" :min_time="minTime" :max_time="maxTime"/>
+          <CalendarChart :entries="entries" :min_time="minTime" :max_time="maxTime" :min_date="minEntryDate" :max_date="maxEntryDate" :month_diff="entryMonthDiff"/>
         </q-card>
       </div>
     </div>
@@ -40,6 +40,7 @@ import { getBestTimeByUserId} from 'src/models/Stats/stats.api'
 import { getAverageTimeByUserId} from 'src/models/Stats/stats.api'
 
 import {formatTime} from 'src/utilities/time'
+import {monthDiff} from 'src/utilities/dates'
 import CalendarChart from 'components/charts/CalendarChart.vue'
 
 export default defineComponent({
@@ -57,6 +58,9 @@ export default defineComponent({
       maxTime: 0,
       bestTime: '',
       averageTime: '',
+      minEntryDate: '',
+      maxEntryDate: '',
+      entryMonthDiff: 0,
     };
   },
   computed: {
@@ -80,6 +84,10 @@ export default defineComponent({
       this.entries = await getEntriesByUserId(this.$route.params.userID as string)
       this.minTime = Math.min.apply(Math, this.entries.map(e => e.time))
       this.maxTime = Math.max.apply(Math, this.entries.map(e => e.time))
+      const entryDates = this.entries.map(e => e.date)
+      this.minEntryDate = entryDates.reduce(function (a, b) { return a < b ? a : b; });
+      this.maxEntryDate = entryDates.reduce(function (a, b) { return a > b ? a : b; });
+      this.entryMonthDiff = monthDiff(new Date(this.minEntryDate), new Date(this.maxEntryDate));
       this.getStats();
     },
     async getStats()
