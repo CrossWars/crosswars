@@ -18,12 +18,19 @@
               <p>Best Time: <br>{{bestTime}}</p>
             </div>
             <div id="avgTime">
-              <p>Average Time: <br>{{averageTime}}</p>
+              <p>Average Time: <br>{{averageTimeStr}}</p>
             </div>
           </div>
+        <div class="q-pa-sm" v-if="showLineChart">
         <q-card class="q-pa-sm">
-          <CalendarChart :entries="entries" :min_time="minTime" :max_time="maxTime" :min_date="minEntryDate" :max_date="maxEntryDate" :month_diff="entryMonthDiff"/>
+          <WeekLineChart :entries="entries" :min_date="minDate" :max_date="maxDate" :min_time_entry="minTimeEntry" :day_diff="entryDayDiff" :avg_time="averageTime"/>
         </q-card>
+        </div>
+        <div class="q-pa-sm">
+        <q-card >
+          <CalendarChart :entries="entries" :min_time="minTimeEntry.time" :max_time="maxTimeEntry.time" :min_date="minDate" :max_date="maxDate" :month_diff="entryMonthDiff"  />
+        </q-card>
+        </div>
       </div>
     </div>
 </div>
@@ -36,40 +43,41 @@ import {defineComponent} from 'vue'
 
 import { getEntriesByUserId} from 'src/models/Entries/entries.api'
 import { getUserByUserId} from 'src/models/Users/users.api'
-import { getBestTimeByUserId} from 'src/models/Stats/stats.api'
 import { getAverageTimeByUserId} from 'src/models/Stats/stats.api'
 
 import {formatTime} from 'src/utilities/time'
-import {monthDiff} from 'src/utilities/dates'
+import {monthDiff, dayDiff} from 'src/utilities/dates'
 import CalendarChart from 'components/charts/CalendarChart.vue'
+import WeekLineChart from 'components/charts/WeekLineChart.vue'
 
 export default defineComponent({
   name: 'UserPage',
   components: {
-    CalendarChart
+    CalendarChart,
+    WeekLineChart
   },
   data() {
     return {
       user: {name: '', id: ''} as User,
       showUserPage: false,
       showLoading: true,
+      showLineChart: false,
       entries: [] as Entry[],
-      minTime: 0,
-      maxTime: 0,
       bestTime: '',
-      averageTime: '',
-      minEntryDate: '',
-      maxEntryDate: '',
+      averageTime: 0,
+      averageTimeStr: '',
+      minDate: '',
+      maxDate: '',
+      minTimeEntry: {} as Entry,
+      maxTimeEntry: {} as Entry,
       entryMonthDiff: 0,
+      entryDayDiff: 0,
     };
-  },
-  computed: {
   },
   mounted() {
     this.getUserInfo();
     this.getAllEntries();
-    this.getAllEntries();
-    this.getStats();
+    this.getAllEntries()
 
   },
   methods: {
@@ -82,19 +90,21 @@ export default defineComponent({
     async getAllEntries()
     {
       this.entries = await getEntriesByUserId(this.$route.params.userID as string)
-      this.minTime = Math.min.apply(Math, this.entries.map(e => e.time))
-      this.maxTime = Math.max.apply(Math, this.entries.map(e => e.time))
       const entryDates = this.entries.map(e => e.date)
-      this.minEntryDate = entryDates.reduce(function (a, b) { return a < b ? a : b; });
-      this.maxEntryDate = entryDates.reduce(function (a, b) { return a > b ? a : b; });
-      this.entryMonthDiff = monthDiff(new Date(this.minEntryDate), new Date(this.maxEntryDate));
+      this.minDate = entryDates.reduce(function (a, b) { return a < b ? a : b; });
+      this.maxDate = entryDates.reduce(function (a, b) { return a > b ? a : b; });
+      this.entryMonthDiff = monthDiff(new Date(this.minDate), new Date(this.maxDate));
+      this.entryDayDiff = dayDiff(new Date(this.minDate), new Date(this.maxDate))
+      this.minTimeEntry = this.entries.reduce((prev, curr) => prev.time < curr.time ? prev : curr)
+      this.maxTimeEntry = this.entries.reduce((prev, curr) => prev.time > curr.time ? prev : curr)
       this.getStats();
     },
     async getStats()
     {
-      this.minTime = await getBestTimeByUserId(this.$route.params.userID as string)
-      this.bestTime = formatTime(this.minTime)
-      this.averageTime = formatTime(await getAverageTimeByUserId(this.$route.params.userID as string))
+      this.bestTime = formatTime(this.minTimeEntry.time)
+      this.averageTime = await getAverageTimeByUserId(this.$route.params.userID as string)
+      this.averageTimeStr = formatTime(this.averageTime);
+      this.showLineChart = this.entries.length >= 2;
     }
   },
 });
