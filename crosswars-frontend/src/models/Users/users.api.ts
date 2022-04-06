@@ -46,7 +46,7 @@ export async function getUserByUserId(user_id: string, photo=false): Promise<Use
     })
 }
 
-export async function getUserByJWT(): Promise<User>
+export async function getUserByJWT(photo=false): Promise<User>
 {
     const token = localStorage.getItem('jwt')
     return api.get('/users/ids',
@@ -56,11 +56,15 @@ export async function getUserByJWT(): Promise<User>
             }
         }
     )
-    .then((userResponse) => {
+    .then(async (userResponse) => {
         if(userResponse.status == 204) {
             throw new Error('User not found')
         }
-        return createUserFromData(userResponse.data)
+        const user = createUserFromData(userResponse.data);
+        if(photo) {
+            user.photoUrl = await getGooglePhotoForUser(user.id);
+        }
+        return user;
     })
 }
 
@@ -76,7 +80,7 @@ export async function postNewUser(): Promise<User>
     )
 }
 
-export async function getGooglePhotoForUser(user_id: string): Promise<string | undefined> { 
+export async function getGooglePhotoForUser(user_id: string): Promise<string | undefined> {
     return axios.get(`https://people.googleapis.com/v1/people/${user_id}?personFields=photos&key=${api_key}`)
     .then((personResponse) => {
         const photos = personResponse.data['photos'][0]

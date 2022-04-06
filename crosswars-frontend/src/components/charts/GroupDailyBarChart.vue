@@ -10,13 +10,13 @@
 ;
 
 <script lang="ts">
-import { LeaderboardEntry } from "src/models/Entries/entries";
-import { formatTime } from "src/utilities/time";
-import { defineComponent, PropType } from "vue";
-import VueApexCharts from "vue3-apexcharts";
+import { LeaderboardEntry } from 'src/models/Entries/entries';
+import { formatTime } from 'src/utilities/time';
+import { defineComponent, PropType } from 'vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 export default defineComponent({
-  name: "GroupDailyBarChart",
+  name: 'GroupDailyBarChart',
   props: {
     entries: {
       type: Array as PropType<LeaderboardEntry[]>,
@@ -34,7 +34,7 @@ export default defineComponent({
       const data: number[] = this.entries.map((e) => e.time);
       return [
         {
-          name: "Todays Times",
+          name: 'Todays Times',
           data: data,
         },
       ];
@@ -48,10 +48,10 @@ export default defineComponent({
   data() {
     return {
       chartOptions: {
-        colors: ["#3da8ff"],
+        colors: ['#3da8ff'],
         animations: {
           enabled: true,
-          easing: "easeinout",
+          easing: 'easeinout',
           speed: 1000,
         },
         grid: {
@@ -64,10 +64,10 @@ export default defineComponent({
           },
         },
         title: {
-          text: "Column",
-          align: "left",
+          text: 'Column',
+          align: 'left',
           style: {
-            color: "#FFF",
+            color: '#FFF',
           },
         },
         dataLabels: {
@@ -80,25 +80,25 @@ export default defineComponent({
           width: 0,
         },
         xaxis: {
-          type: "category",
+          type: 'category',
           categories: this.entries.map((e) => e.user.name),
           labels: {
             show: true,
             style: {
-              fontsize: "12px",
+              fontsize: '12px',
             },
           },
         },
         yaxis: {
           title: {
-            text: "$ (thousands)",
+            text: '$ (thousands)',
             style: {
-              color: "#FFF",
+              color: '#FFF',
             },
           },
           labels: {
             style: {
-              colors: "#fff",
+              colors: '#fff',
             },
           },
         },
@@ -107,7 +107,7 @@ export default defineComponent({
             formatter: function (timeInSeconds: number) {
               const mins = Math.floor(timeInSeconds / 60);
               const secs = timeInSeconds % 60;
-              return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+              return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
             },
           },
         },
