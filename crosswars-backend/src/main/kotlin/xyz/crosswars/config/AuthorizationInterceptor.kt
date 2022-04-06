@@ -6,6 +6,7 @@ import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 import xyz.crosswars.exception.UnauthorizedException
 import xyz.crosswars.service.GoogleAuthService
+import xyz.crosswars.service.UserService
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -17,7 +18,8 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class AuthorizationInterceptor(
     private val authConfig: AuthConfig,
-    private val googleAuthService: GoogleAuthService
+    private val googleAuthService: GoogleAuthService,
+    private val userService: UserService
 ) : HandlerInterceptor {
 
     @Transactional
@@ -27,7 +29,8 @@ class AuthorizationInterceptor(
             val authMethods: Authorized = handler.getMethodAnnotation(Authorized::class.java)
                 ?: return true // Authorized annotation is missing, allow the request to proceed
 
-            if (!authConfig.enabled) return true // Allow all requests if auth is disabled
+            if (!authConfig.enabled)
+                // Allow all requests if auth is disabled
 
             if (authMethods.googleIdToken) {
                 request.getHeader("Authorization")?.split(" ")?.get(1).let { idToken ->
@@ -42,6 +45,9 @@ class AuthorizationInterceptor(
             if (authMethods.authToken) {
                 request.getHeader("x-internal-access-token")?.let { authHeader ->
                     if (authHeader != authConfig.authKey) throw UnauthorizedException("Invalid ")
+                    val userId = request.getParameter("user_id") as String
+                    val user = userService.findUserById(userId)
+                    request.setAttribute("auth_user", user)
                     isAuthorized = true
                 }
             }
