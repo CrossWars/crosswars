@@ -54,6 +54,7 @@ class GoogleAuthService(
                         userId = payload.subject,
                         name = payload["given_name"] as String,
                         email = payload.email,
-                        remind = false
+                        remind = false,
+                        telegramId = null //new users won't have a pre-existing telegramID
                 )} ?: throw UnauthorizedException("Google id token is invalid")
 }

@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS USER
 (
     user_id TEXT PRIMARY KEY,
+    telegram_id TEXT UNIQUE,
     name    TEXT    NOT NULL,
     remind  BOOLEAN NOT NULL DEFAULT (1),
     email   VARCHAR UNIQUE

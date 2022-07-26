@@ -20,6 +20,14 @@ data class Entry(
     @Column val time: Int,
 ) : Serializable
 
+@Entity
+data class TelegramEntry(
+    @Id
+    @Column(name = "telegram_id")
+    val telegramId: String,
+    val date: String? = null,
+    val time: Int
+)
 data class EntryId(
     val userId: String = "",
     val date: String = ""

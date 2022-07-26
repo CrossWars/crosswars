@@ -27,7 +27,11 @@ class AuthorizationNewUserInterceptor(
             val authMethods: AuthorizedNewUser = handler.getMethodAnnotation(AuthorizedNewUser::class.java)
                 ?: return true // Authorized annotation is missing, allow the request to proceed
 
-            if (!authConfig.enabled) return true // Allow all requests if auth is disabled
+            if (!authConfig.enabled)
+            {
+                request.setAttribute("auth_user", null)
+                isAuthorized = true
+            }
 
             if (authMethods.googleIdToken) {
                 request.getHeader("Authorization")?.split(" ")?.get(1).let { idToken ->
@@ -41,7 +45,9 @@ class AuthorizationNewUserInterceptor(
 
             if (authMethods.authToken) {
                 request.getHeader("x-internal-access-token")?.let { authHeader ->
-                    if (authHeader != authConfig.authKey) throw UnauthorizedException("Invalid ")
+                    //if using auth token, ensure keys match
+                    if (authHeader != authConfig.authKey) throw UnauthorizedException("Invalid auth token")
+                    request.setAttribute("auth_user", null) // no auth user associated with auth token
                     isAuthorized = true
                 }
             }

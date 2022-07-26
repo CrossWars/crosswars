@@ -1,6 +1,10 @@
 package xyz.crosswars.service
 
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 import xyz.crosswars.entities.User
 import xyz.crosswars.exception.BadRequestException
 import xyz.crosswars.exception.NoContentException
@@ -30,10 +34,24 @@ class UserService(
         return "nothing found"
     }
 
-    fun findUserById(id: String): User =
-        userRepository.findById(id).unwrap()
-            ?: throw NoContentException("Could not find user with id $id")
+    fun findUserById(id: String?, auth_user: User?): User =
+            if (auth_user != null && (id == null || auth_user.userId == id)) {
+                auth_user.apply { this.email = null }
+            } else if (id !== null){
+                // exclude emails of other users
+                userRepository.findById(id).unwrap()?.apply { this.email = null }
+                        ?: throw NoContentException("Could not find user with id $id")
+            }
+            else {
+                throw BadRequestException("User ID must be provided") //if using auth token, must include user id
+            }
 
+    @Transactional(readOnly = true)
+    fun findUserByTelegramId(telegramId: String): User {
+        return userRepository.findUserByTelegramId(telegramId).findFirst().unwrap()
+                ?: throw BadRequestException("Telegram ID does not correspond to a CrossWars user")
+
+    }
     fun findUserByEmail(email: String): User =
         userRepository.findUserByEmail(email.lowercase()).findFirst().unwrap()
             ?: throw NoContentException("Could not find user with email $email")
@@ -57,7 +75,8 @@ class UserService(
             userId = user.userId,
             name = user.name.lowercase(),
             email = user.email?.lowercase(),
-            remind = user.remind ?: false
+            remind = user.remind ?: false,
+            telegramId = user.telegramId
         )
         userRepository.save(savedUser)
         return savedUser
@@ -77,7 +96,8 @@ class UserService(
             userId = user.userId.lowercase(),
             name = user.name,
             email = user.email!!.lowercase(),
-            remind = user.remind ?: false
+            remind = user.remind ?: false,
+            telegramId = null
         )
         userRepository.save(savedUser)
         return savedUser

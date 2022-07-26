@@ -14,4 +14,7 @@ interface UserRepository : CrudRepository<User, String> {
 
     @Query("select u from User u where u.email = :email")
     fun findUserByEmail(email: String): Stream<User>
+
+    @Query("select u from User u where u.telegramId = :telegramId")
+    fun findUserByTelegramId(telegramId: String): Stream<User>
 }

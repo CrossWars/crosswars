@@ -76,7 +76,7 @@ export async function postNewUser(): Promise<User>
     )
 }
 
-export async function getGooglePhotoForUser(user_id: string): Promise<string | undefined> { 
+export async function getGooglePhotoForUser(user_id: string): Promise<string | undefined> {
     return axios.get(`https://people.googleapis.com/v1/people/${user_id}?personFields=photos&key=${api_key}`)
     .then((personResponse) => {
         const photos = personResponse.data['photos'][0]
@@ -84,6 +84,9 @@ export async function getGooglePhotoForUser(user_id: string): Promise<string | u
             return undefined;
         }
         return photos['url']
+    })
+    .catch(function (error) {
+        return undefined
     })
 }
 

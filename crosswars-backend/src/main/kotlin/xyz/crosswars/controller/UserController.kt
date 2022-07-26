@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*
 import xyz.crosswars.config.Authorized
 import xyz.crosswars.config.AuthorizedNewUser
 import xyz.crosswars.entities.User
-import xyz.crosswars.exception.BadRequestException
 import xyz.crosswars.service.UserService
 
 @RestController
@@ -39,14 +38,19 @@ class UserController(
     @Authorized
     fun getUserById(
         @RequestParam("user_id", required = false) id: String?,
-        @RequestAttribute("auth_user") user: User
+        @RequestAttribute("auth_user") auth_user: User?
     ): ResponseEntity<User> {
-        return if (id == null || user.userId == id) {
-            ResponseEntity.ok(user)
-        } else {
-            // exclude emails of other users
-            ResponseEntity.ok(service.findUserById(id).apply { this.email = null })
-        }
+        return ResponseEntity.ok(service.findUserById(id, auth_user))
+    }
+
+    @GetMapping("/ids/telegram")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional(readOnly = true)
+    @Authorized
+    fun getUserByTelegramId(
+            @RequestParam("telegram_id") id: String
+    ): ResponseEntity<User> {
+        return ResponseEntity.ok(service.findUserByTelegramId(id).apply { this.email = null })
     }
 
     @GetMapping("/emails")
