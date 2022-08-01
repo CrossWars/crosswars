@@ -1,11 +1,13 @@
 package xyz.crosswars.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import xyz.crosswars.entities.*
 import xyz.crosswars.exception.NoContentException
 import xyz.crosswars.repository.*
 import xyz.crosswars.util.getPuzzleDateInEST
 import xyz.crosswars.util.currentDateInEST
+import java.util.stream.Collectors.groupingBy
 
 @Service
 class WinService(
@@ -105,5 +107,31 @@ class WinService(
         if (entries.isEmpty()) return listOf()
         val min = entries.minOf { it.time }
         return entries.filter { it.time == min}.map { it.userId}
+    }
+    /**
+     * Utility function to recalculate all wins in a given group, based on currently recorded entries.
+     *
+     * @param groupId: The group for which wins are recalculated
+     * @return the new WinCount for each user in the group
+     */
+    @Transactional
+    fun syncWinsInGroup(groupId: String): List<WinCount>
+    {
+        try {
+            groupService.findGroupById(groupId) //throws exception if groupId not found
+        } catch(e: NoContentException) {
+            throw xyz.crosswars.exception.BadRequestException("Group id $groupId not found")
+        }
+        val entries = entryService.getAllEntriesByGroup(groupId)
+        val entriesByDate = entries.collect(groupingBy(Entry::date))
+        val allNewWins = mutableListOf<Win>()
+        entriesByDate.forEach { (date, entryList) ->
+            val winningEntries = entryList.filter{ it.time == entryList.minOf{ it1 -> it1.time}}
+            val newWins = winningEntries.map{ e -> Win(e.userId, groupId, date!!)}
+            allNewWins.addAll(newWins)
+        }
+        winRepository.deleteByGroupId(groupId)
+        winRepository.saveAll(allNewWins)
+        return getWinCountsForAllUsersInGroup(groupId)
     }
 }

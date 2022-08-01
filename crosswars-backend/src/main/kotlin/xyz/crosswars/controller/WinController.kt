@@ -87,4 +87,14 @@ class WinController(
     fun updateWinRecord(@RequestBody wins: Win): Win {
         return winService.updateWinsRecord(wins)
     }
+
+    /**
+     * Utility endpoint for recalculating and overwriting all wins in a group
+     */
+    @PutMapping("/sync")
+    fun syncWinsInGroup(
+            @RequestParam( "group_id") groupId: String
+    ): List<WinCount> {
+        return winService.syncWinsInGroup(groupId)
+    }
 }

@@ -1,5 +1,6 @@
 package xyz.crosswars.repository
 
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -46,4 +47,7 @@ interface WinRepository : CrudRepository<Win, WinId> {
 
     @Query("select w from Win w where w.groupId = :groupId")
     fun getWinsForAllUsersInGroup(groupId: String): Stream<Win>
+
+    @Modifying
+    fun deleteByGroupId(groupId: String): Long
 }

@@ -30,7 +30,7 @@ interface EntryRepository : CrudRepository<Entry, EntryId> {
     fun getAllEntries(userId: String): Stream<Entry>
 
     @Query(
-        """
+            """
         select e from Entry e, IsMember im
         where e.userId = im.userId and im.groupId = :groupId
             and e.date between :fromDate and :toDate
@@ -38,4 +38,15 @@ interface EntryRepository : CrudRepository<Entry, EntryId> {
         """
     )
     fun getEntriesByGroupAndDate(groupId: String, fromDate: String, toDate: String): Stream<Entry>
+
+    @Query(
+            """
+        select e from Entry e, IsMember im
+        where e.userId = im.userId and im.groupId = :groupId
+        order by e.date, e.userId
+        """
+    )
+    fun getAllEntriesByGroup(groupId: String): Stream<Entry>
+
+
 }

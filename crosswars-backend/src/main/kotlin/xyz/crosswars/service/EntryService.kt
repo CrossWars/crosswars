@@ -2,7 +2,6 @@ package xyz.crosswars.service
 
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.server.ResponseStatusException
 import xyz.crosswars.entities.*
 import xyz.crosswars.exception.BadRequestException
@@ -13,6 +12,7 @@ import xyz.crosswars.util.getPuzzleDate
 import xyz.crosswars.util.getPuzzleDateInEST
 import xyz.crosswars.util.isValidPuzzleDate
 import java.time.LocalDate
+import java.util.stream.Stream
 
 @Service
 class EntryService(
@@ -155,4 +155,7 @@ class EntryService(
             val currentPuzzleDate = getPuzzleDateInEST()
             entryRepository.getEntriesByGroupAndDate(groupId, currentPuzzleDate, currentPuzzleDate).toList()
         }
+
+    fun getAllEntriesByGroup(groupId: String): Stream<Entry> =
+            entryRepository.getAllEntriesByGroup(groupId)
 }
