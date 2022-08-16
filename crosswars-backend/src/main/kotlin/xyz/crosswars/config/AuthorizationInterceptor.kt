@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse
 class AuthorizationInterceptor(
     private val authConfig: AuthConfig,
     private val googleAuthService: GoogleAuthService,
-    private val userService: UserService
 ) : HandlerInterceptor {
 
     @Transactional

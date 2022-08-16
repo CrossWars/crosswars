@@ -40,6 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
+    implementation("junit:junit:4.13.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     // Springfox

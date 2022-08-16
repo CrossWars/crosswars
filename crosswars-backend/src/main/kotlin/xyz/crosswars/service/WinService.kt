@@ -109,7 +109,8 @@ class WinService(
         return entries.filter { it.time == min}.map { it.userId}
     }
     /**
-     * Utility function to recalculate all wins in a given group, based on currently recorded entries.
+     * Utility function to recalculate all wins in a given group, based on currently recorded entries
+     * (excluding those of the current puzzle date).
      *
      * @param groupId: The group for which wins are recalculated
      * @return the new WinCount for each user in the group
@@ -126,9 +127,12 @@ class WinService(
         val entriesByDate = entries.collect(groupingBy(Entry::date))
         val allNewWins = mutableListOf<Win>()
         entriesByDate.forEach { (date, entryList) ->
-            val winningEntries = entryList.filter{ it.time == entryList.minOf{ it1 -> it1.time}}
-            val newWins = winningEntries.map{ e -> Win(e.userId, groupId, date!!)}
-            allNewWins.addAll(newWins)
+            //win for current day will be recorded by job
+            if(date != getPuzzleDateInEST()) {
+                val winningEntries = entryList.filter { it.time == entryList.minOf { it1 -> it1.time } }
+                val newWins = winningEntries.map { e -> Win(e.userId, groupId, date!!) }
+                allNewWins.addAll(newWins)
+            }
         }
         winRepository.deleteByGroupId(groupId)
         winRepository.saveAll(allNewWins)

@@ -23,6 +23,7 @@ class GroupController(
     @PostMapping("/telegram")
     @ResponseStatus(HttpStatus.CREATED)
     @Authorized(googleIdToken = false)
+    // TODO: Add telgegram ID for created_by
     fun createTelegramGroup(@RequestBody group: Group): Group {
         return service.createTelegramGroup(group)
     }
@@ -42,6 +43,16 @@ class GroupController(
         @RequestParam("user_id", required = true) userId: String
     ): IsMember {
         return service.addUserToGroup(groupId, userId)
+    }
+
+    @PostMapping("/users/telegram")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Authorized(googleIdToken = false)
+    fun addTelegramUserToGroup(
+            @RequestParam("group_id", required = true) groupId: String,
+            @RequestParam("telegram_id", required = true) telegramId: String
+    ): IsMember {
+        return service.addTelegramUserToGroup(groupId, telegramId)
     }
 
     @GetMapping("/ids")

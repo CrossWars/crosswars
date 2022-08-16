@@ -49,7 +49,7 @@ class UserService(
     @Transactional(readOnly = true)
     fun findUserByTelegramId(telegramId: String): User {
         return userRepository.findUserByTelegramId(telegramId).findFirst().unwrap()
-                ?: throw BadRequestException("Telegram ID does not correspond to a CrossWars user")
+                ?: throw NoContentException("Telegram ID does not correspond to a CrossWars user")
 
     }
     fun findUserByEmail(email: String): User =
@@ -68,7 +68,7 @@ class UserService(
      */
     fun createTelegramUser(user: User): User {
         if (userRepository.existsById(user.userId)) {
-            throw BadRequestException("A user with ID ${user.userId} already exists")
+            throw NoContentException("A user with ID ${user.userId} already exists")
         }
         // create a telegram user
         val savedUser = User(

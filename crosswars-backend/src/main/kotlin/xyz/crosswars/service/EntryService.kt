@@ -11,6 +11,7 @@ import xyz.crosswars.util.currentDateInEST
 import xyz.crosswars.util.getPuzzleDate
 import xyz.crosswars.util.getPuzzleDateInEST
 import xyz.crosswars.util.isValidPuzzleDate
+import java.security.KeyStore
 import java.time.LocalDate
 import java.util.stream.Stream
 
@@ -119,6 +120,12 @@ class EntryService(
             entries.add(entry)
         }
         return recordEntries(entries, auth_user)
+    }
+
+    fun getEntriesByTelegramId(telegramId: String, fromDate: String?, toDate: String?): List<Entry>
+    {
+        val matchedUser = userService.findUserByTelegramId(telegramId)
+        return getEntries(matchedUser.userId, fromDate, toDate)
     }
 
     fun getEntries(userId: String, fromDate: String?, toDate: String?): List<Entry> =

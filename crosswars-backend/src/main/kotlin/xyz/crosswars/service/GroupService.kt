@@ -7,6 +7,7 @@ import xyz.crosswars.entities.IsMemberId
 import xyz.crosswars.entities.User
 import xyz.crosswars.exception.BadRequestException
 import xyz.crosswars.exception.NoContentException
+import xyz.crosswars.exception.SeeOtherException
 import xyz.crosswars.repository.GroupRepository
 import xyz.crosswars.repository.IsMemberRepository
 import xyz.crosswars.repository.UserRepository
@@ -19,20 +20,21 @@ private const val MAX_CREATED_GROUPS_PER_USER = 5
 
 @Service
 class GroupService(
-    val groupRepository: GroupRepository,
-    val userRepository: UserRepository,
-    val isMemberRepository: IsMemberRepository
+        val groupRepository: GroupRepository,
+        val userRepository: UserRepository,
+        val userService: UserService,
+        val isMemberRepository: IsMemberRepository,
 ) {
 
 
     fun findGroupById(groupId: String): Group {
         return groupRepository.findById(groupId).unwrap()
-            ?: throw NoContentException("Could not find group with id $groupId")
+                ?: throw NoContentException("Could not find group with id $groupId")
     }
 
     fun findGroupByName(name: String): Group {
         return groupRepository.findGroupByName(name.lowercase()).findFirst().unwrap()
-            ?: throw NoContentException("Could not find group with name $name")
+                ?: throw NoContentException("Could not find group with name $name")
     }
 
     fun findGroupsByUser(userId: String): List<Group> {
@@ -42,6 +44,7 @@ class GroupService(
     fun findAllGroups(): List<Group> {
         return groupRepository.findAllGroups().toList()
     }
+
     /**
      * Finds all users in a given group
      *
@@ -50,7 +53,7 @@ class GroupService(
      */
     fun findUsersByGroupId(groupId: String): List<User> {
         if (!groupRepository.existsById(groupId)) {
-            throw BadRequestException("A group with ID $groupId does not exist")
+            throw NoContentException("A group with ID $groupId does not exist")
         }
         return groupRepository.findUsersByGroupId(groupId).toList()
     }
@@ -63,16 +66,19 @@ class GroupService(
      */
     fun createTelegramGroup(group: Group): Group {
         if (groupRepository.existsById(group.groupId)) {
-            throw BadRequestException("A group with ID ${group.groupId} already exists")
+            throw NoContentException("A group with ID ${group.groupId} already exists")
         }
-        // create a telegram group
-        val savedGroup = Group(
-            groupId = group.groupId,
-            name = group.name.lowercase(),
-            createdBy = null
-        )
-        groupRepository.save(savedGroup)
-        return savedGroup
+        group.createdBy?.let {
+            val user = userService.findUserByTelegramId(it)
+            // create a telegram group
+            val savedGroup = Group(
+                    groupId = group.groupId,
+                    name = group.name.lowercase(),
+                    createdBy = user.userId
+            )
+            groupRepository.save(savedGroup)
+            return savedGroup
+        } ?: throw BadRequestException("CreatedBy Telegram ID required")
     }
 
     /**
@@ -94,9 +100,9 @@ class GroupService(
         val groupId = createUniqueGroupId()
         // create a website group
         val savedGroup = Group(
-            groupId = groupId,
-            name = group.name,
-            createdBy = createdByUser.userId
+                groupId = groupId,
+                name = group.name,
+                createdBy = createdByUser.userId
         )
         groupRepository.save(savedGroup)
         return savedGroup
@@ -117,19 +123,25 @@ class GroupService(
             throw BadRequestException("A group with ID $groupId does not exist")
         }
         if (isMemberRepository.existsById(IsMemberId(userId, groupId))) {
-            throw BadRequestException("A user with ID $userId is already a member of a group with ID $groupId")
+            // TODO: why is message not appearing in call
+            throw SeeOtherException("A user with ID $userId is already a member of a group with ID $groupId")
         }
 
         val savedIsMember = IsMember(
-            userId = userId,
-            groupId = groupId
+                userId = userId,
+                groupId = groupId
         )
         isMemberRepository.save(savedIsMember)
         return savedIsMember
     }
 
+    fun addTelegramUserToGroup(groupId: String, telegramId: String): IsMember {
+        val matchedUser = userService.findUserByTelegramId(telegramId)
+        return addUserToGroup(groupId, matchedUser.userId)
+    }
+
     private fun isGroupNameValid(groupName: String): Boolean {
-        if(groupName.length < 3 || groupName.length > 25) return false
+        if (groupName.length < 3 || groupName.length > 25) return false
         return VALID_GROUP_NAME_PATTERN.toRegex().matches(groupName)
     }
 
@@ -137,7 +149,7 @@ class GroupService(
         val max = 9999999999999L
         val min = 1000000000000L
         var id = (Math.random() * (max - min)).toLong() + min
-        while(groupRepository.existsById(id.toString())) {
+        while (groupRepository.existsById(id.toString())) {
             id = (Math.random() * (max - min)).toLong() + min
         }
         return id.toString()

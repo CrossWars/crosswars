@@ -2,6 +2,7 @@ package xyz.crosswars.controller
 
 import io.swagger.annotations.Api
 import org.springframework.web.bind.annotation.*
+import xyz.crosswars.config.Authorized
 import xyz.crosswars.entities.Win
 import xyz.crosswars.entities.WinCount
 import xyz.crosswars.entities.Winner
@@ -92,6 +93,7 @@ class WinController(
      * Utility endpoint for recalculating and overwriting all wins in a group
      */
     @PutMapping("/sync")
+    @Authorized(googleIdToken = false)
     fun syncWinsInGroup(
             @RequestParam( "group_id") groupId: String
     ): List<WinCount> {

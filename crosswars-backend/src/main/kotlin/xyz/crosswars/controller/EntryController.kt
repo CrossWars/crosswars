@@ -21,7 +21,6 @@ import xyz.crosswars.service.UserService
 @RequestMapping("/entries")
 class EntryController(
     private val entryService: EntryService,
-    private val userService: UserService
 ) {
     @PostMapping
     @Authorized
@@ -30,15 +29,9 @@ class EntryController(
     }
 
     @PostMapping("/telegram")
-    @Authorized
+    @Authorized(googleIdToken = false)
     fun recordTelegramEntry(@RequestBody telegramEntry: TelegramEntry, @RequestAttribute("auth_user") auth_user: User?): Entry {
-        val matchedUser = userService.findUserByTelegramId(telegramEntry.telegramId)
-        val entry = Entry(
-            userId = matchedUser.userId,
-            time = telegramEntry.time,
-            date = telegramEntry.date
-        )
-        return entryService.recordEntry(entry, auth_user)
+        return entryService.recordTelegramEntry(telegramEntry, auth_user)
     }
 
     @PostMapping("/bulk")
@@ -47,8 +40,8 @@ class EntryController(
         return entryService.recordEntries(entries, auth_user)
     }
 
-    @PostMapping("/telegram/bulk")
-    @Authorized
+    @PostMapping("/bulk/telegram")
+    @Authorized(googleIdToken = false)
     fun recordTelegramEntries(@RequestBody telegramEntries: List<TelegramEntry>, @RequestAttribute("auth_user") auth_user: User?): List<Entry> {
         return entryService.recordTelegramEntries(telegramEntries, auth_user)
     }
@@ -74,6 +67,18 @@ class EntryController(
     ): ResponseEntity<List<Entry>> {
         return ResponseEntity.ok(entryService.getEntries(userId, fromDate, toDate))
     }
+
+    @GetMapping("/users/telegram")
+    @Transactional(readOnly = true)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun getEntriesByTelegramUser(
+            @RequestParam("telegram_id") telegramId: String,
+            @RequestParam("from_date", required = false) fromDate: String?,
+            @RequestParam("to_date", required = false) toDate: String?
+    ): ResponseEntity<List<Entry>> {
+        return ResponseEntity.ok(entryService.getEntriesByTelegramId(telegramId, fromDate, toDate))
+    }
+
 
     @GetMapping("/groups")
     @Transactional(readOnly = true)
