@@ -1,14 +1,15 @@
+from dataclasses import dataclass
 from typing import Mapping, NewType, Optional
 
 UserId = NewType('UserId', int)
 Time = NewType('Time', int)
 
 
+@dataclass
 class LeaderboardRecord:
-    def __init__(self, userId: UserId, time: Time, rank: Optional[int]):
-        self.userId = userId
-        self.time = time
-        self.rank = rank
+        userId: UserId
+        time: Time
+        rank: Optional[int]
 
 
 # returns records of [userId, time, position]

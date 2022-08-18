@@ -8,13 +8,21 @@ from typing import Optional, Any, Mapping
 from pytz import timezone
 import pytz
 
-import config
 import logging
-from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
+from telegram import Update, InlineQueryResultArticle, InputTextMessageContent, constants
 from telegram.ext import Updater, ApplicationBuilder, ContextTypes, CommandHandler, InlineQueryHandler, MessageHandler, \
     filters
+
+# Used for custom webhooka
+import uvicorn
+from starlette.applications import Starlette
+from starlette.requests import Request
+from starlette.responses import PlainTextResponse, Response
+from starlette.routing import Route
+
+import config
 import crosswars
-import utilities
+from utilities import Leaderboard, UserId, Time
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -30,7 +38,8 @@ context.chat_data = {
     },
     daily_times: {
         id0: time
-    }
+    },
+    leaderboard_msg: msgId
 }
 """
 
@@ -101,7 +110,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type in ('group', 'supergroup'):
         # check if group exists, prompt to create with /start_group
         response = await crosswars.get_group(update.effective_chat.id)
-        if response.staus_code == 204:
+        if response.status_code == 204:
             # MESSAGE TO CREATE GROUP WITH /start_group
             await context.bot.send_message(chat_id=update.effective_chat.id,
                                            text='Start a daily crossword leaderboard in this group using /start_group')
@@ -142,38 +151,48 @@ async def add_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # add time for user
     time_strs = (update.message.text.partition(':'))
     time = 60 * int(time_strs[0] if len(time_strs[0]) != 0 else "0") + int(time_strs[2])
-    response = await crosswars.add_time(update.message.from_user.id, time)
+    response = await crosswars.add_time(telegram_id=update.message.from_user.id, time=time)
     if response.status_code == 204:
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text='It looks like your Telegram account is not linked to a CrossWars user. '
-                                            'Please link your account at crosswars.xyz on your user page.')
+        await update.effective_chat.send_message(
+            text='It looks like your Telegram account is not linked to a CrossWars user. Please link your account at '
+                 'crosswars.xyz on your user page.')
         return
     if response.status_code != 200:
-        await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text='An error occurred, please try again')
+        await update.effective_chat.send_message(text='An error occurred, please try again')
         return
 
-    if update.effective_chat.type in ('group', 'supergroup'):
+    if update.effective_chat.type in (constants.ChatType.GROUP, constants.ChatType.SUPERGROUP):
+        # TODO: Test in group
         response = await crosswars.add_to_group(telegram_id=update.message.from_user.id,
                                                 group_id=update.effective_chat.id)
         if response.status_code not in (201, 303):
-            await update.effective_chat.send_message('An error occurred adding you to the group, plaese send time again'
-                                                     'or join group via website invite link')
+            # TODO: Add invite link here
+            await update.effective_chat.send_message(text='An error occurred adding you to the group, please send '
+                                                          'time again or join group via website invite link')
             return
 
-        # TODO: Add to leaderboard, cache time
+        # Add to leaderboard, cache time
         if 'name_map' not in context.chat_data:
-            context.chat_data['name_map']: Mapping[int, str] = dict()
-        context.chat_data['name_map'][update.message.from_user] = update.message.from_user.first_name
+            context.chat_data['name_map']: Mapping[UserId, str] = dict()
+        context.chat_data['name_map'][update.message.from_user.id] = update.message.from_user.first_name
+
         if 'daily_times' not in context.chat_data:
-            context.chat_data['daily_times']: Mapping[int, int] = dict()
+            context.chat_data['daily_times']: Mapping[UserId, Time] = dict()
         context.chat_data['daily_times'][update.message.from_user.id] = time
-        if 'leaderboard_msg' not in context.chat_data:
-            leaderboard_str = utilities.get_leaderboard_msg()
-            context.chat_data['leaderboard_msg']
-    else:
+
+        # Create leaderboard
+        leaderboard = Leaderboard(context.chat_data['daily_times'], context.chat_data['name_map'])
+        if 'leaderboard_msg' in context.chat_data:
+            context.bot.edit_message_text(text=str(leaderboard),
+                                          chat_id=update.effective_chat.id,
+                                          message_id=context.chat_data['leaderboard_msg'])
+        else:
+            msg = await update.effective_chat.send_message(text=str(leaderboard))
+            context.chat_data['leaderboard_msg'] = msg.id
+            await update.effective_chat.pin_message(msg.id)
+    elif update.effective_chat.type == constants.ChatType.PRIVATE:
         await context.bot.send_message(chat_id=update.effective_chat.id,
-                                       text=f'Time {time} added')
+                                       text=f'Time added')
 
 
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
