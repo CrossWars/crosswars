@@ -1,3 +1,4 @@
+import asyncio
 import functools
 import logging
 import datetime
@@ -11,7 +12,7 @@ import pytz
 import logging
 from telegram import Update, InlineQueryResultArticle, InputTextMessageContent, constants
 from telegram.ext import Updater, ApplicationBuilder, ContextTypes, CommandHandler, InlineQueryHandler, MessageHandler, \
-    filters
+    filters, Application
 
 # Used for custom webhooka
 import uvicorn
@@ -211,8 +212,9 @@ async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(user)
 """
 
-if __name__ == '__main__':
-    application = ApplicationBuilder().token(config.api_key).build()
+async def main() -> None:
+    # Set updater to None to use custom webhook server
+    application = Application.builder().token(config.api_key).updater(None).build()
 
     start_handler = CommandHandler('start', start)
     application.add_handler(start_handler)
@@ -223,4 +225,39 @@ if __name__ == '__main__':
     unknown_handler = MessageHandler(filters.COMMAND, unknown)
     application.add_handler(unknown_handler)
 
+    # TODO SET TO IP
+    await application.bot.set_webhook(url=f'{config.bot_url}/telegram',
+                                      certificate=config.public_key,
+                                      secret_token=config.secret_token,
+                                      )
+
+    async def telegram(request: Request) -> Response:
+        """Handle incoming Telegram updates by putting them into the `update_queue`"""
+        await application.update_queue.put(
+            Update.de_json(data=await request.json(), bot=application.bot)
+        )
+        return Response()
+
     application.run_polling()
+    starlette_app = Starlette(
+        routes=[
+            Route("/telegram", telegram, methods=["POST"]),
+        ]
+    )
+    webserver = uvicorn.Server(
+        config=uvicorn.Config(
+            app=starlette_app,
+            port=config.bot_port,
+            use_colors=False,
+            host="127.0.0.1",
+
+        )
+
+    )
+    async with application:
+        await application.start()
+        await webserver.serve()
+        await application.stop()
+
+if __name__ == '__main__':
+    asyncio.run(main())
