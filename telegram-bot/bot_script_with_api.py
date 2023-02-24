@@ -1,18 +1,11 @@
 import asyncio
-import functools
-import logging
-import datetime
-import random
-import statistics
+
 from typing import Optional, Any, Mapping
 
-from pytz import timezone
-import pytz
 
 import logging
-from telegram import Update, InlineQueryResultArticle, InputTextMessageContent, constants
-from telegram.ext import Updater, ApplicationBuilder, ContextTypes, CommandHandler, InlineQueryHandler, MessageHandler, \
-    filters, Application
+from telegram import Update, constants, InputFile
+from telegram.ext import ContextTypes, CommandHandler, MessageHandler, filters, Application
 
 # Used for custom webhooka
 import uvicorn
@@ -213,6 +206,7 @@ async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
 """
 
 async def main() -> None:
+    print(config.bot_url)
     # Set updater to None to use custom webhook server
     application = Application.builder().token(config.api_key).updater(None).build()
 
@@ -225,11 +219,13 @@ async def main() -> None:
     unknown_handler = MessageHandler(filters.COMMAND, unknown)
     application.add_handler(unknown_handler)
 
-    # TODO SET TO IP
-    await application.bot.set_webhook(url=f'{config.bot_url}/telegram',
-                                      certificate=config.public_key,
-                                      secret_token=config.secret_token,
-                                      )
+    with open(config.cert) as cert_file:
+        cert = InputFile(cert_file, filename=config.cert)
+        await application.bot.set_webhook(url=f'{config.bot_url}/telegram',
+                                          certificate=open(config.publick_key, 'rb'),
+                                          secret_token=config.secret_token,
+
+                                          )
 
     async def telegram(request: Request) -> Response:
         """Handle incoming Telegram updates by putting them into the `update_queue`"""
@@ -237,20 +233,26 @@ async def main() -> None:
             Update.de_json(data=await request.json(), bot=application.bot)
         )
         return Response()
+    
+    async def test(request: Request) -> Response:
+        return Response('Hello, world!', media_type='text/plain')
 
-    application.run_polling()
     starlette_app = Starlette(
         routes=[
-            Route("/telegram", telegram, methods=["POST"]),
+            Route(f"/crosswars/telegram/telegram", telegram, methods=["POST"]),
+            Route(f"/crosswars/telegram/test", test, methods=["GET"]),
         ]
     )
+
     webserver = uvicorn.Server(
         config=uvicorn.Config(
+            log_level='trace',
             app=starlette_app,
             port=config.bot_port,
-            use_colors=False,
-            host="127.0.0.1",
-
+            use_colors=True,
+            ssl_certfile=config.cert,
+            ssl_keyfile=config.key,
+            host=f'0.0.0.0',
         )
 
     )

@@ -8,8 +8,8 @@ auth_header = {'x-internal-access-token': config.crosswars_token}
 
 
 def build_url(endpoint: str) -> str:
-    base = 'https://crosswars:8080/crosswars/api'
-    if config.dev:
+    base = 'https://crosswars.xyz:8080/crosswars/api'
+    if config.on_dev_machine:
         base = 'http://localhost:8080/crosswars/api'
     return base + endpoint
 
